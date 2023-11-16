@@ -12,5 +12,26 @@
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "handson_ex01.html",
+    "href": "handson_ex01.html",
+    "title": "Hands-on Exercise 1",
+    "section": "",
+    "text": "Overview paragraph"
+  },
+  {
+    "objectID": "handson_ex01.html#overview",
+    "href": "handson_ex01.html#overview",
+    "title": "Hands-on Exercise 1",
+    "section": "",
+    "text": "Overview paragraph"
+  },
+  {
+    "objectID": "handson_ex01.html#getting-started",
+    "href": "handson_ex01.html#getting-started",
+    "title": "Hands-on Exercise 1",
+    "section": "Getting Started",
+    "text": "Getting Started\nStart paragraph"
   }
 ]
