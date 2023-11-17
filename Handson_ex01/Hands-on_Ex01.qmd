@@ -43,3 +43,29 @@ preschool = st_read("data/geospatial/preschoolslocation.kml")
 ## **Checking the Content of A Simple Feature Data Frame**
 
 In this sub-section, I learned different ways to retrieve information related to the content of a simple feature data frame.
+
+### **Working with *st_geometry()***
+
+The column in the sf data.frame that contains the geometries is a list, of class `sfc`. We can retrieve the geometry list-column using *st_geometry()* as shown in the code chunk below.
+
+```{r}
+st_geometry(mpsz)
+```
+
+### **Working with glimpse()**
+
+Beside the basic feature information, we also would like to learn more about the associated attribute information in the data frame.
+
+```{r}
+glimpse(mpsz)
+```
+
+*glimpse()* report reveals the data type of each fields. For example `FMEL-UPD_D` field is in **date** data type and `X_ADDR`, `Y_ADDR`, `SHAPE_L` and `SHAPE_AREA` fields are all in **double-precision values**.
+
+### **Working with *head()***
+
+Sometimes we would like to reveal complete information of a feature object, this is the job of [*head()*](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head) of Base R.
+
+```{r}
+head(mpsz, n=5)  
+```
