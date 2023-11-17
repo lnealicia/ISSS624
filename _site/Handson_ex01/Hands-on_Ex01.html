@@ -175,6 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#importing-and-converting-an-aspatial-data" id="toc-importing-and-converting-an-aspatial-data" class="nav-link" data-scroll-target="#importing-and-converting-an-aspatial-data"><strong>Importing and Converting An Aspatial Data</strong></a>
   <ul class="collapse">
   <li><a href="#importing-the-aspatial-data" id="toc-importing-the-aspatial-data" class="nav-link" data-scroll-target="#importing-the-aspatial-data"><strong>Importing the aspatial data</strong></a></li>
+  <li><a href="#creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" id="toc-creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" class="nav-link" data-scroll-target="#creating-a-simple-feature-data-frame-from-an-aspatial-data-frame"><strong>Creating a simple feature data frame from an aspatial data frame</strong></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -524,7 +525,7 @@ date  (1): last_review
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
-<p>After importing the data file into R, it is important for us to examine if the data file has been imported correctly</p>
+<p>The code chunk below shows&nbsp;<em>list()</em>&nbsp;of Base R&nbsp;to examine if the data file has been imported correctly.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(listings) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -549,6 +550,49 @@ date  (1): last_review
 #   availability_365 &lt;dbl&gt;, number_of_reviews_ltm &lt;dbl&gt;, license &lt;chr&gt;</code></pre>
 </div>
 </div>
+<p>The output reveals that&nbsp;<code>listing</code>&nbsp;tibble data frame consists of 4252 rows and 16 columns. Two useful fields we are going to use in the next phase are&nbsp;<code>latitude</code>&nbsp;and&nbsp;<code>longitude</code>.</p>
+</section>
+<section id="creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="creating-a-simple-feature-data-frame-from-an-aspatial-data-frame"><strong>Creating a simple feature data frame from an aspatial data frame</strong></h3>
+<p>The code chunk below converts <code>listing</code> data frame into a simple feature data frame by using <a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><em>st_as_sf()</em></a> of <strong>sf</strong> packages</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>listings_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(listings, </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>, <span class="st">"latitude"</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs=</span><span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note</p>
+<ul>
+<li><p><em>coords</em> argument requires you to provide the column name of the x-coordinates first then followed by the column name of the y-coordinates.</p></li>
+<li><p><em>crs</em> argument requires you to provide the coordinates system in epsg format. <a href="https://epsg.io/4326">EPSG: 4326</a> is wgs84 Geographic Coordinate System and <a href="https://epsg.io/3414">EPSG: 3414</a> is Singapore SVY21 Projected Coordinate System. You can search for other country's epsg code by referring to <a href="https://epsg.io/">epsg.io</a>.</p></li>
+<li><p><em>%&gt;%</em> is used to nest <em>st_transform()</em> to transform the newly created simple feature data frame into svy21 projected coordinates system.</p></li>
+</ul>
+<p>Examine the content of this newly created simple feature data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(listings_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,483
+Columns: 17
+$ id                             &lt;dbl&gt; 71609, 71896, 71903, 275343, 275344, 28…
+$ name                           &lt;chr&gt; "Villa in Singapore · ★4.44 · 2 bedroom…
+$ host_id                        &lt;dbl&gt; 367042, 367042, 367042, 1439258, 143925…
+$ host_name                      &lt;chr&gt; "Belinda", "Belinda", "Belinda", "Kay",…
+$ neighbourhood_group            &lt;chr&gt; "East Region", "East Region", "East Reg…
+$ neighbourhood                  &lt;chr&gt; "Tampines", "Tampines", "Tampines", "Bu…
+$ room_type                      &lt;chr&gt; "Private room", "Private room", "Privat…
+$ price                          &lt;dbl&gt; 150, 80, 80, 55, 69, 220, 85, 75, 45, 7…
+$ minimum_nights                 &lt;dbl&gt; 92, 92, 92, 60, 60, 92, 92, 60, 60, 92,…
+$ number_of_reviews              &lt;dbl&gt; 20, 24, 47, 22, 17, 12, 133, 18, 6, 81,…
+$ last_review                    &lt;date&gt; 2020-01-17, 2019-10-13, 2020-01-09, 20…
+$ reviews_per_month              &lt;dbl&gt; 0.14, 0.16, 0.31, 0.17, 0.12, 0.09, 0.9…
+$ calculated_host_listings_count &lt;dbl&gt; 5, 5, 5, 52, 52, 5, 7, 52, 52, 7, 7, 1,…
+$ availability_365               &lt;dbl&gt; 89, 89, 89, 275, 274, 89, 365, 365, 365…
+$ number_of_reviews_ltm          &lt;dbl&gt; 0, 0, 0, 0, 3, 0, 0, 1, 3, 0, 0, 0, 0, …
+$ license                        &lt;chr&gt; NA, NA, NA, "S0399", "S0399", NA, NA, "…
+$ geometry                       &lt;POINT [m]&gt; POINT (41972.5 36390.05), POINT (…</code></pre>
+</div>
+</div>
+<p>Table above shows the content of&nbsp;<code>listing_sf</code>. A new column called&nbsp;<code>geometry</code>&nbsp;has been added into the data frame. The&nbsp;<code>longitude</code>&nbsp;and&nbsp;<code>latitude</code>&nbsp;columns have been dropped from the data frame.</p>
 
 
 </section>
