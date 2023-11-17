@@ -22,3 +22,24 @@ pacman::p_load(sf, tidyverse)
 ```{r}
 mpsz <- st_read(dsn = "Data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
 ```
+
+### **Importing polyline feature data in shapefile form**
+
+The code chunk below uses *st_read()* function of **sf** package to import `CyclingPath` shapefile into R as line feature data frame.
+
+```{r}
+cyclingpath = st_read(dsn = "Data/geospatial", 
+                         layer = "CyclingPathGazette")
+```
+
+### **Importing GIS data in kml format**
+
+The `pre-schools-location-kml` is in kml format. The code chunk below will be used to import the kml into R.
+
+```{r}
+preschool = st_read("data/geospatial/preschoolslocation.kml")
+```
+
+## **Checking the Content of A Simple Feature Data Frame**
+
+In this sub-section, I learned different ways to retrieve information related to the content of a simple feature data frame.
