@@ -212,3 +212,47 @@ Lastly, sum() of Base R will be used to derive the total land involved
 ```{r}
 sum(buffer_cycling$AREA)
 ```
+
+### **Point-in-polygon count**
+
+The scenario:
+
+A pre-school service group want to find out the numbers of pre-schools in each Planning Subzone.
+
+The solution:
+
+The code chunk below performs two operations at one go. Firstly, identify pre-schools located inside each Planning Subzone by using [st_intersects()](https://r-spatial.github.io/sf/reference/geos_binary_pred.html). Next, [*length()*](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/length) of Base R is used to calculate numbers of pre-schools that fall inside each planning subzone.
+
+```{r}
+mpsz3414$`PreSch Count`<- lengths(st_intersects(mpsz3414, preschool3414))
+```
+
+**Note: Different from [st_intersection()](#0).**
+
+You can check the summary statistics of the newly derived *PreSch Count* field by using *summary()* as shown in the code chunk below.
+
+```{r}
+summary(mpsz3414$`PreSch Count`)
+```
+
+The [*top_n()*](https://dplyr.tidyverse.org/reference/top_n.html) of **dplyr** package is used to list the planning subzone with the most number of pre-schools
+
+```{r}
+top_n(mpsz3414, 1, `PreSch Count`)
+```
+
+The solution:
+
+Firstly, the code chunk below uses [*st_area()*](https://r-spatial.github.io/sf/reference/geos_measures.html) of **sf** package to derive the area of each planning subzone.
+
+```{r}
+mpsz3414$Area <- mpsz3414 %>%
+  st_area()
+```
+
+Next, [*mutate()*](https://dplyr.tidyverse.org/reference/mutate.html) of [**dplyr**](https://dplyr.tidyverse.org/) package is used to compute the density by using the code chunk below.
+
+```{r}
+mpsz3414 <- mpsz3414 %>%
+  mutate(`PreSch Density` = `PreSch Count`/Area * 1000000)
+```
