@@ -179,3 +179,36 @@ glimpse(listings_sf)
 ```
 
 Table above shows the content of `listing_sf`. A new column called `geometry` has been added into the data frame. The `longitude` and `latitude` columns have been dropped from the data frame.
+
+## **Geoprocessing with sf package**
+
+Besides providing functions to handling (i.e. importing, exporting, assigning projection, transforming projection etc) geospatial data, **sf** package also offers a wide range of geoprocessing (also known as GIS analysis) functions.
+
+In this section, I learned how to perform two commonly used geoprocessing functions, namely [buffering](https://www.gislounge.com/buffers-in-gis/) and point in polygon count.
+
+### **Buffering**
+
+The scenario:
+
+The authority is planning to upgrade the exiting cycling path. To do so, they need to acquire 5 metres of reserved land on the both sides of the current cycling path. You are tasked to determine the extend of the land need to be acquired and their total area.
+
+The solution:
+
+Firstly, [*st_buffer()*](https://r-spatial.github.io/sf/reference/geos_unary.html) of **sf** package is used to compute the 5-meter buffers around cycling paths
+
+```{r}
+buffer_cycling <- st_buffer(cyclingpath, 
+                               dist=5, nQuadSegs = 30)
+```
+
+This is followed by calculating the area of the buffers
+
+```{r}
+buffer_cycling$AREA <- st_area(buffer_cycling)
+```
+
+Lastly, sum() of Base R will be used to derive the total land involved
+
+```{r}
+sum(buffer_cycling$AREA)
+```
