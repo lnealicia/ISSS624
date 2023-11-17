@@ -256,3 +256,42 @@ Next, [*mutate()*](https://dplyr.tidyverse.org/reference/mutate.html) of [**d
 mpsz3414 <- mpsz3414 %>%
   mutate(`PreSch Density` = `PreSch Count`/Area * 1000000)
 ```
+
+## **Explorotary Data Analysis (EDA)**
+
+Many geospatial analytics start with Exploratory Data Analysis. In this section, I learned how to use appropriate [ggplot2](https://ggplot2.tidyverse.org/) functions to create functional statistical graphs for EDA purposes.
+
+Firstly, we will plot a histogram to reveal the distribution of `PreSch Density`.
+
+```{r}
+hist(mpsz3414$`PreSch Density`)
+```
+
+gg2plot function
+
+```{r}
+ggplot(data=mpsz3414, 
+       aes(x= as.numeric(`PreSch Density`)))+
+  geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue") +
+  labs(title = "Are pre-school even distributed in Singapore?",
+       subtitle= "There are many planning sub-zones with a single pre-school, on the other hand, \nthere are two planning sub-zones with at least 20 pre-schools",
+      x = "Pre-school density (per km sq)",
+      y = "Frequency")
+```
+
+The solution:
+
+```{r}
+ggplot(data=mpsz3414, 
+       aes(y = `PreSch Count`, 
+           x= as.numeric(`PreSch Density`)))+
+  geom_point(color="black", 
+             fill="light blue") +
+  xlim(0, 40) +
+  ylim(0, 40) +
+  labs(title = "",
+      x = "Pre-school density (per km sq)",
+      y = "Pre-school count")
+```
