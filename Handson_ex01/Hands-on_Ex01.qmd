@@ -134,3 +134,19 @@ Let us perform the projection transformation by using the code chunk below.
 preschool3414 <- st_transform(preschool, 
                               crs = 3414)
 ```
+
+## **Importing and Converting An Aspatial Data**
+
+### **Importing the aspatial data**
+
+Since `listings` data set is in csv file format, we will use [*read_csv()*](https://readr.tidyverse.org/reference/read_delim.html) of **readr** package to import `listing.csv` as shown the code chunk below. The output R object is called `listings` and it is a [tibble data frame](https://r4ds.had.co.nz/tibbles.html).
+
+```{r}
+listings <- read_csv("data/aspatial/listings.csv")
+```
+
+After importing the data file into R, it is important for us to examine if the data file has been imported correctly
+
+```{r}
+list(listings) 
+```
