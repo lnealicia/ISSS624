@@ -89,3 +89,48 @@ Alternatively, we can also choose the plot the sf object by using a specific att
 ```{r}
 plot(mpsz["PLN_AREA_N"])
 ```
+
+## **Working with Projection**
+
+Map projection is an important property of a geospatial data. In order to perform geoprocessing using two geospatial data, both geospatial data need to be projected using similar coordinate system.
+
+In this section, I learned how to project a simple feature data frame from one coordinate system to another coordinate system aka **projection transformation**.
+
+### **Assigning EPSG code to a simple feature data frame**
+
+One of the common issue that can happen during importing geospatial data into R is that the coordinate system of the source data was either missing (such as due to missing .proj for ESRI shapefile) or wrongly assigned during the importing process.
+
+This is an example the coordinate system of `mpsz` simple feature data frame by using *st_crs()* of *sf* package as shown in the code chunk below.
+
+```{r}
+st_crs(mpsz)
+```
+
+Although `mpsz` data frame is projected in svy21 but when we read until the end of the print, it indicates that the EPSG is 9001. This is a wrong EPSG code because the correct EPSG code for svy21 should be [3414](https://epsg.io/3414).
+
+In order to assign the correct EPSG code to `mpsz` data frame, *st_set_crs()* of **sf** package is used as shown in the code chunk below.
+
+```{r}
+mpsz3414 <- st_set_crs(mpsz, 3414)
+```
+
+Now, let us check the CSR again by using the code chunk below.
+
+```{r}
+st_crs(mpsz3414)
+```
+
+Notice that the EPSG code is 3414 now.
+
+### **Transforming the projection of preschool from wgs84 to svy21.**
+
+In geospatial analytics, it is very common to transform the original data from geographic coordinate system to projected coordinate system. This is because geographic coordinate system is not appropriate if the analysis need to use distance or/and area measurements.
+
+This is a scenario that *st_set_crs()* is not appropriate and *st_transform()* of sf package should be used. This is because we need to reproject `preschool` from one coordinate system to another coordinate system mathemetically.
+
+Let us perform the projection transformation by using the code chunk below.
+
+```{r}
+preschool3414 <- st_transform(preschool, 
+                              crs = 3414)
+```
