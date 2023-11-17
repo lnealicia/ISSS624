@@ -69,3 +69,23 @@ Sometimes we would like to reveal complete information of a feature object, this
 ```{r}
 head(mpsz, n=5)  
 ```
+
+## **Plotting the Geospatial Data**
+
+In geospatial data science, we are also interested to visualise the geospatial features.
+
+```{r}
+plot(mpsz)
+```
+
+The default plot of an sf object is a multi-plot of all attributes, up to a reasonable maximum as shown above. We can, however, choose to plot only the geometry by using the code chunk below.
+
+```{r}
+plot(st_geometry(mpsz))
+```
+
+Alternatively, we can also choose the plot the sf object by using a specific attribute as shown in the code chunk below.
+
+```{r}
+plot(mpsz["PLN_AREA_N"])
+```
