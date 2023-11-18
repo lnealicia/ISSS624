@@ -3,11 +3,11 @@ title: "Hands-on Exercise 1: Geospatial Data Wrangling with R"
 date: "17 Novemeber 2023"
 date-modified: "last-modified"
 format: html
-execute: 
-  echo:true
-  eval:true
+execute:
+  echo: true
+  eval: true
   warning: false
-editor:visual
+editor: visual
 ---
 
 ## Overview

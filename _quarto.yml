@@ -4,15 +4,15 @@ project:
 website:
   title: "ISSS624"
   navbar:
-    left: 
+    left:
       - text: Hands-on Exercises
-        menu: 
+        menu:
           - text: Hands-on Exercise 1 (part i)
             href: Handson_ex01/Hands-on_Ex01.html
           - text: Hands-on Exercise 1 (part ii)
             href: Handson_ex01/Hands-on_Ex01_2.html
       - text: In-class Exercise
-        menu: 
+        menu:
           - text: In-class Exercise 1
             href: Inclass_ex1/inclass_ex1.html
       - text: Take-home Exercise
@@ -28,4 +28,3 @@ format:
     toc: true
 
 editor: visual
-
