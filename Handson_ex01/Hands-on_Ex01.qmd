@@ -53,7 +53,7 @@ In this sub-section, I learned different ways to retrieve information related to
 
 ### **Working with *st_geometry()***
 
-The column in the sf data.frame that contains the geometries is a list, of class `sfc`. We can retrieve the geometry list-column using *st_geometry()* as shown in the code chunk below.
+The column in the sf data.frame that contains the geometries is a list, of class `sfc`. The geometry list-column can be retrieved using *st_geometry()* as shown in the code chunk below.
 
 ```{r}
 st_geometry(mpsz)
@@ -61,7 +61,7 @@ st_geometry(mpsz)
 
 ### **Working with glimpse()**
 
-Beside the basic feature information, we also would like to learn more about the associated attribute information in the data frame.
+We can learn more about the associated attribute information in the data frame using *glimpse()*
 
 ```{r}
 glimpse(mpsz)
@@ -71,7 +71,7 @@ glimpse(mpsz)
 
 ### **Working with *head()***
 
-Sometimes we would like to reveal complete information of a feature object, this is the job of [*head()*](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head) of Base R.
+To reveal complete information of a feature object, use [*head()*](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head) of Base R.
 
 ```{r}
 head(mpsz, n=5)  
@@ -121,7 +121,7 @@ In order to assign the correct EPSG code to `mpsz` data frame, *st_set_crs()* of
 mpsz3414 <- st_set_crs(mpsz, 3414)
 ```
 
-Now, let us check the CSR again by using the code chunk below.
+Now, let us check the CRS again by using the code chunk below.
 
 ```{r}
 st_crs(mpsz3414)
@@ -131,7 +131,7 @@ Notice that the EPSG code is 3414 now.
 
 ### **Transforming the projection of preschool from wgs84 to svy21.**
 
-In geospatial analytics, it is very common to transform the original data from geographic coordinate system to projected coordinate system. This is because geographic coordinate system is not appropriate if the analysis need to use distance or/and area measurements.
+In geospatial analytics, it is very common to transform the original data from geographic coordinate system to projected coordinate system. This is because geographic coordinate system is not appropriate if the analysis requires distance or/and area measurements.
 
 This is a scenario that *st_set_crs()* is not appropriate and *st_transform()* of sf package should be used. This is because we need to reproject `preschool` from one coordinate system to another coordinate system mathemetically.
 
@@ -142,7 +142,7 @@ preschool3414 <- st_transform(preschool,
                               crs = 3414)
 ```
 
-## **Importing and Converting An Aspatial Data**
+## **Importing and Converting Aspatial Data**
 
 ### **Importing the aspatial data**
 
@@ -197,7 +197,7 @@ In this section, I learned how to perform two commonly used geoprocessing functi
 
 The scenario:
 
-The authority is planning to upgrade the exiting cycling path. To do so, they need to acquire 5 metres of reserved land on the both sides of the current cycling path. You are tasked to determine the extend of the land need to be acquired and their total area.
+The authority is planning to upgrade the exiting cycling path. To do so, they need to acquire 5m of reserved land on the both sides of the current cycling path. You are tasked to determine the extend of the land need to be acquired and their total area.
 
 The solution:
 
@@ -264,7 +264,7 @@ mpsz3414 <- mpsz3414 %>%
   mutate(`PreSch Density` = `PreSch Count`/Area * 1000000)
 ```
 
-## **Explorotary Data Analysis (EDA)**
+## **Exploratory Data Analysis (EDA)**
 
 Many geospatial analytics start with Exploratory Data Analysis. In this section, I learned how to use appropriate [ggplot2](https://ggplot2.tidyverse.org/) functions to create functional statistical graphs for EDA purposes.
 
@@ -282,8 +282,8 @@ ggplot(data=mpsz3414,
   geom_histogram(bins=20, 
                  color="black", 
                  fill="light blue") +
-  labs(title = "Are pre-school even distributed in Singapore?",
-       subtitle= "There are many planning sub-zones with a single pre-school, on the other hand, \nthere are two planning sub-zones with at least 20 pre-schools",
+  labs(title = "Are pre-schools evenly distributed in Singapore?",
+       subtitle= "There are many planning sub-zones with a single pre-school, and, \nthere are two planning sub-zones with at least 20 pre-schools",
       x = "Pre-school density (per km sq)",
       y = "Frequency")
 ```

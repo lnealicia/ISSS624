@@ -34,12 +34,16 @@ Firstly, we will import the **Passenger Volume by Origin Destination Bus Stops**
 odbus <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
 ```
 
+Match bus stop code to location
+
 ```{r}
 odbus$ORIGIN_PT_CODE <-
 as.factor(odbus$ORIGIN_PT_CODE)
 odbus$DESTINATION_PT_CODE <-
 as.factor(odbus$DESTINATION_PT_CODE)
 ```
+
+Filter out data that belong to trips that occur on "Weekday" and "7-9am"
 
 ```{r}
 
@@ -66,3 +70,5 @@ mpsz <- st_read(dsn = "data/geospatial",
   st_transform(crs = 3414)
 mpsz
 ```
+
+## Visualise Data
