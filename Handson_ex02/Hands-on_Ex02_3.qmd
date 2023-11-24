@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Exercise 2: Global Measures of Spatial Autocorrelation"
+title: "Hands-on Exercise 2: Local Measures of Spatial Autocorrelation"
 date: "24 Novemeber 2023"
 date-modified: "last-modified"
 format: html
@@ -12,7 +12,7 @@ editor: visual
 
 ## Overview
 
-In this hands-on exercise, I learned how to compute Global and Local Measure of Spatial Autocorrelation (GLSA) via **spdep** package.
+In this hands-on exercise, I learned how to compute Global and Local Measure of Spatial Autocorrelation (GLSA) by using **spdep** package.
 
 -   import geospatial data using appropriate function(s) of **sf** package,
 
@@ -36,7 +36,7 @@ In this hands-on exercise, I learned how to compute Global and Local Measure of 
 
 -   Hunan province administrative boundary layer at county level. This is a geospatial data set in ESRI shapefile format.
 
--   Hunan_2012.csv: This csv file contains selected Hunan\'s local development indicators in 2012.
+-   Hunan_2012.csv: This csv file contains selected Hunan's local development indicators in 2012.
 
 ## Getting Started
 
@@ -101,10 +101,6 @@ tmap_arrange(equal,
              ncol=2)
 ```
 
-## **Computing Contiguity Spatial Weights**
-
-Use [*poly2nb()*](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries. Note: A "queen" argument taking TRUE/FALSE option can be passed. Default is set to TRUE.
-
 ## **Global Spatial Autocorrelation**
 
 Compute global spatial autocorrelation statistics and to perform spatial complete randomness test for global spatial autocorrelation.
@@ -137,9 +133,9 @@ rswm_q
 
 The input of *nb2listw()* must be an object of class **nb**. The syntax of the function has two major arguments, namely style and zero.poly.
 
-### **Global Spatial Autocorrelation: Moran\'s I**
+### **Global Spatial Autocorrelation: Moran's I**
 
-Perform Moran\'s I statistics testing by using [*moran.test()*](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
+Perform Moran's I statistics testing by using [*moran.test()*](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**.
 
 ```{r}
 moran.test(hunan$GDPPC, 
@@ -150,9 +146,9 @@ moran.test(hunan$GDPPC,
 
 Conclusion: Given the small p-value \< 0.05, we reject the null hypothesis of spatial randomness. Therefore, there is strong evidence that the variable **`hunan$GDPPC`** exhibits positive spatial autocorrelation in relation to the specified spatial weights. Regions with similar values of **`hunan$GDPPC`** are clustered together, suggesting a spatial pattern in the distribution of this variable.
 
-#### Computing Monte Carlo Moran\'s I
+#### Computing Monte Carlo Moran's I
 
-Perform permutation test for Moran\'s I statistic by using [*moran.mc()*](https://r-spatial.github.io/spdep/reference/moran.mc.html) of **spdep**. A total of 1000 simulation will be performed.
+Perform permutation test for Moran's I statistic by using [*moran.mc()*](https://r-spatial.github.io/spdep/reference/moran.mc.html) of **spdep**. A total of 1000 simulation will be performed.
 
 ```{r}
 set.seed(1234)
@@ -166,7 +162,7 @@ bperm
 
 Conclusion: Given the small p-value \< 0.05, we reject the null hypothesis of spatial randomness. Therefore, there is strong evidence that the variable **`hunan$GDPPC`** exhibits positive spatial autocorrelation in relation to the specified spatial weights. Regions with similar values of **`hunan$GDPPC`** are clustered together, suggesting a spatial pattern in the distribution of this variable.
 
-#### Visualising Monte Carlo Moran\'s I
+#### Visualising Monte Carlo Moran's I
 
 Plotting the distribution of the statistical values as a histogram
 
@@ -187,17 +183,11 @@ abline(v=0,
 
 Conclusion: The statistical observation suggests that the observed spatial autocorrelation in the variable **`hunan$GDPPC`** is unlikely to be due to random chance, as indicated by its position (red line) in the distribution of simulated Moran I values.
 
-Average neighbouring income values for each country
+### **Global Spatial Autocorrelation: Geary's**
 
-```{r}
-head(hunan)
-```
+Perform Geary's c statistics testing by using appropriate functions of **spdep** package
 
-### **Global Spatial Autocorrelation: Geary\'s**
-
-Perform Geary\'s c statistics testing by using appropriate functions of **spdep** package
-
-#### Geary\'s C test
+#### Geary's C test
 
 ```{r}
 geary.test(hunan$GDPPC, listw=rswm_q)
@@ -205,9 +195,9 @@ geary.test(hunan$GDPPC, listw=rswm_q)
 
 Conclusion: Given that the p-value is \<0.05, we reject the null hypothesis of syatial randomness. The small p-value indicates that the observed Geary C statistic is statistically significant, providing evidence that there is positive spatial autocorrelation in the variable `hunan$GDPPC` with respect to the specified spatial weights (`rswm_q`). The spatial pattern observed is unlikely to have occurred by random chance alone.
 
-#### Computing Monte Carlo Geary\'s C
+#### Computing Monte Carlo Geary's C
 
-Performs permutation test for Geary\'s C statistic by using [*geary.mc()*](https://r-spatial.github.io/spdep/reference/geary.mc.html) of **spdep**.
+Performs permutation test for Geary's C statistic by using [*geary.mc()*](https://r-spatial.github.io/spdep/reference/geary.mc.html) of **spdep**.
 
 ```{r}
 set.seed(1234)
@@ -219,7 +209,7 @@ bperm
 
 Conclusion: Given that the p-value is \<0.05, we reject the null hypothesis of syatial randomness. The small p-value indicates that the observed Geary C statistic is statistically significant, providing evidence that there is positive spatial autocorrelation in the variable `hunan$GDPPC` with respect to the specified spatial weights (`rswm_q`). The spatial pattern observed is unlikely to have occurred by random chance alone.
 
-#### Visualising the Monte Carlo Geary\'s C
+#### Visualising the Monte Carlo Geary's C
 
 Plot a histogram to reveal the distribution of the simulated values
 
@@ -238,11 +228,11 @@ Conclusion: The statistical observation suggests that the observed spatial autoc
 
 ## **Spatial Correlogram**
 
-Spatial correlograms show how correlated are pairs of spatial observations when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran\'s I or Geary\'s c) against distance. Useful as an exploratory and descriptive tool.
+Spatial correlograms show how correlated are pairs of spatial observations when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran's I or Geary's c) against distance. Useful as an exploratory and descriptive tool.
 
-### **Compute Moran\'s I correlogram**
+### **Compute Moran's I correlogram**
 
-sp.correlogram() of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran\'s I. The **plot()** of base Graph is then used to plot the output.
+sp.correlogram() of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran's I. The **plot()** of base Graph is then used to plot the output.
 
 ```{r}
 MI_corr <- sp.correlogram(wm_q, 
@@ -261,9 +251,9 @@ print(MI_corr)
 
 The spatial correlogram suggests that there is positive spatial autocorrelation in the variable **`hunan$GDPPC`** across different distance classes, and this autocorrelation is statistically significant. The pattern is not likely to be due to random chance alone.
 
-### **Compute Geary\'s C correlogram and plot**
+### **Compute Geary's C correlogram and plot**
 
-*sp.correlogram()* of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary\'s C. The **plot()** of base Graph is then used to plot the output.
+*sp.correlogram()* of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary's C. The **plot()** of base Graph is then used to plot the output.
 
 ```{r}
 GC_corr <- sp.correlogram(wm_q, 
