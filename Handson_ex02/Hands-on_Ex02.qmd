@@ -18,7 +18,7 @@ In this hands-on exercise, I learned geospatial statistical methods for measurin
 
 -   Hunan county boundary layer. This is a geospatial data set in ESRI shapefile format.
 
--   Hunan_2012.csv: This csv file contains selected Hunan\'s local development indicators in 2012.
+-   Hunan_2012.csv: This csv file contains selected Hunan's local development indicators in 2012.
 
 ## Getting Started
 
@@ -286,7 +286,7 @@ ids
 
 ### **Row-standardised weights matrix**
 
-Assign weights to each neighboring polygon. Below, each neighboring polygon will be assigned equal weight (style=\"W\").
+Assign weights to each neighboring polygon. Below, each neighboring polygon will be assigned equal weight (style="W").
 
 This is done via assigning the fraction 1/ (# of neighbours) to each neighbouring country then adding up the weighted income values.
 
@@ -299,13 +299,13 @@ rswm_q
 
 Note: The zero.policy=TRUE option allows for lists of non-neighbors. This should be used with caution since the user may not be aware of missing neighbors in their dataset however, a zero.policy of FALSE would return an error.
 
-To see the weight of the first polygon\'s eight neighbors:
+To see the weight of the first polygon's eight neighbors:
 
 ```{r}
 rswm_q$weights[10]
 ```
 
-Each neighbor is assigned a 0.125 of the total weight. This means that when R computes the average neighboring income values, each neighbor\'s income will be multiplied by 0.2 before being tallied.
+Each neighbor is assigned a 0.125 of the total weight. This means that when R computes the average neighboring income values, each neighbor's income will be multiplied by 0.2 before being tallied.
 
 Using the same method, we can also derive a row standardised distance weight matrix.
 

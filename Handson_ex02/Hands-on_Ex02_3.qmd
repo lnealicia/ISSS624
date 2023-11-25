@@ -28,7 +28,7 @@ In this hands-on exercise, I learned how to compute Global and Local Measure of 
 
 -   compute Local Indicator of Spatial Association (LISA) statistics for detecting clusters and outliers by using appropriate functions **spdep** package;
 
--   compute Getis-Ord\'s Gi-statistics for detecting hot spot or/and cold spot area by using appropriate functions of **spdep** package; and
+-   compute Getis-Ord's Gi-statistics for detecting hot spot or/and cold spot area by using appropriate functions of **spdep** package; and
 
 -   to visualise the analysis output by using **tmap** package.
 

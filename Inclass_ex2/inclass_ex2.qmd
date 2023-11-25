@@ -12,180 +12,123 @@ editor: visual
 
 ## Getting Started
 
-The code chunk below loads the following packages:
-
--   tmap: for thematic mapping
-
--   sf: for geospatial data handling
-
--   tidyverse: for non-spatial data handling
-
 ```{r}
-pacman::p_load(tmap,sf,tidyverse,knitr,h3jsr)
+pacman::p_load(tmap,sf,sfdep,tidyverse,knitr, plotly,zoo,kendall)
 ```
 
-## Preparing the Flow Data
+## The Data
 
-### Importing the OD data
+### Importing the data
 
-Firstly, we will import the **Passenger Volume by Origin Destination Bus Stops** data set downloaded from LTA DataMall by using read_csv() of **readr** package.
+-   Hunan, a geospatial data set in ESRI shapefile format
+
+-   Hunan_2012, an attribute data set in csv format
 
 ```{r}
-odbus <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
+hunan <- st_read(dsn = "data/geospatial", layer = "Hunan")
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
 ```
 
-Check odbus tibble data frame that values in OROGIN_PT_CODE and DESTINATION_PT_CODE are in numeric data type.
+Combine both data frames
 
 ```{r}
-glimpse(odbus)
+hunan_GDPPC <- left_join(hunan,hunan2012) %>%
+  select(1:4, 7, 15)
 ```
 
-Origin & Destination Bus Stop Code
+## **Computing Contiguity Spatial Weights**
+
+Use [*poly2nb()*](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries. Note: A "queen" argument taking TRUE/FALSE option can be passed. Default is set to TRUE.
+
+### **Computing (QUEEN) contiguity based neighbours**
 
 ```{r}
-odbus$ORIGIN_PT_CODE <-
-as.factor(odbus$ORIGIN_PT_CODE)
-odbus$DESTINATION_PT_CODE <-
-as.factor(odbus$DESTINATION_PT_CODE)
+wm_q <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb, style = "W"),
+         .before = 1)
+        
 ```
 
-### Extracting the Study Data
+## **Global Spatial Autocorrelation**
 
-Filter out data that belong to trips that occur on "Weekday" and "7-9am"
+Compute global spatial autocorrelation statistics and to perform spatial complete randomness test for global spatial autocorrelation.
+
+### **Computing local Moran's I**
+
+Local Moran's I of GDPPC at country level
 
 ```{r}
-
-origin7_9 <- odbus %>%
-  filter(DAY_TYPE == "WEEKDAY") %>%
-  filter(TIME_PER_HOUR >= 7 &
-           TIME_PER_HOUR <= 9) %>%
-  group_by(ORIGIN_PT_CODE) %>%
-  summarise(TRIPS = sum(TOTAL_TRIPS))
+lisa <- wm_q %>%
+  mutate(local_moran = local_moran(
+    GDPPC, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_moran)
 ```
 
-Check data table
+## Time Series Cube
 
 ```{r}
-kable(head(origin7_9)) 
+GDPPC <- read_csv("data/aspatial/Hunan_GDPPC.csv")
 ```
 
-Output saved in rds format for future use
-
 ```{r}
-write_rds(origin7_9, "data/rds/origin7_9.rds")
+
+GDPPC_st <- spacetime(GDPPC, hunan, 
+                      .loc_col = "County",
+                      .time_col = "Year")
+is_spacetime_cube(GDPPC)
 ```
 
-Import the rds file into R environment
-
 ```{r}
-origin7_9 <- read_rds("data/rds/origin7_9.rds")
+GDPPC_nb <- GDPPC_st %>%
+  activate("geometry") %>%
+  mutate(nb = include_self(st_contiguity(geometry)),
+         wt = st_inverse_distance(nb,geometry,
+                                  scale = 1,
+                                  alpha=1),
+         .before = 1) %>%
+  set_nbs("nb") %>%
+  set_wts("wt")
 ```
 
-## Working with Geospatial Data
-
-Two geospatial data (shapefile) will be used for this exercise:
-
--   BusStop: Provides location of bus stop as at Q4 2022
-
--   MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019
-
-### Importing geospatial data
+## Computing Gi\*
 
 ```{r}
-busstop <- st_read(dsn = "Data/geospatial",
-                   layer = "BusStop") %>%
-  st_transform(crs = 3414)
-
+gi_stars <- GDPPC_nb %>%
+  group_by(Year) %>%
+  mutate(gi_star = local_gstar_perm(
+    GDPPC, nb, wt)) %>%
+  tidyr::unnest(gi_star)
 ```
 
-Check structure of `busstop` sf tibble data frame
+## Emerging Hot Spots
 
 ```{r}
-glimpse(busstop)
+
+ehsa <- emerging_hotspot_analysis(
+  x = GDPPC_st,
+  .var = "GDPPC",
+  k = 1,
+  nsim = 99
+)
+
+hunan_ehsa <- hunan %>%
+  left_join(ehsa,
+            by = join_by(County==location))
 ```
 
-Repeat for MPSZ
+### Visualising the distribution of EHSA classes
 
 ```{r}
-mpsz <- st_read(dsn = "data/geospatial",
-                layer = "MPSZ-2019") %>%
-  st_transform(crs = 3414)
-```
+ehsa_sig <- hunan_ehsa %>%
+  filter(p_value < 0.05)
 
-Check structure of `mpsz` sf tibble data frame
-
-```{r}
-glimpse(mpsz)
-```
-
-## Geospatial Data Wrangling
-
-## Combining Busstop & mpsz
-
-```{r}
-busstop_mpsz <- st_intersection(busstop, mpsz) %>%
-  select(BUS_STOP_N, SUBZONE_C) %>%
-  st_drop_geometry()
-```
-
-Save output into rds format
-
-```{r}
-write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")  
-```
-
-Append the planning subzone code from busstop_mpsz onto odbus7_9 data frame.
-
-```{r}
-origin_data <- left_join(origin7_9 , busstop_mpsz,
-            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
-  rename(ORIGIN_BS = ORIGIN_PT_CODE,
-         ORIGIN_SZ = SUBZONE_C)
-```
-
-Check for duplicate records
-
-```{r}
-duplicate <- origin_data %>%
-  group_by_all() %>%
-  filter(n()>1) %>%
-  ungroup()
-```
-
-Retain unique records only
-
-```{r}
-origin_data <- unique(origin_data)
-```
-
-Update ob_data with the planning subzone codes
-
-```{r}
-mpsz_origtrip <- left_join(mpsz, 
-                           origin_data,
-                           by = c("SUBZONE_C" = "ORIGIN_SZ"))
-```
-
-## **Choropleth Visualisation**
-
-Choropleth map showing the distribution of passenger trips at planning sub-zone level.
-
-```{r}
-tm_shape(mpsz_origtrip)+
-  tm_fill("TRIPS", 
-          style = "quantile", 
-          palette = "Blues",
-          title = "Passenger trips") +
-  tm_layout(main.title = "Passenger trips generated at planning sub-zone level",
-            main.title.position = "center",
-            main.title.size = 1.2,
-            legend.height = 0.45, 
-            legend.width = 0.35,
-            frame = TRUE) +
+tmap_mode("plot")
+tm_shape(hunan_ehsa) +
+  tm_polygons +
   tm_borders(alpha = 0.5) +
-  tm_compass(type="8star", size = 2) +
-  tm_scale_bar() +
-  tm_grid(alpha =0.2) +
-  tm_credits("Source: Planning Sub-zone boundary from URA\n and Passenger trips data from LTA", 
-             position = c("left", "bottom"))
+tm_shape(ehsa_sig) +
+  tm_fill("classification") +
+  tm_borders(alpha = 0.4)
 ```
