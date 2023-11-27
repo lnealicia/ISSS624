@@ -1,0 +1,276 @@
+---
+title: "Take Home Exercise 1"
+date: "27 Novemeber 2023"
+date-modified: "last-modified"
+format: html
+execute:
+  echo: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+## Getting Started
+
+```{r}
+pacman::p_load(tmap,sf,tidyverse,knitr,h3jsr,dplyr, mapview)
+```
+
+## Preparing the Flow Data
+
+### Importing the OD data
+
+Firstly, we will import the **Passenger Volume by Origin Destination Bus Stops** data set downloaded from LTA DataMall by using read_csv() of **readr** package.
+
+```{r}
+odbus <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
+```
+
+Check odbus tibble data frame that values in OROGIN_PT_CODE and DESTINATION_PT_CODE are in numeric data type.
+
+```{r}
+glimpse(odbus)
+```
+
+Origin & Destination Bus Stop Code
+
+```{r}
+odbus$ORIGIN_PT_CODE <-
+as.factor(odbus$ORIGIN_PT_CODE)
+odbus$DESTINATION_PT_CODE <-
+as.factor(odbus$DESTINATION_PT_CODE)
+```
+
+### Extracting the Study Data
+
+Filter out data that belong to trips that occur on:
+
+-   "Weekday" and "6-9am" (wdmp)
+
+    ```{r}
+    wdmp <-  odbus %>%
+      filter(DAY_TYPE == "WEEKDAY") %>%
+      filter(TIME_PER_HOUR >= 6 &
+               TIME_PER_HOUR <= 9) %>%
+      group_by(ORIGIN_PT_CODE) %>%
+      summarise(TRIPS = sum(TOTAL_TRIPS))
+    ```
+
+-   "Weekday" and "5-8pm" (wdap)
+
+    ```{r}
+    wdap <-  odbus %>%
+      filter(DAY_TYPE == "WEEKDAY") %>%
+      filter(TIME_PER_HOUR >= 17 &
+               TIME_PER_HOUR <= 20) %>%
+      group_by(ORIGIN_PT_CODE) %>%
+      summarise(TRIPS = sum(TOTAL_TRIPS))
+    ```
+
+-   "Weekends/Holiday" and "11am-2pm" (hmp)
+
+    ```{r}
+    hmp <- odbus %>%
+      filter(DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
+      filter(TIME_PER_HOUR >= 11 &
+               TIME_PER_HOUR <= 14) %>%
+      group_by(ORIGIN_PT_CODE) %>%
+      summarise(TRIPS = sum(TOTAL_TRIPS))
+    ```
+
+-   "Weekends/Holiday" and "4pm-7pm" (hep)
+
+    ```{r}
+    hep <- odbus %>%
+      filter(DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
+      filter(TIME_PER_HOUR >= 16 &
+               TIME_PER_HOUR <= 19) %>%
+      group_by(ORIGIN_PT_CODE) %>%
+      summarise(TRIPS = sum(TOTAL_TRIPS))
+    ```
+
+Check resulting data tables
+
+```{r}
+kable(head(wdmp)) 
+kable(head(wdap)) 
+kable(head(hmp)) 
+kable(head(hep))
+```
+
+Output saved in rds format for future use
+
+```{r}
+write_rds(wdmp, "data/rds/wdmp.rds") 
+write_rds(wdap, "data/rds/wdap.rds") 
+write_rds(hmp, "data/rds/hmp.rds") 
+write_rds(hep, "data/rds/hep.rds")
+```
+
+Import the rds file into R environment
+
+```{r}
+wdmp <- read_rds("data/rds/wdmp.rds") 
+wdap <- read_rds("data/rds/wdap.rds") 
+hmp <- read_rds("data/rds/hmp.rds") 
+hep <- read_rds("data/rds/hmp.rds")
+```
+
+## Working with Geospatial Data
+
+Two geospatial data (shapefile) will be used for this exercise:
+
+-   BusStop: Provides location of bus stop as at Q4 2022
+
+-   MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019
+
+### Importing geospatial data
+
+```{r}
+busstop <- st_read(dsn = "Data/geospatial",
+                   layer = "BusStop") %>%
+  st_transform(crs = 3414)
+
+mpsz <- st_read(dsn = "data/geospatial",
+                layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+```
+
+Check structure of `busstop` and `MPSZ`  sf tibble data frame
+
+```{r}
+glimpse(busstop)
+glimpse(mpsz)
+```
+
+## Geospatial Data Wrangling
+
+## Combining Busstop & mpsz
+
+```{r}
+busstop_mpsz <- st_intersection(busstop, mpsz) %>%
+  select(BUS_STOP_N, SUBZONE_C) %>%
+  st_drop_geometry()
+```
+
+Save output into rds format
+
+```{r}
+write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")
+```
+
+Each data frame will have the planning subzone code appended to it, and only unique records will be retained.
+
+-   Weekday Morning Peak
+
+    ```{r}
+    wdmp_c <- left_join(wdmp , busstop_mpsz,
+                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+      
+      rename(ORIGIN_BS = ORIGIN_PT_CODE,
+             ORIGIN_SZ = SUBZONE_C) 
+
+    duplicate <- wdmp_c %>%
+      group_by_all() %>%
+      filter(n()>1) %>%
+      ungroup() 
+
+    wdmp_o <- unique(wdmp_c)
+    ```
+
+-   Weekday Afternoon Peak
+
+    ```{r}
+    wdap_c <- left_join(wdap , busstop_mpsz,
+                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+      
+      rename(ORIGIN_BS = ORIGIN_PT_CODE,
+             ORIGIN_SZ = SUBZONE_C) 
+
+    duplicate <- wdap_c %>%
+      group_by_all() %>%
+      filter(n()>1) %>%
+      ungroup()  
+
+    wdap_o <- unique(wdap_c)
+    ```
+
+-   Weekends/Holiday Morning Peak
+
+    ```{r}
+    hmp_c <- left_join(hmp , busstop_mpsz,
+                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+      
+      rename(ORIGIN_BS = ORIGIN_PT_CODE,
+             ORIGIN_SZ = SUBZONE_C) 
+
+    duplicate <- hmp_c %>%
+      group_by_all() %>%
+      filter(n()>1) %>%
+      ungroup() 
+
+    hmp_o <- unique(hmp_c)
+    ```
+
+-   Weekends/Holiday Evening Peak
+
+    ```{r}
+    hep_c <- left_join(hep , busstop_mpsz,
+                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+      
+      rename(ORIGIN_BS = ORIGIN_PT_CODE,
+             ORIGIN_SZ = SUBZONE_C) 
+
+    duplicate <- hep_c %>%
+      group_by_all() %>%
+      filter(n()>1) %>%
+      ungroup() 
+
+    hep_o <- unique(hep_c)
+    ```
+
+Update data with the planning subzone codes
+
+```{r}
+mpsz_wdmp_o <- left_join(mpsz, 
+                       wdmp_o,
+                       by = c("SUBZONE_C" = "ORIGIN_SZ"))
+
+mpsz_wdap_o <- left_join(mpsz, 
+                       wdap_o,
+                       by = c("SUBZONE_C" = "ORIGIN_SZ"))
+
+mpsz_hmp_o <- left_join(mpsz, 
+                      hmp_o,
+                      by = c("SUBZONE_C" = "ORIGIN_SZ"))
+
+mpsz_hep_o <- left_join(mpsz, 
+                      hep_o,
+                      by = c("SUBZONE_C" = "ORIGIN_SZ"))
+
+
+```
+
+## **Choropleth Visualisation**
+
+Choropleth map showing the distribution of passenger trips at planning sub-zone level.
+
+```{r}
+tm_shape(mpsz_hep_o)+
+  tm_fill("TRIPS", 
+          style = "quantile", 
+          palette = "Greens",
+          title = "Passenger trips") +
+  tm_layout(main.title = "Passenger trips generated at planning sub-zone level",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2) +
+  tm_credits("Source: Planning Sub-zone boundary from URA\n and Passenger trips data from LTA", 
+             position = c("left", "bottom"))
+```
