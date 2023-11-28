@@ -251,26 +251,190 @@ mpsz_hep_o <- left_join(mpsz,
 
 ```
 
-## **Choropleth Visualisation**
+## **Choropleth Visualisation (Hexagon Grid)**
 
-Choropleth map showing the distribution of passenger trips at planning sub-zone level.
+Choropleth map showing the distribution of passenger trips
+
+**Weekday Morning Peak 6am-9am**
+
+Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
 
 ```{r}
-tm_shape(mpsz_hep_o)+
-  tm_fill("TRIPS", 
-          style = "quantile", 
-          palette = "Greens",
-          title = "Passenger trips") +
-  tm_layout(main.title = "Passenger trips generated at planning sub-zone level",
-            main.title.position = "center",
-            main.title.size = 1.2,
-            legend.height = 0.45, 
-            legend.width = 0.35,
-            frame = TRUE) +
-  tm_borders(alpha = 0.5) +
-  tm_compass(type="8star", size = 2) +
-  tm_scale_bar() +
-  tm_grid(alpha =0.2) +
-  tm_credits("Source: Planning Sub-zone boundary from URA\n and Passenger trips data from LTA", 
-             position = c("left", "bottom"))
+area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+
+# To sf and add grid ID
+honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
+  # add grid ID
+  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+
+# count number of points in each hexagon
+
+honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_wdmp_o))
+
+# remove heaxgons that have no points in side it
+honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+```
+
+Plot the Choropleth map
+
+```{r}
+tmap_mode("view")
+
+map_honeycomb = tm_shape(honeycomb_count) +
+  tm_fill(
+    col = "trips",
+    palette = "Blues",
+    style = "cont",
+    title = "Total Trips Taken - Weekday Morning Peak 6-9am",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "trips"
+    ),
+    popup.format = list(
+      trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.2)
+
+map_honeycomb
+```
+
+**Weekday Afternoon Peak 5pm-8pm**
+
+Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+
+```{r}
+area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+
+# To sf and add grid ID
+honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
+  # add grid ID
+  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+
+# count number of points in each hexagon
+
+honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_wdap_o))
+
+# remove heaxgons that have no points in side it
+honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+```
+
+Plot the Choropleth map
+
+```{r}
+tmap_mode("view")
+
+map_honeycomb = tm_shape(honeycomb_count) +
+  tm_fill(
+    col = "trips",
+    palette = "Blues",
+    style = "cont",
+    title = "Total Trips Taken - Weekday Afternoon Peak 5pm-8pm",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "trips"
+    ),
+    popup.format = list(
+      trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.2)
+
+map_honeycomb
+```
+
+**Weekend/Holiday Morning Peak** **11am-2pm**
+
+Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+
+```{r}
+area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+
+# To sf and add grid ID
+honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
+  # add grid ID
+  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+
+# count number of points in each hexagon
+
+honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_hmp_o))
+
+# remove heaxgons that have no points in side it
+honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+```
+
+Plot the Choropleth map
+
+```{r}
+tmap_mode("view")
+
+map_honeycomb = tm_shape(honeycomb_count) +
+  tm_fill(
+    col = "trips",
+    palette = "Blues",
+    style = "cont",
+    title = "Total Trips Taken - Weekend/Holiday Morning Peak 11am-2pm",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "trips"
+    ),
+    popup.format = list(
+      trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.2)
+
+map_honeycomb
+```
+
+**Weekend/Holiday Evening Peak 4pm-7pm**
+
+Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+
+```{r}
+area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+
+# To sf and add grid ID
+honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
+  # add grid ID
+  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+
+# count number of points in each hexagon
+
+honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_hep_o))
+
+# remove heaxgons that have no points in side it
+honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+```
+
+Plot the Choropleth map
+
+```{r}
+tmap_mode("view")
+
+map_honeycomb = tm_shape(honeycomb_count) +
+  tm_fill(
+    col = "trips",
+    palette = "Blues",
+    style = "cont",
+    title = "Total Trips Taken - Weekend/Holiday Evening Peak 4pm-7pm",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "trips"
+    ),
+    popup.format = list(
+      trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.2)
+
+map_honeycomb
 ```
