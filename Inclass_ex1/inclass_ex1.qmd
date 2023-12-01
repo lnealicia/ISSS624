@@ -139,6 +139,7 @@ Append the planning subzone code from busstop_mpsz onto odbus7_9 data frame.
 ```{r}
 origin_data <- left_join(origin7_9 , busstop_mpsz,
             by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  
   rename(ORIGIN_BS = ORIGIN_PT_CODE,
          ORIGIN_SZ = SUBZONE_C)
 ```
@@ -158,7 +159,7 @@ Retain unique records only
 origin_data <- unique(origin_data)
 ```
 
-Update ob_data with the planning subzone codes
+Update data with the planning subzone codes
 
 ```{r}
 mpsz_origtrip <- left_join(mpsz, 
