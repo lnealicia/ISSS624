@@ -530,7 +530,7 @@ tm_shape(total_trips_by_grid_hep_sf) +
 ::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
 Weekend/Holiday Evening Peak 4pm-7pm
 
-This timeslot has a total of 7,738,503 trips taken. It ranks third by total volume of trips among our time periods of interest. The median number of trips per hexagon is 671.
+This timeslot has a total of 7,721,570 trips taken. It ranks fourth (i.e. last) by total volume of trips among our time periods of interest. The median number of trips per hexagon is 631.
 
 Hexagons with greater number of trips are located near:
 
@@ -653,33 +653,129 @@ Computed to perform spatial complete randomness test for global spatial autocorr
 
 Use poly2nb() of spdep package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.
 
+#### **Weekday Morning Peak 6am-9am**
+
 ```{r}
-wm_q <- poly2nb(total_trips_by_grid_sf, 
+wm_wdmp <- poly2nb(total_trips_by_grid_wdmp_sf, 
                 queen=TRUE)
-summary(wm_q)
+summary(wm_wdmp)
+```
+Note: The summary report above shows that there are 1490 hexagons considered for Weekday Morning Peak 6am-9am. The most connected hexagon has 6 neighbours. There are 43 hexagons with only 1 neighbour.
+
+#### **Weekday Afternoon Peak 5pm-8pm**
+
+```{r}
+wm_wdap <- poly2nb(total_trips_by_grid_wdap_sf, 
+                queen=TRUE)
+summary(wm_wdap)
+```
+Note: The summary report above shows that there are 1491 hexagons considered for Weekday Afternoon Peak 5pm-8pm, 1 more than Weekday Morning Peak 6am-9am. Similar to Weekday Morning Peak 6am-9am, the most connected hexagon has 6 neighbours and there are 43 hexagons with only 1 neighbour.
+
+#### **Weekend/Holiday Morning Peak 11am-2pm**
+
+```{r}
+wm_hmp <- poly2nb(total_trips_by_grid_hmp_sf, 
+                queen=TRUE)
+summary(wm_hmp)
+```
+Note: The summary report above shows that there are 1499 hexagons considered for Weekend/Holiday Morning Peak 11am-2pm, the highest number among the time periods of interests. Similar to Weekday Morning Peak 6am-9am, the most connected hexagon has 6 neighbours, but there are 45 hexagons with only 1 neighbour. 2 more than Weekday Morning Peak 6am-9am and Weekday Afternoon Peak 5pm-8pm.
+
+#### **Weekend/Holiday Evening Peak 4pm-7pm**
+
+```{r}
+wm_hep <- poly2nb(total_trips_by_grid_hep_sf, 
+                queen=TRUE)
+summary(wm_hep)
 ```
 
-Note: The summary report above shows that there are 1490 hexagons in Singapore. The most connected hexagon has 6 neighbours. There are two area units with 43 neighbours.
+Note: The summary report above shows that there are 1489 hexagons considered for Weekend/Holiday Evening Peak 4pm-7pm, second to Weekend/Holiday Morning Peak 11am-2pm. Similar to other time periods of interest, the most connected hexagon has 6 neighbours, but there are 44 hexagons with only 1 neighbour. 1 less than Weekend/Holiday Morning Peak 11am-2pm.
 
 ### **Row-standardised weights matrix**
 
 Assign weights to each neighboring polygon
 
 ```{r}
-rswm_q <- nb2listw(wm_q, 
+rswm_wdmp <- nb2listw(wm_wdmp, 
                    style="W", 
                    zero.policy = TRUE)
-rswm_q
+rswm_wdmp
+
+rswm_wdap <- nb2listw(wm_wdap, 
+                   style="W", 
+                   zero.policy = TRUE)
+rswm_wdap
+
+rswm_hmp <- nb2listw(wm_hmp, 
+                   style="W", 
+                   zero.policy = TRUE)
+rswm_hmp
+
+rswm_hep <- nb2listw(wm_hep, 
+                   style="W", 
+                   zero.policy = TRUE)
+rswm_hep
 ```
 
 ### **Computing local Moran's I**
 
+#### **Weekday Morning Peak 6am-9am**
+
 ```{r}
 moran.test(total_trips_by_grid_sf$total_trips, 
-           listw=rswm_q, 
+           listw=rswm_wdmp, 
            zero.policy = TRUE, 
            na.action=na.omit)
 ```
 ::: {.callout-tip title="Statistical Conclusion" style="color: red"}
+ **Weekday Morning Peak 6am-9am**
+
+The Moran's I statistic is significantly different from what would be expected under spatial randomness. The positive Moran's I value and the small p-value (<0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.
+:::
+
+####  **Weekday Afternoon Peak 5pm-8pm**
+
+
+```{r}
+moran.test(total_trips_by_grid_sf$total_trips, 
+           listw=rswm_wdap, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
+```
+::: {.callout-tip title="Statistical Conclusion" style="color: red"}
+  **Weekday Afternoon Peak 5pm-8pm**
+
+
+The Moran's I statistic is significantly different from what would be expected under spatial randomness. The positive Moran's I value and the small p-value (<0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.
+:::
+
+####  **Weekend/Holiday Morning Peak 11am-2pm**
+
+
+```{r}
+moran.test(total_trips_by_grid_sf$total_trips, 
+           listw=rswm_hmp, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
+```
+::: {.callout-tip title="Statistical Conclusion" style="color: red"}
+   **Weekend/Holiday Morning Peak 11am-2pm**
+
+
+The Moran's I statistic is significantly different from what would be expected under spatial randomness. The positive Moran's I value and the small p-value (<0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.
+:::
+
+####  **Weekend/Holiday Evening Peak 4pm-7pm**
+
+
+```{r}
+moran.test(total_trips_by_grid_sf$total_trips, 
+           listw=rswm_hmp, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
+```
+::: {.callout-tip title="Statistical Conclusion" style="color: red"}
+   **Weekend/Holiday Evening Peak 4pm-7pm**
+
+
 The Moran's I statistic is significantly different from what would be expected under spatial randomness. The positive Moran's I value and the small p-value (<0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.
 :::
