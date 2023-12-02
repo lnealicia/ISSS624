@@ -9,11 +9,11 @@ editor: visual
 
 ## **Getting Started**
 
--   sf for importing, integrating, processing and transforming geospatial data.
+-   sf - importing, integrating, processing and transforming geospatial data.
 
--   tidyverse for importing, integrating, wrangling and visualising data.
+-   tidyverse - importing, integrating, wrangling and visualising data.
 
--   tmap for creating thematic maps.
+-   tmap - creating thematic maps.
 
 ```{r}
 pacman::p_load(tmap, sf, sp, DT,
@@ -25,11 +25,11 @@ pacman::p_load(tmap, sf, sp, DT,
 
 The following data will be used:
 
--   *od_data.rds*, weekday morning peak passenger flows at planning subzone level.
+-   *od_data.rds*, weekday morning peak passenger flows at planning subzone level
 
--   *mpsz.rds*, URA Master Plan 2019 Planning Subzone boundary in simple feature tibble data frame format.
+-   *mpsz.rds*, URA Master Plan 2019 Planning Subzone boundary in simple feature tibble data frame format
 
-Beside these two data sets, an additional attribute data file called pop.csv will be provided.
+An additional attribute data file called pop.csv is also used
 
 ### **Importing the mpsz data**
 
@@ -38,100 +38,109 @@ mpsz <- read_rds("data/rds/mpsz.rds")
 mpsz
 ```
 
+Note: mpsz is a tibble dataframe object class
+
 ### **Converting from sf data.table to SpatialPolygonsDataFrame**
 
-First [`as.Spatial()`](https://r-spatial.github.io/sf/reference/coerce-methods.html) will be used to convert *mpsz* from sf tibble data frame to SpatialPolygonsDataFrame of sp object
+ *mpsz*  is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object
 
 ```{r}
 mpsz_sp <- as(mpsz, "Spatial")
 mpsz_sp
 ```
 
+### **Computing the distance matrix**
+
+Euclidean distance between the centroids of the planning subzones
+
 ```{r}
-datatable(mpsz)
+dist <- spDists(mpsz_sp, 
+                longlat = FALSE)
+head(dist, n=c(10, 10))
 ```
 
+Note: Output dist is a matrix object class of R. Column heanders and row headers are also not labeled with the planning subzone codes.
+
+## **Labelling column and row headers of a distance matrix**
+
+Create a list sorted according to the the distance matrix by planning sub-zone code.
+
 ```{r}
-write_rds(odbus6_9, "Data/rds/odbus6_9.rds")
+sz_names <- mpsz$SUBZONE_C
 ```
 
+Attach `SUBZONE_C` to row and column for distance matrix matching
+
 ```{r}
-odbus6_9 <- read_rds("Data/rds/odbus6_9.rds")
+colnames(dist) <- paste0(sz_names)
+rownames(dist) <- paste0(sz_names)
 ```
 
-## **Working with Geospatial Data**
+### **Pivoting distance value by SUBZONE_C**
 
-### **Importing geospatial data**
+Pivot the distance matrix into a long table by using the row and column subzone codes
 
 ```{r}
-busstop <- st_read(dsn = "Data/geospatial",
-                   layer = "BusStop") %>%
-  st_transform(crs = 3414)
+distPair <- melt(dist) %>%
+  rename(dist = value)
+head(distPair, 10)
 ```
 
+Note: Within zone distance is 0
+
+### **Updating intra-zonal distances**
+
+Append a constant value to replace the intra-zonal distance of 0.
+
+Select and find out the minimum value of the distance
+
 ```{r}
-mpsz <- st_read(dsn = "Data/geospatial",
-                   layer = "MPSZ-2019") %>%
-  st_transform(crs = 3414)
+distPair %>%
+  filter(dist > 0) %>%
+  summary()
 ```
 
+Constant distance value of 50m is added into intra-zones distance
+
 ```{r}
-mpsz
+distPair$dist <- ifelse(distPair$dist == 0,
+                        50, distPair$dist)
 ```
 
-## **Geospatial data wrangling**
-
-### **Combining Busstop and mpsz**
+Check resulting data frame
 
 ```{r}
-busstop_mpsz <- st_intersection(busstop, mpsz) %>%
-  select(BUS_STOP_N, SUBZONE_C) %>%
-  st_drop_geometry()
+distPair %>%
+  summary()
 ```
 
+Rename the origin and destination fields
+
 ```{r}
-datatable(busstop_mpsz)
+distPair <- distPair %>%
+  rename(orig = Var1,
+         dest = Var2)
 ```
 
+Save the dataframe as rds format
+
 ```{r}
-write_rds(busstop_mpsz, "Data/rds/busstop_mpsz.rds")  
+write_rds(distPair, "chap16/data/rds/distPair.rds") 
 ```
 
-```{r}
-od_data <- left_join(odbus6_9 , busstop_mpsz,
-            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
-  rename(ORIGIN_BS = ORIGIN_PT_CODE,
-         ORIGIN_SZ = SUBZONE_C,
-         DESTIN_BS = DESTINATION_PT_CODE)
-```
+## **Preparing flow data**
 
 ```{r}
-duplicate <- od_data %>%
-  group_by_all() %>%
-  filter(n()>1) %>%
-  ungroup()
-
-```
-
-```{r}
-od_data <- unique(od_data)
-```
-
-```{r}
-od_data <- left_join(od_data , busstop_mpsz,
-            by = c("DESTIN_BS" = "BUS_STOP_N")) 
-```
-
-```{r}
-duplicate <- od_data %>%
-  group_by_all() %>%
-  filter(n()>1) %>%
-  ungroup()
+od_data <- read_rds("data/rds/od_data.rds")
 
 ```
 
+Compute the total passenger trip between and within planning subzones. The resulting output is flow data
+
 ```{r}
-od_data <- unique(od_data)
+flow_data <- od_data %>%
+  group_by(ORIGIN_SZ, DESTIN_SZ) %>% 
+  summarize(TRIPS = sum(MORNING_PEAK)) 
 ```
 
 ```{r}
