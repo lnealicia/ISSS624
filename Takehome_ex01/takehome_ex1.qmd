@@ -13,7 +13,7 @@ editor: visual
 ## Getting Started
 
 ```{r}
-pacman::p_load(tmap,sf,tidyverse,knitr,h3jsr,dplyr, mapview)
+pacman::p_load(tmap,sf,tidyverse,knitr, dplyr, mapview)
 ```
 
 ## Preparing the Flow Data
@@ -145,7 +145,7 @@ glimpse(mpsz)
 
 ## Geospatial Data Wrangling
 
-## Combining Busstop & mpsz
+### Combining Busstop & mpsz
 
 ```{r}
 busstop_mpsz <- st_intersection(busstop, mpsz) %>%
@@ -159,282 +159,293 @@ Save output into rds format
 write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")
 ```
 
-Each data frame will have the planning subzone code appended to it, and only unique records will be retained.
+## Setting up the Hexagon Grid
 
--   Weekday Morning Peak
+### Drawing the Hexagon Grid
 
-    ```{r}
-    wdmp_c <- left_join(wdmp , busstop_mpsz,
-                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
-      
-      rename(ORIGIN_BS = ORIGIN_PT_CODE,
-             ORIGIN_SZ = SUBZONE_C) 
-
-    duplicate <- wdmp_c %>%
-      group_by_all() %>%
-      filter(n()>1) %>%
-      ungroup() 
-
-    wdmp_o <- unique(wdmp_c)
-    ```
-
--   Weekday Afternoon Peak
-
-    ```{r}
-    wdap_c <- left_join(wdap , busstop_mpsz,
-                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
-      
-      rename(ORIGIN_BS = ORIGIN_PT_CODE,
-             ORIGIN_SZ = SUBZONE_C) 
-
-    duplicate <- wdap_c %>%
-      group_by_all() %>%
-      filter(n()>1) %>%
-      ungroup()  
-
-    wdap_o <- unique(wdap_c)
-    ```
-
--   Weekends/Holiday Morning Peak
-
-    ```{r}
-    hmp_c <- left_join(hmp , busstop_mpsz,
-                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
-      
-      rename(ORIGIN_BS = ORIGIN_PT_CODE,
-             ORIGIN_SZ = SUBZONE_C) 
-
-    duplicate <- hmp_c %>%
-      group_by_all() %>%
-      filter(n()>1) %>%
-      ungroup() 
-
-    hmp_o <- unique(hmp_c)
-    ```
-
--   Weekends/Holiday Evening Peak
-
-    ```{r}
-    hep_c <- left_join(hep , busstop_mpsz,
-                by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
-      
-      rename(ORIGIN_BS = ORIGIN_PT_CODE,
-             ORIGIN_SZ = SUBZONE_C) 
-
-    duplicate <- hep_c %>%
-      group_by_all() %>%
-      filter(n()>1) %>%
-      ungroup() 
-
-    hep_o <- unique(hep_c)
-    ```
-
-Update data with the planning subzone codes
+Draw hexagon grid over the mpsz map
 
 ```{r}
-mpsz_wdmp_o <- left_join(mpsz, 
-                       wdmp_o,
-                       by = c("SUBZONE_C" = "ORIGIN_SZ"))
-
-mpsz_wdap_o <- left_join(mpsz, 
-                       wdap_o,
-                       by = c("SUBZONE_C" = "ORIGIN_SZ"))
-
-mpsz_hmp_o <- left_join(mpsz, 
-                      hmp_o,
-                      by = c("SUBZONE_C" = "ORIGIN_SZ"))
-
-mpsz_hep_o <- left_join(mpsz, 
-                      hep_o,
-                      by = c("SUBZONE_C" = "ORIGIN_SZ"))
-
-
+area_honeycomb_grid = st_make_grid(mpsz, c(500, 500), what = "polygons", square = FALSE)
 ```
 
-## **Choropleth Visualisation (Hexagon Grid)**
-
-Choropleth map showing the distribution of passenger trips
-
-**Weekday Morning Peak 6am-9am**
-
-Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+Convert the hexagon grid to sf (simple features) object and add a new column grid_id (sequential identifier) to it
 
 ```{r}
-area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
-
-# To sf and add grid ID
 honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
   # add grid ID
   mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+```
 
-# count number of points in each hexagon
+Determine which bus stops is contained within which hexagon using **`st_within`**.
 
-honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_wdmp_o))
+```{r}
+busstop_honeycomb <- st_intersection(honeycomb_grid_sf,busstop) %>%
+  select(BUS_STOP_N, grid_id) %>%
+  st_drop_geometry()
+```
 
-# remove heaxgons that have no points in side it
-honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+Save output into rds format
+
+```{r}
+write_rds(busstop_honeycomb, "data/rds/busstop_honeycomb.csv")
+```
+
+Check for duplicate records
+
+```{r}
+duplicate <- busstop_honeycomb %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+```
+
+Retain unique records only
+
+```{r}
+busstop_honeycomb <- unique(busstop_honeycomb)
+```
+
+Only include hexagon grid IDs that have bus stop numbers
+
+```{r}
+
+busstop_honeycomb <- busstop_honeycomb %>%
+  filter(!is.na(grid_id) & grid_id > 0)
+```
+
+### Assign Each Bus Stop to a Grid ID
+
+For all time periods, assign bus stops to a hexagon grid id. All NULL and 0 values are removed.
+
+```{r}
+wdmp_gridid <- left_join(busstop_honeycomb, wdmp,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+wdmp_gridid <- wdmp_gridid %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+
+wdap_gridid <- left_join(busstop_honeycomb, wdap,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+wdap_gridid <- wdap_gridid %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+
+hmp_gridid <- left_join(busstop_honeycomb, hmp,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+hmp_gridid <- hmp_gridid %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+
+hep_gridid <- left_join(busstop_honeycomb, hep,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+hep_gridid <- hep_gridid %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+```
+
+## **Choropleth Visualisation**
+
+#### **Weekday Morning Peak 6am-9am**
+
+Sum up the trips per hexagon
+
+```{r}
+total_trips_by_grid <- wdmp_gridid %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
+
+```
+
+Merge geospatial data
+
+```{r}
+
+total_trips_by_grid <- total_trips_by_grid %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
 Plot the Choropleth map
 
 ```{r}
-tmap_mode("view")
 
-map_honeycomb = tm_shape(honeycomb_count) +
+tmap_mode("plot")
+
+tm_shape(total_trips_by_grid_sf) +
   tm_fill(
-    col = "trips",
-    palette = "Blues",
+    col = "total_trips",
+    palette = "Reds",
     style = "cont",
     title = "Total Trips Taken - Weekday Morning Peak 6-9am",
     id = "grid_id",
     showNA = FALSE,
     alpha = 0.6,
     popup.vars = c(
-      "Number of trips: " = "trips"
+      "Number of trips: " = "total_trips"
     ),
     popup.format = list(
-      trips = list(format = "f", digits = 0)
+      total_trips = list(format = "f", digits = 0)
     )
   ) +
-  tm_borders(col = "grey40", lwd = 0.2)
-
-map_honeycomb
+  tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-**Weekday Afternoon Peak 5pm-8pm**
+*\<insert description of spatial patterns in 200 words\>*
 
-Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+#### **Weekday Afternoon Peak 5pm-8pm**
+
+Sum up the trips per hexagon
 
 ```{r}
-area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+total_trips_by_grid <- wdap_gridid %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
-# To sf and add grid ID
-honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
-  # add grid ID
-  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+```
 
-# count number of points in each hexagon
+Merge geospatial data
 
-honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_wdap_o))
+```{r}
 
-# remove heaxgons that have no points in side it
-honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+total_trips_by_grid <- total_trips_by_grid %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
 Plot the Choropleth map
 
 ```{r}
-tmap_mode("view")
 
-map_honeycomb = tm_shape(honeycomb_count) +
+tmap_mode("plot")
+
+tm_shape(total_trips_by_grid_sf) +
   tm_fill(
-    col = "trips",
-    palette = "Blues",
+    col = "total_trips",
+    palette = "Reds",
     style = "cont",
-    title = "Total Trips Taken - Weekday Afternoon Peak 5pm-8pm",
+    title = "Total Trips Taken - Weekday Afternoon Peak 6-9am",
     id = "grid_id",
     showNA = FALSE,
     alpha = 0.6,
     popup.vars = c(
-      "Number of trips: " = "trips"
+      "Number of trips: " = "total_trips"
     ),
     popup.format = list(
-      trips = list(format = "f", digits = 0)
+      total_trips = list(format = "f", digits = 0)
     )
   ) +
-  tm_borders(col = "grey40", lwd = 0.2)
-
-map_honeycomb
+  tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-**Weekend/Holiday Morning Peak** **11am-2pm**
+\<insert description of spatial patterns in 200 words\>
 
-Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+#### **Weekend/Holiday Morning Peak** **11am-2pm**
+
+Sum up the trips per hexagon
 
 ```{r}
-area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+total_trips_by_grid <- hmp_gridid %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
-# To sf and add grid ID
-honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
-  # add grid ID
-  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+```
 
-# count number of points in each hexagon
+Merge geospatial data
 
-honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_hmp_o))
+```{r}
 
-# remove heaxgons that have no points in side it
-honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+total_trips_by_grid <- total_trips_by_grid %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
 Plot the Choropleth map
 
 ```{r}
-tmap_mode("view")
 
-map_honeycomb = tm_shape(honeycomb_count) +
+tmap_mode("plot")
+
+tm_shape(total_trips_by_grid_sf) +
   tm_fill(
-    col = "trips",
-    palette = "Blues",
+    col = "total_trips",
+    palette = "Greens",
     style = "cont",
     title = "Total Trips Taken - Weekend/Holiday Morning Peak 11am-2pm",
     id = "grid_id",
     showNA = FALSE,
     alpha = 0.6,
     popup.vars = c(
-      "Number of trips: " = "trips"
+      "Number of trips: " = "total_trips"
     ),
     popup.format = list(
-      trips = list(format = "f", digits = 0)
+      total_trips = list(format = "f", digits = 0)
     )
   ) +
-  tm_borders(col = "grey40", lwd = 0.2)
-
-map_honeycomb
+  tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-**Weekend/Holiday Evening Peak 4pm-7pm**
+\<insert description of spatial patterns in 200 words\>
 
-Draw hexagon over the Singapore map, and count number of bus stops in each hexagon.
+#### **Weekend/Holiday Evening Peak 4pm-7pm**
+
+Sum up the trips per hexagon
 
 ```{r}
-area_honeycomb_grid = st_make_grid(mpsz, c(150, 150), what = "polygons", square = FALSE)
+total_trips_by_grid <- hep_gridid %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
-# To sf and add grid ID
-honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
-  # add grid ID
-  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+```
 
-# count number of points in each hexagon
+Merge geospatial data
 
-honeycomb_grid_sf$trips = lengths(st_intersects(honeycomb_grid_sf, mpsz_hep_o))
+```{r}
 
-# remove heaxgons that have no points in side it
-honeycomb_count = filter(honeycomb_grid_sf, trips > 0)
+total_trips_by_grid <- total_trips_by_grid %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
 Plot the Choropleth map
 
 ```{r}
-tmap_mode("view")
 
-map_honeycomb = tm_shape(honeycomb_count) +
+tmap_mode("plot")
+
+tm_shape(total_trips_by_grid_sf) +
   tm_fill(
-    col = "trips",
-    palette = "Blues",
+    col = "total_trips",
+    palette = "Greens",
     style = "cont",
     title = "Total Trips Taken - Weekend/Holiday Evening Peak 4pm-7pm",
     id = "grid_id",
     showNA = FALSE,
     alpha = 0.6,
     popup.vars = c(
-      "Number of trips: " = "trips"
+      "Number of trips: " = "total_trips"
     ),
     popup.format = list(
-      trips = list(format = "f", digits = 0)
+      total_trips = list(format = "f", digits = 0)
     )
   ) +
-  tm_borders(col = "grey40", lwd = 0.2)
-
-map_honeycomb
+  tm_borders(col = "grey40", lwd = 0.4)
 ```
+
+\<insert description of spatial patterns in 200 words\>
+
+## **Local Indicators of Spatial Association (LISA) Analysis**
+
+-   Compute LISA of the passengers trips generate by origin at hexagon level.
+
+-   Display the LISA maps of the passengers trips generate by origin at hexagon level. The maps should only display the significant (i.e. p-value \< 0.05)
+
+-   With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
