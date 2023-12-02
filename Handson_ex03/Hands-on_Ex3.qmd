@@ -1,5 +1,5 @@
 ---
-title: "Hands on Exercise 3"
+title: "Hands-on Exercise 3"
 subtitle: "Processing and Visualising Flow Data"
 date: "30 Nov 2023"
 date-modified: "last-modified"
@@ -7,13 +7,15 @@ format: html
 editor: visual
 ---
 
+## Objectives:
+
 ## **Getting Started**
 
--   sf for importing, integrating, processing and transforming geospatial data.
+-   sf - importing, integrating, processing and transforming geospatial data.
 
--   tidyverse for importing, integrating, wrangling and visualising data.
+-   tidyverse - importing, integrating, wrangling and visualising data.
 
--   tmap for creating thematic maps.
+-   tmap - creating thematic maps.
 
 ```{r}
 pacman::p_load(tmap, sf, DT, stplanr,
@@ -25,28 +27,28 @@ pacman::p_load(tmap, sf, DT, stplanr,
 
 ### **Importing the OD data**
 
-Import the *Passenger Volume by Origin Destination Bus Stops* data set downloaded from LTA DataMall by using `read_csv()` of **readr** package.
+Import the *Passenger Volume by Origin Destination Bus Stops* data set downloaded from LTA DataMall by using `read_csv()` of **readr** package
 
 ```{r}
 odbus <- read_csv("Data/aspatial/origin_destination_bus_202310.csv")
 ```
 
-Display the *odbus* tibble data table
+Display *odbus* tibble data table
 
 ```{r}
 glimpse(odbus)
 ```
 
-Since the values in OROGIN_PT_CODE and DESTINATION_PT_CODE are in numeric data type, they need to be converted into character data type.
+Note that the *odbus* tibble data table shows that the values in ORIGIN_PT_CODE and DESTINATION_PT_CODE are in numeric data type. Thus, they need to be converted into character data type.
 
 ```{r}
 odbus$ORIGIN_PT_CODE <- as.factor(odbus$ORIGIN_PT_CODE)
 odbus$DESTINATION_PT_CODE <- as.factor(odbus$DESTINATION_PT_CODE) 
 ```
 
-### **Extracting the Study data**
+### **Extracting the study data**
 
-Extract commuting flows on weekday between 0600hrs-0900hrs
+Extract commuting flows on weekday and between 0600hrs and 0900hrs.
 
 ```{r}
 odbus6_9 <- odbus %>%
@@ -58,19 +60,19 @@ odbus6_9 <- odbus %>%
   summarise(TRIPS = sum(TOTAL_TRIPS))
 ```
 
-Content of *odbus6_9*
+Display odbus6_9 content
 
 ```{r}
 datatable(odbus6_9)
 ```
 
-Save output to rds format
+Save the output in rds format 
 
 ```{r}
 write_rds(odbus6_9, "Data/rds/odbus6_9.rds")
 ```
 
-Import rds file into R environment
+Import into R environment
 
 ```{r}
 odbus6_9 <- read_rds("Data/rds/odbus6_9.rds")
@@ -78,11 +80,13 @@ odbus6_9 <- read_rds("Data/rds/odbus6_9.rds")
 
 ## **Working with Geospatial Data**
 
-Two geospatial data will be used. They are:
+Two geospatial data will be used:
 
 -   BusStop: This data provides the location of bus stop as at last quarter of 2022.
 
 -   MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019.
+
+Both data sets are in ESRI shapefile format.
 
 ### **Importing geospatial data**
 
@@ -96,13 +100,11 @@ busstop <- st_read(dsn = "Data/geospatial",
 mpsz <- st_read(dsn = "Data/geospatial",
                    layer = "MPSZ-2019") %>%
   st_transform(crs = 3414)
-```
 
-```{r}
 mpsz
 ```
 
-Write mpsz sf tibble data frame into rds file
+Write mpsz sf tibble data frame into an rds file
 
 ```{r}
 mpsz <- write_rds(mpsz, "data/rds/mpsz.rds")
@@ -111,6 +113,8 @@ mpsz <- write_rds(mpsz, "data/rds/mpsz.rds")
 ## **Geospatial data wrangling**
 
 ### **Combining Busstop and mpsz**
+
+Populates the planning subzone code (i.e. SUBZONE_C) of mpsz sf data frame into busstop sf data frame
 
 ```{r}
 busstop_mpsz <- st_intersection(busstop, mpsz) %>%
@@ -122,23 +126,23 @@ busstop_mpsz <- st_intersection(busstop, mpsz) %>%
 datatable(busstop_mpsz)
 ```
 
-Save output to rds format
+Save the output into rds format
 
 ```{r}
 write_rds(busstop_mpsz, "Data/rds/busstop_mpsz.rds")  
 ```
 
-Apeend planning subzone code from busstop_mpsz data frame onto odbus6_9 data frame
+Append the planning subzone code from busstop_mpsz data frame onto odbus6_9 data frame
 
 ```{r}
-od_data <- left_join(odbus6_9, busstop_mpsz,
+od_data <- left_join(odbus6_9 , busstop_mpsz,
             by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
   rename(ORIGIN_BS = ORIGIN_PT_CODE,
          ORIGIN_SZ = SUBZONE_C,
          DESTIN_BS = DESTINATION_PT_CODE)
 ```
 
-Check for duplicates
+Check for duplicating records
 
 ```{r}
 duplicate <- od_data %>%
@@ -154,12 +158,14 @@ Retain unique records
 od_data <- unique(od_data)
 ```
 
-Update od_data data frame with planning subzone codes
+Update od_data data frame with the planning subzone codes
 
 ```{r}
 od_data <- left_join(od_data , busstop_mpsz,
             by = c("DESTIN_BS" = "BUS_STOP_N")) 
 ```
+
+Check for duplicating records
 
 ```{r}
 duplicate <- od_data %>%
@@ -168,6 +174,8 @@ duplicate <- od_data %>%
   ungroup()
 
 ```
+
+Retain unique records
 
 ```{r}
 od_data <- unique(od_data)
@@ -180,8 +188,6 @@ od_data <- od_data %>%
   group_by(ORIGIN_SZ, DESTIN_SZ) %>%
   summarise(MORNING_PEAK = sum(TRIPS))
 ```
-
-Save output to rds format
 
 ```{r}
 write_rds(od_data, "Data/rds/od_data.rds")
@@ -220,8 +226,6 @@ tm_shape() +
            n = 6,
            alpha = 0.3)
 ```
-
-Note that the above flow data is highly messy and highly skewed. A flow \>= 5000 is filtered out for analysis.
 
 ```{r}
 tm_shape(mpsz) +
