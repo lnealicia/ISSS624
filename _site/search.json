@@ -54,5 +54,12 @@
     "title": "Take Home Exercise 1",
     "section": "Local Indicators of Spatial Association (LISA) Analysis",
     "text": "Local Indicators of Spatial Association (LISA) Analysis\n\nCompute LISA of the passengers trips generate by origin at hexagon level.\nDisplay the LISA maps of the passengers trips generate by origin at hexagon level. The maps should only display the significant (i.e. p-value &lt; 0.05)\nWith reference to the analysis results, draw statistical conclusions (not more than 200 words per visual)."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This site is written by Loh Nian En Alicia as part of the ISSS624 Applied Geospatial Data Analysis from the Singapore Management University - Masters of IT in Business (Analytics Track)."
   }
 ]
