@@ -4,4 +4,6 @@ title: "ISSS624 Applied Geospatial Analytics"
 
 Welcome to ISSS624 Geospatial Analytics Applications!
 
+This site is written by Loh Nian En Alicia as part of the the Singapore Management University - Masters of IT in Business (Analytics Track).
+
 In this webpage, I am going to share with you my learning journey of geospatial analytics.
