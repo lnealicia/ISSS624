@@ -2,8 +2,4 @@
 title: "About"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+This site is written by Loh Nian En Alicia as part of the ISSS624 Applied Geospatial Data Analysis from the Singapore Management University - Masters of IT in Business (Analytics Track).
