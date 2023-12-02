@@ -162,7 +162,7 @@ flow_data$offset <- ifelse(
   0.000001, 1)
 ```
 
-###  **Combining passenger volume data with distance value**
+### **Combining passenger volume data with distance value**
 
 Convert data value type of *ORIGIN_SZ* and *DESTIN_SZ* fields of flow_data dataframe into factor data type
 
@@ -182,13 +182,13 @@ flow_data1 <- flow_data %>%
 
 ## **Preparing Origin and Destination Attributes**
 
-###  **Importing population data**
+### **Importing population data**
 
 ```{r}
 pop <- read_csv("data/aspatial/pop.csv")
 ```
 
-###  **Geospatial data wrangling**
+### **Geospatial data wrangling**
 
 ```{r}
 pop <- pop %>%
@@ -234,7 +234,7 @@ write_rds(flow_data1, "data/rds/SIM_data")
 
 Calibrate Spatial Interaction Models by using Poisson Regression method
 
-###  **Importing the modelling data**
+### **Importing the modelling data**
 
 ```{r}
 SIM_data <- read_rds("data/rds/SIM_data.rds")
@@ -275,3 +275,262 @@ ggplot(data = SIM_data,
 ```
 
 ### **Checking for variables with zero values**
+
+Since Poisson Regression is based of log and log 0 is undefined, the explanatory variables cannot contain 0 values.
+
+Summary() of Base R is used to compute the summary statistics of all variables in *SIM_data* data frame
+
+```{r}
+summary(SIM_data)
+```
+
+The report above reveals that there are 0 values in variables: ORIGIN_AGE7_12, ORIGIN_AGE13_24, ORIGIN_AGE25_64,DESTIN_AGE7_12, DESTIN_AGE13_24, DESTIN_AGE25_64.
+
+0 values are repalced with a small value 0.99
+
+```{r}
+SIM_data$DESTIN_AGE7_12 <- ifelse(
+  SIM_data$DESTIN_AGE7_12 == 0,
+  0.99, SIM_data$DESTIN_AGE7_12)
+SIM_data$DESTIN_AGE13_24 <- ifelse(
+  SIM_data$DESTIN_AGE13_24 == 0,
+  0.99, SIM_data$DESTIN_AGE13_24)
+SIM_data$DESTIN_AGE25_64 <- ifelse(
+  SIM_data$DESTIN_AGE25_64 == 0,
+  0.99, SIM_data$DESTIN_AGE25_64)
+SIM_data$ORIGIN_AGE7_12 <- ifelse(
+  SIM_data$ORIGIN_AGE7_12 == 0,
+  0.99, SIM_data$ORIGIN_AGE7_12)
+SIM_data$ORIGIN_AGE13_24 <- ifelse(
+  SIM_data$ORIGIN_AGE13_24 == 0,
+  0.99, SIM_data$ORIGIN_AGE13_24)
+SIM_data$ORIGIN_AGE25_64 <- ifelse(
+  SIM_data$ORIGIN_AGE25_64 == 0,
+  0.99, SIM_data$ORIGIN_AGE25_64)
+```
+
+Verify that there are no more 0 values
+
+```{r}
+summary(SIM_data)
+```
+
+### **Unconstrained Spatial Interaction Model**
+
+Calibrate an unconstrained spatial interaction model by using `glm()` of Base Stats.
+
+Explanatory variables: origin population by different age cohort, destination population by different age cohort (i.e. *ORIGIN_AGE25_64*) and distance between origin and destination in km (i.e. *dist*).
+
+Model calibration:
+
+```{r}
+uncSIM <- glm(formula = TRIPS ~ 
+                log(ORIGIN_AGE25_64) + 
+                log(DESTIN_AGE25_64) +
+                log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+uncSIM
+```
+
+### **R-squared function**
+
+Measure how much variation of the trips can be accounted by the model
+
+```{r}
+CalcRSquared <- function(observed,estimated){
+  r <- cor(observed,estimated)
+  R2 <- r^2
+  R2
+}
+```
+
+Compute the R-squared of the unconstrained SIM
+
+```{r}
+CalcRSquared(uncSIM$data$TRIPS, uncSIM$fitted.values)
+```
+
+```{r}
+r2_mcfadden(uncSIM)
+```
+
+### **Origin constrained SIM**
+
+```{r}
+orcSIM <- glm(formula = TRIPS ~ 
+                 ORIGIN_SZ +
+                 log(DESTIN_AGE25_64) +
+                 log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+summary(orcSIM)
+```
+
+How the constraints hold for destinations
+
+```{r}
+CalcRSquared(orcSIM$data$TRIPS, orcSIM$fitted.values)
+```
+
+### **Destination constrained**
+
+```{r}
+decSIM <- glm(formula = TRIPS ~ 
+                DESTIN_SZ + 
+                log(ORIGIN_AGE25_64) + 
+                log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+summary(decSIM)
+```
+
+How the constraints hold for destinations
+
+```{r}
+CalcRSquared(decSIM$data$TRIPS, decSIM$fitted.values)
+```
+
+### **Doubly constrained**
+
+```{r}
+dbcSIM <- glm(formula = TRIPS ~ 
+                ORIGIN_SZ + 
+                DESTIN_SZ + 
+                log(dist),
+              family = poisson(link = "log"),
+              data = SIM_data,
+              na.action = na.exclude)
+summary(dbcSIM)
+```
+
+How the constraints hold for destinations
+
+```{r}
+CalcRSquared(dbcSIM$data$TRIPS, dbcSIM$fitted.values)
+```
+
+::: {.callout-tip title="R-Squared Value Comparison" style="color: green"}
+R squared value for:
+
+Unconstrained Spatial Interaction Model - 0.1694734
+
+Origin Constrained Model - 0.4029115
+
+Destination Constrained Model - 0.496166
+
+Doubly Constrained Model - 0.6883675
+
+Note: There is a relatively greater improvement in the R-squared value
+:::
+
+### **Model comparison**
+
+Root Mean Squared Error (RMSE)
+
+```{r}
+model_list <- list(unconstrained=uncSIM,
+                   originConstrained=orcSIM,
+                   destinationConstrained=decSIM,
+                   doublyConstrained=dbcSIM)
+```
+
+RSME of all models
+
+```{r}
+compare_performance(model_list,
+                    metrics = "RMSE")
+```
+
+Note: The result above reveals that doubly constrained SIM is the best model among all the four SIMs as it has the smallest RMSE value of 1487.111.
+
+### **Visualising fitted**
+
+Visualise observed values and fitted values
+
+Extract the fitted values from each model 
+
+```{r}
+df <- as.data.frame(uncSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+Join the values to *SIM_data* data frame
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(uncTRIPS = "uncSIM$fitted.values")
+```
+
+Repeat for Origin Constrained SIM (i.e. orcSIM)
+
+```{r}
+df <- as.data.frame(orcSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(orcTRIPS = "orcSIM$fitted.values")
+```
+
+Repeat for Destination Constrained SIM (i.e. decSIM)
+
+```{r}
+df <- as.data.frame(decSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(decTRIPS = "decSIM$fitted.values")
+```
+
+Repeat for Doubly Constrained SIM (i.e. dbcSIM)
+
+```{r}
+df <- as.data.frame(dbcSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(dbcTRIPS = "dbcSIM$fitted.values")
+```
+
+```{r}
+unc_p <- ggplot(data = SIM_data,
+                aes(x = uncTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+orc_p <- ggplot(data = SIM_data,
+                aes(x = orcTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+dec_p <- ggplot(data = SIM_data,
+                aes(x = decTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+dbc_p <- ggplot(data = SIM_data,
+                aes(x = dbcTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+ggarrange(unc_p, orc_p, dec_p, dbc_p,
+          ncol = 2,
+          nrow = 2)
+```
