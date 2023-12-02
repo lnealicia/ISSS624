@@ -132,7 +132,7 @@ Save the output into rds format
 write_rds(busstop_mpsz, "Data/rds/busstop_mpsz.rds")  
 ```
 
-Append the planning subzone code from busstop_mpsz data frame onto odbus6_9 data frame
+Append the planning subzone code from busstop_mpsz data frame onto odbus6_9 data frame (ORIGIN_PT_CODE)
 
 ```{r}
 od_data <- left_join(odbus6_9 , busstop_mpsz,
@@ -158,7 +158,7 @@ Retain unique records
 od_data <- unique(od_data)
 ```
 
-Update od_data data frame with the planning subzone codes
+Update od_data data frame with the planning subzone codes (DESTIN_BS)
 
 ```{r}
 od_data <- left_join(od_data , busstop_mpsz,
@@ -188,6 +188,8 @@ od_data <- od_data %>%
   group_by(ORIGIN_SZ, DESTIN_SZ) %>%
   summarise(MORNING_PEAK = sum(TRIPS))
 ```
+
+Save the output into an rds file format
 
 ```{r}
 write_rds(od_data, "Data/rds/od_data.rds")
@@ -226,6 +228,8 @@ tm_shape() +
            n = 6,
            alpha = 0.3)
 ```
+
+When the flow data are very messy and highly skewed like the one shown above, focus on selected flows e.g. flow \>= 5000
 
 ```{r}
 tm_shape(mpsz) +
