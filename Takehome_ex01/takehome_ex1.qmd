@@ -113,7 +113,7 @@ Import the rds file into R environment
 wdmp <- read_rds("data/rds/wdmp.rds") 
 wdap <- read_rds("data/rds/wdap.rds") 
 hmp <- read_rds("data/rds/hmp.rds") 
-hep <- read_rds("data/rds/hmp.rds")
+hep <- read_rds("data/rds/hep.rds")
 ```
 
 ## Working with Geospatial Data
@@ -271,11 +271,23 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
+Summary Statistics Per Hexagon
+
+```{r}
+summary(wdmp$TRIPS)
+```
+
+Total Trips in the time slot
+
+```{r}
+sum(wdmp$TRIPS)
+```
+
 Plot the Choropleth map
 
 ```{r}
 
-tmap_mode("plot")
+tmap_mode("view")
 
 tm_shape(total_trips_by_grid_sf) +
   tm_fill(
@@ -297,7 +309,11 @@ tm_shape(total_trips_by_grid_sf) +
 ```
 
 ::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
-200 words
+Weekday Morning Peak 6am-9am
+
+This timeslot has a total of 26,430,413 trips taken. It ranks first by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2184.
+
+Hexagons located at Jurong, Woodlands
 :::
 
 #### **Weekday Afternoon Peak 5pm-8pm**
@@ -321,12 +337,27 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
+Summary Statistics Per Hexagon
+
+```{r}
+summary(wdap$TRIPS)
+```
+
+Total Trips in the time slot
+
+```{r}
+sum(wdap$TRIPS)
+
+```
+
+```{r}
+sum(wdap$TRIPS)
+```
+
 Plot the Choropleth map
 
 ```{r}
-
 tmap_mode("plot")
-
 tm_shape(total_trips_by_grid_sf) +
   tm_fill(
     col = "total_trips",
@@ -347,7 +378,11 @@ tm_shape(total_trips_by_grid_sf) +
 ```
 
 ::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
-200 words
+Weekday Afternoon Peak 6am-9am
+
+This timeslot has a total of 25,748,484 trips taken. It ranks second by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2055.
+
+Hotsport at residential hot spots. have greater density of trips
 :::
 
 #### **Weekend/Holiday Morning Peak** **11am-2pm**
@@ -371,10 +406,22 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
+Summary Statistics Per Hexagon
+
+```{r}
+summary(hmp$TRIPS)
+```
+
+Total Trips in the time slot
+
+```{r}
+sum(hmp$TRIPS)
+
+```
+
 Plot the Choropleth map
 
 ```{r}
-
 tmap_mode("plot")
 
 tm_shape(total_trips_by_grid_sf) +
@@ -397,7 +444,23 @@ tm_shape(total_trips_by_grid_sf) +
 ```
 
 ::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
-200 words
+Weekend/Holiday Morning Peak 11am-2pm
+
+This timeslot has a total of 7,738,503 trips taken. It ranks third by total volume of trips among our time periods of interest. The median number of trips per hexagon is 671.
+
+Overall volume lower probably due to:
+
+Holiday Travels
+
+Foreign workers/students returning home
+
+Concentrated:
+
+Shopping
+
+Leisure
+
+POI
 :::
 
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
@@ -421,10 +484,22 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
+Summary Statistics Per Hexagon
+
+```{r}
+summary(hep$TRIPS)
+```
+
+Total Trips in the time slot
+
+```{r}
+sum(hep$TRIPS)
+
+```
+
 Plot the Choropleth map
 
 ```{r}
-
 tmap_mode("plot")
 
 tm_shape(total_trips_by_grid_sf) +
@@ -447,7 +522,23 @@ tm_shape(total_trips_by_grid_sf) +
 ```
 
 ::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
-200 words
+Weekend/Holiday Evening Peak 4pm-7pm
+
+This timeslot has a total of 7,738,503 trips taken. It ranks third by total volume of trips among our time periods of interest. The median number of trips per hexagon is 671.
+
+Overall volume lower probably due to:
+
+Holiday Travels
+
+Foreign workers/students returning home
+
+Concentrated:
+
+Shopping
+
+Leisure
+
+POI
 :::
 
 ## **Local Indicators of Spatial Association (LISA) Analysis**
