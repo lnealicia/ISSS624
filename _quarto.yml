@@ -39,7 +39,7 @@ website:
 
 format:
   html:
-    theme: spacelab
+    theme: zephyr
     css: styles.css
     toc: true
 
