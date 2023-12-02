@@ -814,3 +814,42 @@ quadrant_hep[localMI_hmp[,5]>signif] <- 0
 ```
 
 ### **Plotting LISA map**
+
+Both the local Moran's I values map and its corresponding p-values map next to each other for effective interpretation
+
+#### **Weekday Morning Peak 6am-9am**
+
+```{r}
+total_trips_wdmp <- qtm(total_trips_by_grid_wdmp_sf, "total_trips")
+
+total_trips_by_grid_wdmp_sf.localMI_wdmp$quadrant_wdmp <- quadrant_wdmp
+
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LISAmap_wdmp <- tm_shape(total_trips_by_grid_wdmp_sf.localMI_wdmp$quadrant_wdmp) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant)))+1], 
+          labels = clusters[c(sort(unique(quadrant)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+
+tmap_arrange(total_trips_wdmp, LISAmap_wdmp, 
+             asp=1, ncol=2)
+```
+
+#### **Weekday Afternoon Peak 5pm-8pm**
+
+#### **Weekend/Holiday Morning Peak 11am-2pm**
+
+#### **Weekend/Holiday Evening Peak 4pm-7pm**
+
+```{r}
+
+```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Weekday Morning Peak 6am-9am What statistical observations can you draw from the LISA map above?
+:::
