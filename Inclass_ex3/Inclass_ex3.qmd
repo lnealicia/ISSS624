@@ -35,8 +35,7 @@ Beside these two data sets, an additional attribute data file called pop.csv wil
 
 ```{r}
 mpsz <- read_rds("data/rds/mpsz.rds")
-mpsz #read directly from shape file or hands on 3 rds copy (chap 15)
-#to check hands on 3 code chunks, see if any missing
+mpsz
 ```
 
 ### **Converting from sf data.table to SpatialPolygonsDataFrame**
