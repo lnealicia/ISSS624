@@ -13,7 +13,7 @@ editor: visual
 ## Getting Started
 
 ```{r}
-pacman::p_load(tmap,sf,sfdep,tidyverse,knitr,plotly,zoo,Kendall)
+pacman::p_load(tmap,sf,spdep,sfdep,tidyverse,knitr,plotly,zoo,Kendall)
 ```
 
 ## Preparing the Flow Data
@@ -257,7 +257,7 @@ Note: Grid id 2955 and 3036 contains bus stops that are not within Singapore (i.
 Sum up the trips per hexagon
 
 ```{r}
-total_trips_by_grid <- wdmp_gridid %>%
+total_trips_by_grid_wdmp <- wdmp_gridid %>%
   group_by(grid_id) %>%
   summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
@@ -267,10 +267,10 @@ Merge geospatial data
 
 ```{r}
 
-total_trips_by_grid <- total_trips_by_grid %>%
+total_trips_by_grid_wdmp <- total_trips_by_grid_wdmp %>%
   left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
 
-total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
+total_trips_by_grid_wdmp_sf <- st_sf(total_trips_by_grid_wdmp)
 ```
 
 Summary Statistics (Hexagon)
@@ -291,7 +291,7 @@ Plot the Choropleth map
 
 tmap_mode("view")
 
-tm_shape(total_trips_by_grid_sf) +
+tm_shape(total_trips_by_grid_wdmp_sf) +
   tm_fill(
     col = "total_trips",
     palette = "Greens",
@@ -329,7 +329,7 @@ Hexagons with greater number of trips are located near:
 Sum up the trips per hexagon
 
 ```{r}
-total_trips_by_grid <- wdap_gridid %>%
+total_trips_by_grid_wdap <- wdap_gridid %>%
   group_by(grid_id) %>%
   summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
@@ -339,10 +339,10 @@ Merge geospatial data
 
 ```{r}
 
-total_trips_by_grid <- total_trips_by_grid %>%
+total_trips_by_grid_wdap <- total_trips_by_grid_wdap %>%
   left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
 
-total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
+total_trips_by_grid_wdap_sf <- st_sf(total_trips_by_grid_wdap)
 ```
 
 Summary Statistics (Hexagon)
@@ -366,7 +366,7 @@ Plot the Choropleth map
 
 ```{r}
 tmap_mode("plot")
-tm_shape(total_trips_by_grid_sf) +
+tm_shape(total_trips_by_grid_wdap_sf) +
   tm_fill(
     col = "total_trips",
     palette = "Greens",
@@ -402,7 +402,7 @@ Hexagons with greater number of trips are located near:
 Sum up the trips per hexagon
 
 ```{r}
-total_trips_by_grid <- hmp_gridid %>%
+total_trips_by_grid_hmp <- hmp_gridid %>%
   group_by(grid_id) %>%
   summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
@@ -412,10 +412,10 @@ Merge geospatial data
 
 ```{r}
 
-total_trips_by_grid <- total_trips_by_grid %>%
+total_trips_by_grid_hmp <- total_trips_by_grid_hmp %>%
   left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
 
-total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
+total_trips_by_grid_hmp_sf <- st_sf(total_trips_by_grid_hmp)
 ```
 
 Summary Statistics Per Hexagon
@@ -436,7 +436,7 @@ Plot the Choropleth map
 ```{r}
 tmap_mode("plot")
 
-tm_shape(total_trips_by_grid_sf) +
+tm_shape(total_trips_by_grid_hmp_sf) +
   tm_fill(
     col = "total_trips",
     palette = "Greens",
@@ -474,7 +474,7 @@ Additional Note: Overall drop in volume could be contributed by leisure travels,
 Sum up the trips per hexagon
 
 ```{r}
-total_trips_by_grid <- hep_gridid %>%
+total_trips_by_grid_hep <- hep_gridid %>%
   group_by(grid_id) %>%
   summarise(total_trips = sum(TRIPS, na.rm = TRUE))
 
@@ -484,10 +484,10 @@ Merge geospatial data
 
 ```{r}
 
-total_trips_by_grid <- total_trips_by_grid %>%
+total_trips_by_grid_hep <- total_trips_by_grid_hep %>%
   left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
 
-total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
+total_trips_by_grid_hep_sf <- st_sf(total_trips_by_grid_hep)
 ```
 
 Summary Statistics (Hexagon)
@@ -508,7 +508,7 @@ Plot the Choropleth map
 ```{r}
 tmap_mode("plot")
 
-tm_shape(total_trips_by_grid_sf) +
+tm_shape(total_trips_by_grid_hep_sf) +
   tm_fill(
     col = "total_trips",
     palette = "Greens",
@@ -545,10 +545,12 @@ Additional Note: It is interesting to see that the Central Business District, as
 
 ## Visualisation of Trips Distribution
 
+### **Weekday Morning Peak 6am-9am**
+
 ```{r}
 tmap_mode("plot")
 
-equal <- tm_shape(total_trips_by_grid_sf) +
+equal <- tm_shape(total_trips_by_grid_wdmp_sf) +
   tm_fill("total_trips",
           n = 5,
           style = "equal") +
@@ -568,28 +570,47 @@ tmap_arrange(equal,
              ncol=2)
 ```
 
-### **Computing Contiguity Spatial Weights**
+### **Weekday Afternoon Peak 5pm-8pm**
 
-Use poly2nb() of spdep package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.
+### **Weekend/Holiday Morning Peak** **11am-2pm**
 
-```{r}
-wm08 <- wm08 %>%
-  mutate( nb = st_contiguity(area_honeycomb_grid),
-          wt = st_weights(nb, style = "W"),
-          .before = 1
-)
-```
+### **Weekend/Holiday Evening Peak 4pm-7pm**
 
 ## **Global Spatial Autocorrelation**
 
 Computed to perform spatial complete randomness test for global spatial autocorrelation.
 
+### **Computing Contiguity Spatial Weights**
+
+Use poly2nb() of spdep package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.
+
+```{r}
+wm_q <- poly2nb(total_trips_by_grid_sf, 
+                queen=TRUE)
+summary(wm_q)
+```
+
+Note: The summary report above shows that there are 1490 hexagons in Singapore. The most connected hexagon has 6 neighbours. There are two area units with 43 neighbours.
+
+### **Row-standardised weights matrix**
+
+Assign weights to each neighboring polygon
+
+```{r}
+rswm_q <- nb2listw(wm_q, 
+                   style="W", 
+                   zero.policy = TRUE)
+rswm_q
+```
+
 ### **Computing local Moran's I**
 
 ```{r}
-lisa <- wm08 %>%
-  mutate(local_moran = local_moran(
-    GDPPC, nb, wt, nsim = 99),
-    .before = 1) %>%
-  unnest(local_moran)
+moran.test(total_trips_by_grid_sf$total_trips, 
+           listw=rswm_q, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
 ```
+::: {.callout-tip title="Statistical Conclusion" style="color: red"}
+The Moran's I statistic is significantly different from what would be expected under spatial randomness. The positive Moran's I value and the small p-value (<0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.
+:::
