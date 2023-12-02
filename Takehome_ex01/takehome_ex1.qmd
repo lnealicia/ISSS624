@@ -346,7 +346,7 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-::: {.callout-tip title="Description of Spatial Patterns"}
+::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
 200 words
 :::
 
@@ -396,7 +396,7 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-::: {.callout-tip title="Description of Spatial Patterns"}
+::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
 200 words
 :::
 
@@ -446,7 +446,7 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-::: {.callout-tip title="Description of Spatial Patterns"}
+::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
 200 words
 :::
 
