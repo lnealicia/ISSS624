@@ -271,7 +271,7 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
-Summary Statistics Per Hexagon
+Summary Statistics (Hexagon)
 
 ```{r}
 summary(wdmp$TRIPS)
@@ -292,7 +292,7 @@ tmap_mode("view")
 tm_shape(total_trips_by_grid_sf) +
   tm_fill(
     col = "total_trips",
-    palette = "Reds",
+    palette = "Greens",
     style = "cont",
     title = "Total Trips Taken - Weekday Morning Peak 6-9am",
     id = "grid_id",
@@ -313,7 +313,13 @@ Weekday Morning Peak 6am-9am
 
 This timeslot has a total of 26,430,413 trips taken. It ranks first by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2184.
 
-Hexagons located at Jurong, Woodlands
+Hexagons with greater number of trips are located near:
+
+-   Residential areas e.g. Tampines, Ang Mo Kio
+
+-   Public transport hubs e.g. Bus Interchange, MRT Interchange e.g. Toa Payoh Interchange, Bedok Interchange
+
+-   Immigration checkpoint at Woodlands
 :::
 
 #### **Weekday Afternoon Peak 5pm-8pm**
@@ -337,7 +343,7 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
-Summary Statistics Per Hexagon
+Summary Statistics (Hexagon)
 
 ```{r}
 summary(wdap$TRIPS)
@@ -361,7 +367,7 @@ tmap_mode("plot")
 tm_shape(total_trips_by_grid_sf) +
   tm_fill(
     col = "total_trips",
-    palette = "Reds",
+    palette = "Greens",
     style = "cont",
     title = "Total Trips Taken - Weekday Afternoon Peak 6-9am",
     id = "grid_id",
@@ -380,9 +386,13 @@ tm_shape(total_trips_by_grid_sf) +
 ::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
 Weekday Afternoon Peak 6am-9am
 
-This timeslot has a total of 25,748,484 trips taken. It ranks second by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2055.
+This timeslot has a total of 25,748,484 trips taken. It ranks second by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2055. Over all, the distribution of trips remain similar, but are more concentrated at public transport hubs.
 
-Hotsport at residential hot spots. have greater density of trips
+Hexagons with greater number of trips are located near:
+
+-   Public transport hubs e.g. Bus Interchange, MRT Interchange e.g. Serangoon Interchange, Woodlands Interchange
+
+-   School clusters e.g. Commonwealth Avenue West
 :::
 
 #### **Weekend/Holiday Morning Peak** **11am-2pm**
@@ -448,20 +458,14 @@ Weekend/Holiday Morning Peak 11am-2pm
 
 This timeslot has a total of 7,738,503 trips taken. It ranks third by total volume of trips among our time periods of interest. The median number of trips per hexagon is 671.
 
-Overall volume lower probably due to:
+Hexagons with greater number of trips are located near:
 
-Holiday Travels
+-   Public transport hubs e.g. Bus Interchange, MRT Interchange e.g. Choa Chu Kang Interchange, Toa Payoh Interchange
 
-Foreign workers/students returning home
-
-Concentrated:
-
-Shopping
-
-Leisure
-
-POI
+-   Residential Areas e.g. Bukit Batok Central
 :::
+
+Additional Note: Overall drop in volume could be contributed by leisure travels, and foreign students/workers leaving for their home countries.
 
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
 
@@ -484,7 +488,7 @@ total_trips_by_grid <- total_trips_by_grid %>%
 total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
 ```
 
-Summary Statistics Per Hexagon
+Summary Statistics (Hexagon)
 
 ```{r}
 summary(hep$TRIPS)
@@ -526,20 +530,16 @@ Weekend/Holiday Evening Peak 4pm-7pm
 
 This timeslot has a total of 7,738,503 trips taken. It ranks third by total volume of trips among our time periods of interest. The median number of trips per hexagon is 671.
 
-Overall volume lower probably due to:
+Hexagons with greater number of trips are located near:
 
-Holiday Travels
+Public transport hubs e.g. Bus Interchange, MRT Interchange e.g. Choa Chu Kang Interchange, Serangoon Interchange
 
-Foreign workers/students returning home
+These locations also happen to be:
 
-Concentrated:
-
-Shopping
-
-Leisure
-
-POI
+Places of Interest/Shopping Center: e.g. Lot 1 Shopping Center (Choa Chu Kang Interchange), NEX water playground (Serangoon)
 :::
+
+Additional Note: It is interesting to see that the Central Business District, as well as industrial areas, while serviced by public transport, are not as highly utilised when compared to other areas e.g. residential area. This could be due to commuters using alternate forms of transport e.g. private cars, taxi, company shuttle bus
 
 ## **Local Indicators of Spatial Association (LISA) Analysis**
 
