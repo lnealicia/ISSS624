@@ -296,6 +296,10 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
+::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
+200 words
+:::
+
 #### **Weekday Afternoon Peak 5pm-8pm**
 
 Sum up the trips per hexagon
@@ -342,7 +346,9 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-\<insert description of spatial patterns in 200 words\>
+::: {.callout-tip title="Description of Spatial Patterns"}
+200 words
+:::
 
 #### **Weekend/Holiday Morning Peak** **11am-2pm**
 
@@ -390,7 +396,9 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-\<insert description of spatial patterns in 200 words\>
+::: {.callout-tip title="Description of Spatial Patterns"}
+200 words
+:::
 
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
 
@@ -438,7 +446,9 @@ tm_shape(total_trips_by_grid_sf) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
 
-\<insert description of spatial patterns in 200 words\>
+::: {.callout-tip title="Description of Spatial Patterns"}
+200 words
+:::
 
 ## **Local Indicators of Spatial Association (LISA) Analysis**
 
