@@ -1,23 +1,11 @@
 ---
-title: "Hands-on_Ex3"
-subtitle: "Processing and Visualising Flow Data"
-date: "30 Nov 2023"
+title: "In class Exercise 3"
+subtitle: "Calibrating Spatial Interaction Models with R"
+date: "02 Dec 2023"
 date-modified: "last-modified"
 format: html
 editor: visual
 ---
-
-## Objectives:
-
--   to import and extract OD data for a selected time interval,
-
--   to import and save geospatial data (i.e. bus stops and mpsz) into sf tibble data frame objects,
-
--   to populate planning subzone code into bus stops sf tibble data frame,
-
--   to construct desire lines geospatial data from the OD data, and
-
--   to visualise passenger volume by origin and destination bus stops by using the desire lines data.
 
 ## **Getting Started**
 
@@ -28,39 +16,36 @@ editor: visual
 -   tmap for creating thematic maps.
 
 ```{r}
-pacman::p_load(tmap, sf, DT, stplanr,
-               performance,
+pacman::p_load(tmap, sf, sp, DT,
+               performance, reshape2,
                ggpubr, tidyverse)
 ```
 
 ## **Preparing the Flow Data**
 
-### **Importing the OD data**
+The following data will be used:
+
+-   *od_data.rds*, weekday morning peak passenger flows at planning subzone level.
+
+-   *mpsz.rds*, URA Master Plan 2019 Planning Subzone boundary in simple feature tibble data frame format.
+
+Beside these two data sets, an additional attribute data file called pop.csv will be provided.
+
+### **Importing the mpsz data**
 
 ```{r}
-getwd()
-odbus <- read_csv("Data/aspatial/origin_destination_bus_202310.csv")
+mpsz <- read_rds("data/rds/mpsz.rds")
+mpsz #read directly from shape file or hands on 3 rds copy (chap 15)
+#to check hands on 3 code chunks, see if any missing
 ```
 
-```{r}
-glimpse(odbus)
-```
+### **Converting from sf data.table to SpatialPolygonsDataFrame**
+
+First [`as.Spatial()`](https://r-spatial.github.io/sf/reference/coerce-methods.html) will be used to convert *mpsz* from sf tibble data frame to SpatialPolygonsDataFrame of sp object
 
 ```{r}
-odbus$ORIGIN_PT_CODE <- as.factor(odbus$ORIGIN_PT_CODE)
-odbus$DESTINATION_PT_CODE <- as.factor(odbus$DESTINATION_PT_CODE) 
-```
-
-### **Extracting the study data**
-
-```{r}
-odbus6_9 <- odbus %>%
-  filter(DAY_TYPE == "WEEKDAY") %>%
-  filter(TIME_PER_HOUR >= 6 &
-           TIME_PER_HOUR <= 9) %>%
-  group_by(ORIGIN_PT_CODE,
-           DESTINATION_PT_CODE) %>%
-  summarise(TRIPS = sum(TOTAL_TRIPS))
+mpsz_sp <- as(mpsz, "Spatial")
+mpsz_sp
 ```
 
 ```{r}
@@ -182,7 +167,7 @@ flowLine <- od2line(flow = od_data1,
                     zone_code = "SUBZONE_C")
 ```
 
-###  **Visualising the desire lines**
+### **Visualising the desire lines**
 
 ```{r}
 tm_shape(mpsz) +

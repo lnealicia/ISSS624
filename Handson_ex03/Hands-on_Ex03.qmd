@@ -28,7 +28,6 @@ pacman::p_load(tmap, sf, DT, stplanr,
 Import the *Passenger Volume by Origin Destination Bus Stops* data set downloaded from LTA DataMall by using `read_csv()` of **readr** package.
 
 ```{r}
-getwd()
 odbus <- read_csv("Data/aspatial/origin_destination_bus_202310.csv")
 ```
 

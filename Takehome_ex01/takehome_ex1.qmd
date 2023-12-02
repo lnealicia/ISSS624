@@ -13,7 +13,7 @@ editor: visual
 ## Getting Started
 
 ```{r}
-pacman::p_load(tmap,sf,tidyverse,knitr, dplyr, mapview)
+pacman::p_load(tmap,sf,tidyverse,knitr)
 ```
 
 ## Preparing the Flow Data
@@ -295,8 +295,6 @@ tm_shape(total_trips_by_grid_sf) +
   ) +
   tm_borders(col = "grey40", lwd = 0.4)
 ```
-
-*\<insert description of spatial patterns in 200 words\>*
 
 #### **Weekday Afternoon Peak 5pm-8pm**
 
