@@ -58,7 +58,7 @@ odbus6_9 <- odbus %>%
   summarise(TRIPS = sum(TOTAL_TRIPS))
 ```
 
-Table shows content of *odbus6_9*
+Content of *odbus6_9*
 
 ```{r}
 datatable(odbus6_9)
@@ -102,6 +102,12 @@ mpsz <- st_read(dsn = "Data/geospatial",
 mpsz
 ```
 
+Write mpsz sf tibble data frame into rds file
+
+```{r}
+mpsz <- write_rds(mpsz, "data/rds/mpsz.rds")
+```
+
 ## **Geospatial data wrangling**
 
 ### **Combining Busstop and mpsz**
@@ -125,7 +131,7 @@ write_rds(busstop_mpsz, "Data/rds/busstop_mpsz.rds")
 Apeend planning subzone code from busstop_mpsz data frame onto odbus6_9 data frame
 
 ```{r}
-od_data <- left_join(odbus6_9 , busstop_mpsz,
+od_data <- left_join(odbus6_9, busstop_mpsz,
             by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
   rename(ORIGIN_BS = ORIGIN_PT_CODE,
          ORIGIN_SZ = SUBZONE_C,
