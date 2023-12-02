@@ -13,7 +13,7 @@ editor: visual
 ## Getting Started
 
 ```{r}
-pacman::p_load(tmap,sf,tidyverse,knitr)
+pacman::p_load(tmap,sf,sfdep,tidyverse,knitr,plotly,zoo,Kendall)
 ```
 
 ## Preparing the Flow Data
@@ -159,7 +159,7 @@ Save output into rds format
 write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")
 ```
 
-## Setting up the Hexagon Grid
+## Hexagon Grid Setup
 
 ### Drawing the Hexagon Grid
 
@@ -247,6 +247,8 @@ hep_gridid <- hep_gridid %>%
   filter(!is.na(TRIPS) & TRIPS > 0)
 
 ```
+
+Note: Grid id 2955 and 3036 contains bus stops that are not within Singapore (i.e. Malaysia). These are left as they could provide insights to traffic between the Singapore & Malaysia land border.
 
 ## **Choropleth Visualisation**
 
@@ -543,8 +545,22 @@ Additional Note: It is interesting to see that the Central Business District, as
 
 ## **Local Indicators of Spatial Association (LISA) Analysis**
 
--   Compute LISA of the passengers trips generate by origin at hexagon level.
+### **Computing Contiguity Spatial Weights**
 
--   Display the LISA maps of the passengers trips generate by origin at hexagon level. The maps should only display the significant (i.e. p-value \< 0.05)
+Use poly2nb() of spdep package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.
 
--   With reference to the analysis results, draw statistical conclusions (not more than 200 words per visual).
+```{r}
+wm08 <- wm08 %>%
+  mutate( nb = st_contiguity(area_honeycomb_grid),
+          wt = st_weights(nb, style = "W"),
+          .before = 1
+)
+```
+
+## **Global Spatial Autocorrelation**
+
+Computed to perform spatial complete randomness test for global spatial autocorrelation.
+
+### **Computing local Moran's I**
+
+Local Moran's I of GDPPC at country level
