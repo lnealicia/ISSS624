@@ -572,9 +572,78 @@ tmap_arrange(equal,
 
 ### **Weekday Afternoon Peak 5pm-8pm**
 
+```{r}
+tmap_mode("plot")
+
+equal <- tm_shape(total_trips_by_grid_wdap_sf) +
+  tm_fill("total_trips",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal Interval Classification")
+
+quantile <- tm_shape(total_trips_by_grid_sf) +
+  tm_fill("total_trips",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal Quantile Classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
+
 ### **Weekend/Holiday Morning Peak** **11am-2pm**
 
+```{r}
+tmap_mode("plot")
+
+equal <- tm_shape(total_trips_by_grid_hmp_sf) +
+  tm_fill("total_trips",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal Interval Classification")
+
+quantile <- tm_shape(total_trips_by_grid_sf) +
+  tm_fill("total_trips",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal Quantile Classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
+
 ### **Weekend/Holiday Evening Peak 4pm-7pm**
+
+```{r}
+tmap_mode("plot")
+
+equal <- tm_shape(total_trips_by_grid_hep_sf) +
+  tm_fill("total_trips",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal Interval Classification")
+
+quantile <- tm_shape(total_trips_by_grid_sf) +
+  tm_fill("total_trips",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal Quantile Classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
 
 ## **Global Spatial Autocorrelation**
 
