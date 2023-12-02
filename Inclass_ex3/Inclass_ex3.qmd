@@ -48,7 +48,7 @@ mpsz_sp
 ```
 
 ```{r}
-datatable(odbus6_9)
+datatable(mpsz)
 ```
 
 ```{r}
