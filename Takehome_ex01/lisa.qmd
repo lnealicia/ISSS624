@@ -1,0 +1,750 @@
+---
+title: "Take-home-project"
+subtitle: "Geospatial Proj"
+date: "27 Nov 2023"
+date-modified: "last-modified"
+format: html
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual
+---
+
+## Getting Started
+
+Lets make make sure that **sfdep**, **sf**, **tmap** and **tidyverse** packages of R are currently installed 
+
+```{r}
+pacman::p_load(sf, sfdep, tmap, tidyverse, knitr, plotly, zoo, Kendall, mapview, spdep)
+```
+
+### Importing OD data into R
+
+Firstly we will import the Passenger volume by Origin Destination Bus Stops data set downloaded from LTA DataMall by using read_csv() of readr package.
+
+```{r}
+odbus <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
+glimpse(odbus)
+```
+
+#### Origin & Destination Bus Stop Code
+
+```{r}
+odbus$ORIGIN_PT_CODE <-
+as.factor(odbus$ORIGIN_PT_CODE)
+odbus$DESTINATION_PT_CODE <-
+as.factor(odbus$DESTINATION_PT_CODE)
+```
+
+#### Extracting study data
+
+We will filter out the data according to the requirements set out by Professor 1.) "Weekday \@ 6-9am"
+
+```{r}
+origtrip_6_9 <- odbus %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 6 &
+           TIME_PER_HOUR <= 9) %>%
+  group_by(ORIGIN_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+```
+
+```{r}
+kable(head(origtrip_6_9))
+write_rds(origtrip_6_9, "data/rds/origtrip_6_9.rds")
+```
+
+2.) "Weekday \@ 5-8pm"
+
+```{r}
+origtrip_17_20 <- odbus %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 17 &
+           TIME_PER_HOUR <= 20) %>%
+  group_by(ORIGIN_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+glimpse(origtrip_17_20)
+```
+
+```{r}
+kable(head(origtrip_17_20))
+write_rds(origtrip_17_20, "data/rds/origtrip_17_20.rds")
+```
+
+3.) "Weekend \@ 11am-2pm"
+
+```{r}
+origtrip_11_14 <- odbus %>%
+  filter(DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
+  filter(TIME_PER_HOUR >= 11 &
+           TIME_PER_HOUR <= 14) %>%
+  group_by(ORIGIN_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+```
+
+```{r}
+kable(head(origtrip_11_14))
+write_rds(origtrip_11_14, "data/rds/origtrip_11_14.rds")
+```
+
+4.) "Weekend \@ 4-7pm"
+
+```{r}
+origtrip_16_19 <- odbus %>%
+  filter(DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
+  filter(TIME_PER_HOUR >= 16 &
+           TIME_PER_HOUR <= 19) %>%
+  group_by(ORIGIN_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+```
+
+```{r}
+kable(head(origtrip_16_19))
+write_rds(origtrip_16_19, "data/rds/origtrip_16_19.rds")
+```
+
+```{r}
+origtrip_11_14 <- read_rds("data/rds/origtrip_11_14.rds")
+origtrip_16_19 <- read_rds("data/rds/origtrip_16_19.rds")
+origtrip_17_20 <- read_rds("data/rds/origtrip_17_20.rds")
+origtrip_6_9 <- read_rds("data/rds/origtrip_6_9.rds")
+```
+
+### Importing geospatial data
+
+```{r}
+busstop <- st_read(dsn = "data/geospatial",
+                   layer = "BusStop") %>%
+  st_transform(crs = 3414)
+```
+
+#### Glimpse the Bus Stop tibble data frame
+
+```{r}
+glimpse(busstop)
+```
+
+#### Load Map into MPSZ
+
+```{r}
+mpsz <- st_read(dsn = "data/geospatial",
+                   layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+glimpse(mpsz)
+```
+
+## Geospatial Data Wrangling
+
+### Combining Busstop and mpsz
+
+```{r}
+busstop_mpsz <- st_intersection(busstop, mpsz) %>%
+  select(BUS_STOP_N, SUBZONE_C) %>%
+  st_drop_geometry()
+glimpse(busstop_mpsz)
+```
+
+```{r}
+write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")  
+```
+
+```{r}
+origin_6_9 <- left_join(origtrip_6_9 , busstop_mpsz,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_SZ = SUBZONE_C) %>%
+  group_by(ORIGIN_SZ) %>%
+  summarise(TOT_TRIPS = sum(TRIPS))
+glimpse(origin_6_9)
+```
+
+```{r}
+origin_17_20 <- left_join(origtrip_17_20 , busstop_mpsz,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_SZ = SUBZONE_C) %>%
+  group_by(ORIGIN_SZ) %>%
+  summarise(TOT_TRIPS = sum(TRIPS))
+```
+
+```{r}
+origin_11_14 <- left_join(origtrip_11_14 , busstop_mpsz,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_SZ = SUBZONE_C) %>%
+  group_by(ORIGIN_SZ) %>%
+  summarise(TOT_TRIPS = sum(TRIPS))
+```
+
+```{r}
+origin_16_19 <- left_join(origtrip_16_19 , busstop_mpsz,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_SZ = SUBZONE_C) %>%
+  group_by(ORIGIN_SZ) %>%
+  summarise(TOT_TRIPS = sum(TRIPS))
+```
+
+## Setting up the Hexagon Grid
+
+### Drawing the Hexagon Grid
+
+Drawing the hexagon grid over the mpsz map
+
+```{r}
+area_honeycomb_grid = st_make_grid(mpsz, c(500), what = "polygons", square = FALSE)
+```
+
+### To sf and add grid ID
+
+```{r}
+honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
+  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+```
+
+```{r}
+busstop_honeycomb <- st_intersection(honeycomb_grid_sf,busstop) %>%
+  select(BUS_STOP_N, grid_id) %>%
+  st_drop_geometry()
+```
+
+```{r}
+write_rds(busstop_honeycomb, "data/rds/busstop_honeycomb.csv")
+```
+
+```{r}
+duplicate <- busstop_honeycomb %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+```
+
+```{r}
+busstop_honeycomb <- unique(busstop_honeycomb)
+```
+
+### remove grid without value of 0 (i.e. no points in side that grid)
+
+```{r}
+busstop_honeycomb <- busstop_honeycomb %>%
+  filter(!is.na(grid_id) & grid_id > 0)
+```
+
+## Assign every Bus Stop with a Grid ID
+
+```{r}
+origin_6_9 <- left_join(busstop_honeycomb, origtrip_6_9,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+origin_6_9 <- origin_6_9 %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+
+origin_17_20 <- left_join(busstop_honeycomb, origtrip_17_20,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+origin_17_20 <- origin_17_20 %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+
+origin_11_14 <- left_join(busstop_honeycomb, origtrip_11_14,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+origin_11_14 <- origin_11_14 %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+
+
+origin_16_19 <- left_join(busstop_honeycomb, origtrip_16_19,
+            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
+
+origin_16_19 <- origin_16_19 %>%
+  filter(!is.na(TRIPS) & TRIPS > 0)
+```
+
+# Choropleth Visualisation
+
+## Weekday Morning Peak 6am-9am
+
+```{r}
+total_trips_by_grid_6_9 <- origin_6_9 %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
+
+```
+
+Merge geospatial data
+
+```{r}
+
+total_trips_by_grid_6_9 <- total_trips_by_grid_6_9 %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf_6_9 <- st_sf(total_trips_by_grid_6_9)
+```
+
+Plot the Choropleth map
+
+```{r}
+
+tmap_mode("view")
+
+map_honeycomb = tm_shape(total_trips_by_grid_sf_6_9) +
+  tm_fill(
+    col = "total_trips",
+    palette = "Reds",
+    style = "cont",
+    title = "Total Trips Taken - Weekday Morning Peak 6-9am",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "total_trips"
+    ),
+    popup.format = list(
+      total_trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.4)
+
+map_honeycomb
+```
+
+## Weekday Afternoon Peak 5pm - 8pm
+
+```{r}
+total_trips_by_grid_17_20 <- origin_17_20 %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
+
+```
+
+Merge geospatial data
+
+```{r}
+
+total_trips_by_grid_17_20 <- total_trips_by_grid_17_20 %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf_17_20 <- st_sf(total_trips_by_grid_17_20)
+```
+
+Plot the Choropleth map
+
+```{r}
+
+tmap_mode("view")
+
+map_honeycomb1 = tm_shape(total_trips_by_grid_sf_17_20) +
+  tm_fill(
+    col = "total_trips",
+    palette = "Reds",
+    style = "cont",
+    title = "Total Trips Taken - Weekday Afternoon Peak 5 - 8 pm",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "total_trips"
+    ),
+    popup.format = list(
+      total_trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.4)
+
+
+map_honeycomb1
+```
+
+## Weekday/Weekend Morning Peak 11am-2pm
+
+```{r}
+total_trips_by_grid <- origin_11_14 %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
+```
+
+Merge geospatial data
+
+```{r}
+
+total_trips_by_grid <- total_trips_by_grid %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
+```
+
+Plot the Choropleth map
+
+```{r}
+
+tmap_mode("view")
+
+map_honeycomb = tm_shape(total_trips_by_grid_sf) +
+  tm_fill(
+    col = "total_trips",
+    palette = "Reds",
+    style = "cont",
+    title = "Total Trips Taken - Weekday Morning Peak 6-9am",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "total_trips"
+    ),
+    popup.format = list(
+      total_trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.4)
+
+map_honeycomb
+```
+
+## Weekend/Holiday Peak 4pm-7pm
+
+```{r}
+total_trips_by_grid <- origin_16_19 %>%
+  group_by(grid_id) %>%
+  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
+
+```
+
+Merge geospatial data
+
+```{r}
+
+total_trips_by_grid <- total_trips_by_grid %>%
+  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+
+total_trips_by_grid_sf <- st_sf(total_trips_by_grid)
+```
+
+Plot the Choropleth map
+
+```{r}
+
+tmap_mode("view")
+
+map_honeycomb = tm_shape(total_trips_by_grid_sf) +
+  tm_fill(
+    col = "total_trips",
+    palette = "Reds",
+    style = "cont",
+    title = "Total Trips Taken - Weekday Morning Peak 6-9am",
+    id = "grid_id",
+    showNA = FALSE,
+    alpha = 0.6,
+    popup.vars = c(
+      "Number of trips: " = "total_trips"
+    ),
+    popup.format = list(
+      total_trips = list(format = "f", digits = 0)
+    )
+  ) +
+  tm_borders(col = "grey40", lwd = 0.4)
+
+map_honeycomb
+```
+
+## **Local Indicators of Spatial Association (LISA) Analysis**
+
+### Computing Contiguity Spatial Weights
+
+a z-score, a pseudo p-value, and a code representing the cluster type for each statistically significant feature. The z-scores and pseudo p-values represent the statistical significance of the computed index values.
+
+#### Create list of neighbours
+
+Remove all 0 and null values
+
+```{r}
+# Create neighbor list
+wm08 <- total_trips_by_grid_sf %>%
+  mutate(nb = st_contiguity(area_honeycomb_grid))
+
+# Filter out 0 value & null value from nb
+wm08 <- wm08 %>%
+  filter(!sapply(nb, function(x) any(is.null(x) | any(x == 0))))
+
+# Create the weights
+wm08 <- wm08 %>%
+  mutate(
+    wt = st_weights(nb, style = "W"),
+    .before = 1
+  )
+
+```
+
+#### Step 3 Plot a map based on the list of neighbours
+
+```{r}
+
+# Set map to static
+tmap_mode("view")
+
+map_08 <- tm_shape(wm08) +
+  tm_fill(
+    col = "total_trips",
+    palette = "PuRd",
+    style = "pretty",
+    title = "Trip sizes"
+  ) +
+  tm_layout(main.title = "Total Bus Trips Across the Island ",
+            main.title.size = 1,
+            main.title.position = "center",
+            legend.position = c("left", "top"),
+            legend.height = .6,
+            legend.width = .2,
+            frame = FALSE
+            
+  )
+
+map_08
+```
+
+### Weekday Morning Peak Traffic
+
+```{r}
+# Set seed to ensure that results from simulation are reproducible
+set.seed(1234)
+# Step 1: Merge the data
+# Ensure that both wm08 and Origin_6_9 have 'grid_id' as a common key
+# and that it's of the same data type in both data frames
+merged_data <- wm08 %>% 
+  left_join(origin_6_9, by = "grid_id")
+
+# Step 2: Prepare the data
+# Assuming 'area_honeycomb_grid' is the geometry column in wm08
+# Convert to an sf object if not already
+if (!("sf" %in% class(merged_data))) {
+  merged_data <- st_as_sf(merged_data, geom_col = "area_honeycomb_grid")
+}
+
+# Recreate the neighbor list and spatial weights
+# Ensure 'nb' is in the correct format (e.g., created using st_contiguity or similar)
+listw <- nb2listw(merged_data$nb, style = "W")
+
+merged_data$standardized_trips <- as.numeric(scale(merged_data$TRIPS, center = TRUE, scale = TRUE))
+
+# Remove NA values from the data
+merged_data <- merged_data[!is.na(merged_data$standardized_trips), ]
+
+# Recreate the spatial weights to match the filtered data
+listw <- nb2listw(merged_data$nb, style = "W")
+
+# Check if the lengths match
+if (nrow(merged_data) != length(listw$neighbours)) {
+  stop("The length of the data and the spatial weights list do not match.")
+}
+
+# Run the Monte Carlo test for Local Moran's 
+lisa_wd_morn <- merged_data %>%
+  mutate(local_moran = local_moran(
+    total_trips, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_moran)
+
+# unnest the dataframe column
+tidyr::unnest(lisa_wd_morn)
+```
+
+### Weekday Afternoon/Evening Peak Traffic
+
+```{r}
+# Set seed to ensure that results from simulation are reproducible
+set.seed(1234)
+# Step 1: Merge the data
+# Ensure that both wm08 and Origin_6_9 have 'grid_id' as a common key
+# and that it's of the same data type in both data frames
+merged_data_17_20 <- wm08 %>% 
+  left_join(origin_17_20, by = "grid_id")
+
+# Step 2: Prepare the data
+# Assuming 'area_honeycomb_grid' is the geometry column in wm08
+# Convert to an sf object if not already
+if (!("sf" %in% class(merged_data_17_20))) {
+  merged_data_17_20 <- st_as_sf(merged_data_17_20, geom_col = "area_honeycomb_grid")
+}
+
+# Recreate the neighbor list and spatial weights
+# Ensure 'nb' is in the correct format (e.g., created using st_contiguity or similar)
+listw <- nb2listw(merged_data_17_20$nb, style = "W")
+
+merged_data_17_20$standardized_trips <- as.numeric(scale(merged_data_17_20$TRIPS, center = TRUE, scale = TRUE))
+
+# Remove NA values from the data
+merged_data_17_20 <- merged_data_17_20[!is.na(merged_data_17_20$standardized_trips), ]
+
+# Recreate the spatial weights to match the filtered data
+listw <- nb2listw(merged_data_17_20$nb, style = "W")
+
+# Check if the lengths match
+if (nrow(merged_data_17_20) != length(listw$neighbours)) {
+  stop("The length of the data and the spatial weights list do not match.")
+}
+
+# Run the Monte Carlo test for Local Moran's 
+lisa <- merged_data_17_20 %>%
+  mutate(local_moran = local_moran(
+    total_trips, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_moran)
+
+# unnest the dataframe column
+tidyr::unnest(lisa)
+
+# Extracting p-values or other results from local_moran_mc
+# ...
+```
+
+### Weekend/Holiday Morning Peak Traffic
+
+```{r}
+# Set seed to ensure that results from simulation are reproducible
+set.seed(1234)
+# Step 1: Merge the data
+# Ensure that both wm08 and Origin_6_9 have 'grid_id' as a common key
+# and that it's of the same data type in both data frames
+merged_data_11_14 <- wm08 %>% 
+  left_join(origin_11_14, by = "grid_id")
+
+# Step 2: Prepare the data
+# Assuming 'area_honeycomb_grid' is the geometry column in wm08
+# Convert to an sf object if not already
+if (!("sf" %in% class(merged_data_11_14))) {
+  merged_data_11_14 <- st_as_sf(merged_data_11_14, geom_col = "area_honeycomb_grid")
+}
+
+# Recreate the neighbor list and spatial weights
+# Ensure 'nb' is in the correct format (e.g., created using st_contiguity or similar)
+listw <- nb2listw(merged_data_11_14$nb, style = "W")
+
+merged_data_11_14$standardized_trips <- as.numeric(scale(merged_data_11_14$TRIPS, center = TRUE, scale = TRUE))
+
+# Remove NA values from the data
+merged_data_11_14 <- merged_data_11_14[!is.na(merged_data_11_14$standardized_trips), ]
+
+# Recreate the spatial weights to match the filtered data
+listw <- nb2listw(merged_data_11_14$nb, style = "W")
+
+# Check if the lengths match
+if (nrow(merged_data_11_14) != length(listw$neighbours)) {
+  stop("The length of the data and the spatial weights list do not match.")
+}
+
+# Run the Monte Carlo test for Local Moran's 
+lisa <- merged_data_11_14 %>%
+  mutate(local_moran = local_moran(
+    total_trips, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_moran)
+
+# unnest the dataframe column
+tidyr::unnest(lisa)
+
+# Extracting p-values or other results from local_moran_mc
+# ...
+```
+
+### Weekend/Holiday Evening Peak Traffic
+
+```{r}
+# Set seed to ensure that results from simulation are reproducible
+set.seed(1234)
+# Step 1: Merge the data
+# Ensure that both wm08 and Origin_6_9 have 'grid_id' as a common key
+# and that it's of the same data type in both data frames
+merged_data_16_19 <- wm08 %>% 
+  left_join(origin_16_19, by = "grid_id")
+
+# Step 2: Prepare the data
+# Assuming 'area_honeycomb_grid' is the geometry column in wm08
+# Convert to an sf object if not already
+if (!("sf" %in% class(merged_data_16_19))) {
+  merged_data_16_19 <- st_as_sf(merged_data_16_19, geom_col = "area_honeycomb_grid")
+}
+
+# Recreate the neighbor list and spatial weights
+# Ensure 'nb' is in the correct format (e.g., created using st_contiguity or similar)
+listw <- nb2listw(merged_data_16_19$nb, style = "W")
+
+merged_data_16_19$standardized_trips <- as.numeric(scale(merged_data_16_19$TRIPS, center = TRUE, scale = TRUE))
+
+# Remove NA values from the data
+merged_data_16_19 <- merged_data_16_19[!is.na(merged_data_16_19$standardized_trips), ]
+
+# Recreate the spatial weights to match the filtered data
+listw <- nb2listw(merged_data_16_19$nb, style = "W")
+
+# Check if the lengths match
+if (nrow(merged_data_16_19) != length(listw$neighbours)) {
+  stop("The length of the data and the spatial weights list do not match.")
+}
+
+# Run the Monte Carlo test for Local Moran's 
+lisa <- merged_data_16_19 %>%
+  mutate(local_moran = local_moran(
+    total_trips, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_moran)
+
+# unnest the dataframe column
+tidyr::unnest(lisa)
+
+# Extracting p-values or other results from local_moran_mc
+# ...
+```
+
+```{r}
+# Set map to static
+tmap_mode("plot")
+
+# weekday morning moran I values
+map_wdm_moran08 <- tm_shape(lisa_wd_morn) +
+  tm_fill(
+    col = "ii",
+    palette = "OrRd",
+    style = "pretty",
+    title = "Local Moran's I"
+  ) +
+  tm_layout(main.title = "Weekday Morning Peak Traffic",
+            main.title.size = 1,
+            main.title.position = "center",
+            legend.position = c("left", "top"),
+            legend.height = .6,
+            legend.width = .2,
+            frame = FALSE
+  )
+
+map_wdm_moran08
+
+
+```
+
+```{r}
+
+# Set map to static
+tmap_mode("view")
+
+map_m1 <- tm_shape(merged_data) +
+  tm_fill(
+    col = "total_trips",
+    palette = "PuRd",
+    style = "pretty",
+    title = "Trip sizes"
+  ) +
+  tm_layout(main.title = "Total Bus Trips Across the Island ",
+            main.title.size = 1,
+            main.title.position = "center",
+            legend.position = c("left", "top"),
+            legend.height = .6,
+            legend.width = .2,
+            frame = FALSE
+  )
+
+map_m1
+```

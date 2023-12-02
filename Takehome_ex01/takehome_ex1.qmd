@@ -541,7 +541,7 @@ These locations also happen to be:
 Places of Interest/Shopping Center: e.g. Lot 1 Shopping Center (Choa Chu Kang Interchange), NEX water playground (Serangoon)
 :::
 
-Additional Note: It is interesting to see that the Central Business District, as well as industrial areas, while serviced by public transport, are not as highly utilised when compared to other areas e.g. residential area. This could be due to commuters using alternate forms of transport e.g. private cars, taxi, company shuttle bus`
+Additional Note: It is interesting to see that the Central Business District, as well as industrial areas, while serviced by public transport, are not as highly utilised when compared to other areas e.g. residential area. This could be due to commuters using alternate forms of transport e.g. private cars, taxi, company shuttle bus\`
 
 ## **Global Spatial Autocorrelation**
 
@@ -678,3 +678,139 @@ moran.test(total_trips_by_grid_hep_sf$total_trips,
 
 The Moran's I statistic is significantly different from what would be expected under spatial randomness. The positive Moran's I value and the small p-value (\<0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.
 :::
+
+## **Creating a LISA Cluster Map**
+
+### Computing Local Moran's I
+
+```{r}
+localMI_wdmp <- localmoran(total_trips_by_grid_wdmp_sf$total_trips, rswm_wdmp)
+
+localMI_wdap <- localmoran(total_trips_by_grid_wdap_sf$total_trips, rswm_wdap)
+
+localMI_hmp <- localmoran(total_trips_by_grid_hmp_sf$total_trips, rswm_hmp)
+
+localMI_hep <- localmoran(total_trips_by_grid_hep_sf$total_trips, rswm_hep)
+```
+
+### **Preparing LISA Map Classes**
+
+Create an empty numeric vector named quadrant with a length equal to the number of rows in the object localMI
+
+```{r}
+quadrant_wdmp <- vector(mode="numeric",length=nrow(localMI_wdmp))
+
+quadrant_wdap <- vector(mode="numeric",length=nrow(localMI_wdap))
+
+quadrant_hmp <- vector(mode="numeric",length=nrow(localMI_hmp))
+
+quadrant_hep <- vector(mode="numeric",length=nrow(localMI_hep))
+```
+
+Setting Significance Level
+
+```{r}
+signif <- 0.05
+```
+
+#### **Weekday Morning Peak 6am-9am**
+
+```{r}
+
+# Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean
+
+total_trips_by_grid_wdmp_sf$total_trips_lag <- lag.listw(rswm_wdmp, total_trips_by_grid_wdmp_sf$total_trips)
+DV_wdmp <- total_trips_by_grid_wdmp_sf$total_trips_lag - mean(total_trips_by_grid_wdmp_sf$total_trips_lag)
+
+#centering the local Moran’s around the mean
+
+LM_I_wdmp <- localMI_wdmp[,1]
+
+#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.
+
+quadrant_wdmp[DV_wdmp <0 & LM_I_wdmp>0] <- 1
+quadrant_wdmp[DV_wdmp >0 & LM_I_wdmp<0] <- 2
+quadrant_wdmp[DV_wdmp <0 & LM_I_wdmp<0] <- 3  
+quadrant_wdmp[DV_wdmp >0 & LM_I_wdmp>0] <- 4    
+
+#non-significant Moran placed in the category 0
+
+quadrant_wdmp[localMI_wdmp[,5]>signif] <- 0
+```
+
+#### **Weekday Afternoon Peak 5pm-8pm**
+
+```{r}
+
+# Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean
+
+total_trips_by_grid_wdap_sf$total_trips_lag <- lag.listw(rswm_wdap, total_trips_by_grid_wdap_sf$total_trips)
+DV_wdap <- total_trips_by_grid_wdap_sf$total_trips_lag - mean(total_trips_by_grid_wdap_sf$total_trips_lag)
+
+#centering the local Moran’s around the mean
+
+LM_I_wdap <- localMI_wdap[,1]
+
+#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.
+
+quadrant_wdap[DV_wdap <0 & LM_I_wdap>0] <- 1
+quadrant_wdap[DV_wdap >0 & LM_I_wdap<0] <- 2
+quadrant_wdap[DV_wdap <0 & LM_I_wdap<0] <- 3  
+quadrant_wdap[DV_wdap >0 & LM_I_wdap>0] <- 4    
+
+#non-significant Moran placed in the category 0
+
+quadrant_wdap[localMI_wdap[,5]>signif] <- 0
+```
+
+#### **Weekend/Holiday Morning Peak 11am-2pm**
+
+```{r}
+
+# Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean
+
+total_trips_by_grid_hmp_sf$total_trips_lag <- lag.listw(rswm_hmp, total_trips_by_grid_hmp_sf$total_trips)
+DV_hmp <- total_trips_by_grid_hmp_sf$total_trips_lag - mean(total_trips_by_grid_hmp_sf$total_trips_lag)
+
+#centering the local Moran’s around the mean
+
+LM_I_hmp <- localMI_hmp[,1]
+
+#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.
+
+quadrant_hmp[DV_hmp <0 & LM_I_hmp>0] <- 1
+quadrant_hmp[DV_hmp >0 & LM_I_hmp<0] <- 2
+quadrant_hmp[DV_hmp <0 & LM_I_hmp<0] <- 3  
+quadrant_hmp[DV_hmp >0 & LM_I_hmp>0] <- 4    
+
+#non-significant Moran placed in the category 0
+
+quadrant_hmp[localMI_hmp[,5]>signif] <- 0
+```
+
+#### **Weekend/Holiday Evening Peak 4pm-7pm**
+
+```{r}
+
+# Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean
+
+total_trips_by_grid_hep_sf$total_trips_lag <- lag.listw(rswm_hep, total_trips_by_grid_hep_sf$total_trips)
+DV_hep <- total_trips_by_grid_hep_sf$total_trips_lag - mean(total_trips_by_grid_hep_sf$total_trips_lag)
+
+#centering the local Moran’s around the mean
+
+LM_I_hep <- localMI_hep[,1]
+
+#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.
+
+quadrant_hep[DV_hep <0 & LM_I_hep>0] <- 1
+quadrant_hep[DV_hep >0 & LM_I_hep<0] <- 2
+quadrant_hep[DV_hep <0 & LM_I_hep<0] <- 3  
+quadrant_hep[DV_hep >0 & LM_I_hep>0] <- 4    
+
+#non-significant Moran placed in the category 0
+
+quadrant_hep[localMI_hmp[,5]>signif] <- 0
+```
+
+### **Plotting LISA map**
