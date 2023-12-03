@@ -1076,7 +1076,7 @@ tmap_arrange(total_trips_hmp, LISAmap_hmp,
              asp=1, ncol=2)
 ```
 
-::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekend/Holiday Morning Peak 11am-2pm
 
 Of the hexagons that are significant, there are only regions that are:
@@ -1092,7 +1092,7 @@ High-high hexagons seem to be concentrated at public transport hubs/Shopping are
 
 ```{r}
 
-tmap_mode("plot")
+tmap_mode("view")
 
 total_trips_hep <- qtm(ttbg_sf.localMI_hep, "total_trips")
 
@@ -1115,5 +1115,13 @@ tmap_arrange(total_trips_hep, LISAmap_hep,
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: green"}
-Weekend/Holiday Evening Peak 4pm-7pm What statistical observations can you draw from the LISA map above?
+Weekend/Holiday Evening Peak 4pm-7pm
+
+Of the hexagons that are significant, there are only regions that are:
+
+-   Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome
+
+-   High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome
+
+High-high hexagons seem to be concentrated at public transport hubs/Shopping areas e.g. Bedok, New Upper Changi Road (Decathlon - Bedok, Harvey Norman Factory Outlet) while Low-High hexagons seem to be around residential areas e.g. Lorong Lew Lian, Lorong Biawak
 :::
