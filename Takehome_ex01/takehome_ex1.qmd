@@ -1114,7 +1114,7 @@ tmap_arrange(total_trips_hep, LISAmap_hep,
              asp=1, ncol=2)
 ```
 
-::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekend/Holiday Evening Peak 4pm-7pm
 
 Of the hexagons that are significant, there are only regions that are:
@@ -1123,5 +1123,7 @@ Of the hexagons that are significant, there are only regions that are:
 
 -   High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome
 
-High-high hexagons seem to be concentrated at public transport hubs/Shopping areas e.g. Bedok, New Upper Changi Road (Decathlon - Bedok, Harvey Norman Factory Outlet) while Low-High hexagons seem to be around residential areas e.g. Lorong Lew Lian, Lorong Biawak
+The general pattern is similar to that of Weekend/Holiday Morning Peak, with less Low-High hexagons, meaning that while overall trips are lower, it is more concentrated in specific areas.
+
+High-high hexagons seem to be concentrated at Leisure/Shopping areas e.g. Jalan Besar (Mustafa, New World Center), Bencoolen St (The Mind Cafe, The Loft Gym) while Low-High hexagons seem to be around residential areas e.g. Boon Lay, Pasir Ris Drive 1
 :::
