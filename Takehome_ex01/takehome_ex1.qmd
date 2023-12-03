@@ -1056,7 +1056,7 @@ Plot both the local Moran's I values map and its corresponding p-values map next
 ```{r}
 total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
 
-ttbg_sf.localMI_wdmp$quadrant_wdmp <- quadrant_wdmp
+ttbg_sf.localMI_wdmp$quadrant <- quadrant_wdmp
 
 colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
 clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
@@ -1080,8 +1080,83 @@ Weekday Morning Peak 6am-9am What statistical observations can you draw from the
 
 #### **Weekday Afternoon Peak 5pm-8pm**
 
+```{r}
+total_trips_wdap <- qtm(ttbg_sf.localMI_wdap, "total_trips")
+
+ttbg_sf.localMI_wdap$quadrant <- quadrant_wdap
+
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LISAmap_wdap <- tm_shape(ttbg_sf.localMI_wdap) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant_wdap)))+1], 
+          labels = clusters[c(sort(unique(quadrant_wdap)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+
+tmap_arrange(total_trips_wdap, LISAmap_wdap, 
+             asp=1, ncol=2)
+```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Weekday Afternoon Peak 5pm-8pm What statistical observations can you draw from the LISA map above?
+:::
+
 #### **Weekend/Holiday Morning Peak 11am-2pm**
+
+```{r}
+total_trips_hmp <- qtm(ttbg_sf.localMI_hmp, "total_trips")
+
+ttbg_sf.localMI_hmp$quadrant <- quadrant_hmp
+
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LISAmap_hmp <- tm_shape(ttbg_sf.localMI_hmp) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant_hmp)))+1], 
+          labels = clusters[c(sort(unique(quadrant_hmp)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+
+tmap_arrange(total_trips_hmp, LISAmap_hmp, 
+             asp=1, ncol=2)
+```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Weekend/Holiday Morning Peak 11am-2pm What statistical observations can you draw from the LISA map above?
+:::
 
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
 
+#### **Weekend/Holiday Morning Peak 11am-2pm**
 
+```{r}
+total_trips_hep <- qtm(ttbg_sf.localMI_hep, "total_trips")
+
+ttbg_sf.localMI_hep$quadrant <- quadrant_hep
+
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LISAmap_hep <- tm_shape(ttbg_sf.localMI_hep) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant_hep)))+1], 
+          labels = clusters[c(sort(unique(quadrant_hep)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)
+
+tmap_arrange(total_trips_hep, LISAmap_hep, 
+             asp=1, ncol=2)
+```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Weekend/Holiday Morning Peak 11am-2pm What statistical observations can you draw from the LISA map above?
+:::
