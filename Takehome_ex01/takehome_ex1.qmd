@@ -976,7 +976,6 @@ Plot both the local Moran's I values map and its corresponding p-values map next
 #### **Weekday Morning Peak 6am-9am**
 
 ```{r}
-tmap_mode(view)
 
 total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
 
@@ -999,15 +998,20 @@ tmap_arrange(total_trips_wdmp, LISAmap_wdmp,
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: green"}
-Weekday Morning Peak 6am-9am What statistical observations can you draw from the LISA map above?
+Weekday Morning Peak 6am-9am
+
+Of the hexagons that are significant, there are only regions that are:
+
+-   Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome
+
+-   High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome
+
+High-high hexagons seem to be concentrated at residential areas e.g. Boon Lay, Bukit Batok, while Low-High hexagons seem to be around industrial/office areas e.g. International Road, CBD
 :::
 
 #### **Weekday Afternoon Peak 5pm-8pm**
 
 ```{r}
-
-tmap_mode(plot)
-
 total_trips_wdap <- qtm(ttbg_sf.localMI_wdap, "total_trips")
 
 ttbg_sf.localMI_wdap$quadrant <- quadrant_wdap
