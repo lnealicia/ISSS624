@@ -1044,7 +1044,7 @@ quadrant_hep[DV_hep >0 & LM_I_hep>0] <- 4
 
 #non-significant Moran placed in the category 0
 
-quadrant_hep[localMI_hmp[,5]>signif] <- 0
+quadrant_hep[localMI_hep[,5]>signif] <- 0
 ```
 
 ### **Plotting LISA map**
@@ -1133,8 +1133,6 @@ Weekend/Holiday Morning Peak 11am-2pm What statistical observations can you draw
 :::
 
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
-
-#### **Weekend/Holiday Morning Peak 11am-2pm**
 
 ```{r}
 total_trips_hep <- qtm(ttbg_sf.localMI_hep, "total_trips")
