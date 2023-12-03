@@ -683,7 +683,7 @@ The Moran's I statistic is significantly different from what would be expected u
 
 Seed 1234 is used for consistency and a total of 1000 simulations will be performed
 
-#### **Weekday Morning Peak 6am-9am** 
+#### **Weekday Morning Peak 6am-9am**
 
 ```{r}
 set.seed(1234)
@@ -696,7 +696,7 @@ bperm_wdmp = moran.mc(total_trips_by_grid_wdmp_sf$total_trips,
 bperm_wdmp
 ```
 
-#### **Weekday Afternoon Peak 5pm-8pm**  
+#### **Weekday Afternoon Peak 5pm-8pm**
 
 ```{r}
 set.seed(1234)
@@ -709,7 +709,7 @@ bperm_wdap = moran.mc(total_trips_by_grid_wdap_sf$total_trips,
 bperm_wdap
 ```
 
-#### **Weekend/Holiday Morning Peak 11am-2pm**  
+#### **Weekend/Holiday Morning Peak 11am-2pm**
 
 ```{r}
 set.seed(1234)
@@ -819,17 +819,117 @@ localMI_hep <- localmoran(total_trips_by_grid_hep_sf$total_trips, rswm_hep)
 head(localMI_hep)
 ```
 
-### Computing Local Moran's I
+Note: localmoran() function returns a matrix of values whose columns are:
+
+-   Ii: the local Moran's I statistics
+
+-   E.Ii: the expectation of local Moran statistic under the randomisation hypothesis
+
+-   Var.Ii: the variance of local Moran statistic under the randomisation hypothesis
+
+-   Z.Ii:the standard deviate of local Moran statistic
+
+-   Pr(): the p-value of local Moran statistic
+
+## Mapping Local Moran's I values & P-values
+
+Append the local Moran's I dataframe (i.e. localMI) onto total_trips_by_grid patialPolygonDataFrame.
 
 ```{r}
-localMI_wdmp <- localmoran(total_trips_by_grid_wdmp_sf$total_trips, rswm_wdmp)
+ttbg_sf.localMI_wdmp <- cbind(total_trips_by_grid_wdmp_sf,localMI_wdmp) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
 
-localMI_wdap <- localmoran(total_trips_by_grid_wdap_sf$total_trips, rswm_wdap)
+ttbg_sf.localMI_wdap <- cbind(total_trips_by_grid_wdap_sf,localMI_wdap) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
 
-localMI_hmp <- localmoran(total_trips_by_grid_hmp_sf$total_trips, rswm_hmp)
+ttbg_sf.localMI_hmp <- cbind(total_trips_by_grid_hmp_sf,localMI_hmp) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
 
-localMI_hep <- localmoran(total_trips_by_grid_hep_sf$total_trips, rswm_hep)
+ttbg_sf.localMI_hep <- cbind(total_trips_by_grid_hep_sf,localMI_hep) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
 ```
+
+### Visualisation
+
+#### **Weekday Morning Peak 6am-9am**
+
+```{r}
+localMI_wdmp.map <- tm_shape(ttbg_sf.localMI_wdmp) +
+  tm_fill(col = "Ii", 
+          style = "pretty", 
+          title = "Local Moran's Statistics") +
+  tm_borders(alpha = 0.5)
+
+pvalue_wdmp.map <- tm_shape(ttbg_sf.localMI_wdmp) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "Local Moran's I p-values") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(localMI_wdmp.map, pvalue_wdmp.map, asp=1, ncol=2)
+```
+
+#### **Weekday Afternoon Peak 5pm-8pm**
+
+```{r}
+localMI_wdap.map <- tm_shape(ttbg_sf.localMI_wdap) +
+  tm_fill(col = "Ii", 
+          style = "pretty", 
+          title = "Local Moran's Statistics") +
+  tm_borders(alpha = 0.5)
+
+pvalue_wdap.map <- tm_shape(ttbg_sf.localMI_wdap) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "Local Moran's I p-values") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(localMI_wdap.map, pvalue_wdap.map, asp=1, ncol=2)
+```
+
+#### **Weekend/Holiday Morning Peak 11am-2pm**
+
+```{r}
+localMI_hmp.map <- tm_shape(ttbg_sf.localMI_hmp) +
+  tm_fill(col = "Ii", 
+          style = "pretty", 
+          title = "Local Moran's Statistics") +
+  tm_borders(alpha = 0.5)
+
+pvalue_hmp.map <- tm_shape(ttbg_sf.localMI_hmp) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "Local Moran's I p-values") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(localMI_hmp.map, pvalue_hmp.map, asp=1, ncol=2)
+```
+
+#### **Weekend/Holiday Evening Peak 4pm-7pm**
+
+```{r}
+localMI_hep.map <- tm_shape(ttbg_sf.localMI_hep) +
+  tm_fill(col = "Ii", 
+          style = "pretty", 
+          title = "Local Moran's Statistics") +
+  tm_borders(alpha = 0.5)
+
+pvalue_hep.map <- tm_shape(ttbg_sf.localMI_hep) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "Local Moran's I p-values") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(localMI_hep.map, pvalue_hep.map, asp=1, ncol=2)
+```
+
+## Creating a LISA Cluster Map
+
+Shows the significant locations colour coded by type of spatial autocorrelation.
 
 ### **Preparing LISA Map Classes**
 
