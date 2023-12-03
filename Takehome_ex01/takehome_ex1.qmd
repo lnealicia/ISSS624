@@ -790,7 +790,6 @@ Evaluare existence of clusters in the spatial arrangement of trips in time perio
 #### **Weekday Morning Peak 6am-9am**
 
 ```{r}
-fips_wdmp <- order(total_trips_by_grid_wdmp_sf$grid_id)
 localMI_wdmp <- localmoran(total_trips_by_grid_wdmp_sf$total_trips, rswm_wdmp)
 head(localMI_wdmp)
 ```
@@ -798,7 +797,6 @@ head(localMI_wdmp)
 #### **Weekday Afternoon Peak 5pm-8pm**
 
 ```{r}
-fips_wdap <- order(total_trips_by_grid_wdap_sf$grid_id)
 localMI_wdap <- localmoran(total_trips_by_grid_wdap_sf$total_trips, rswm_wdap)
 head(localMI_wdap)
 ```
@@ -806,7 +804,6 @@ head(localMI_wdap)
 #### **Weekend/Holiday Morning Peak 11am-2pm**
 
 ```{r}
-fips_hmp <- order(total_trips_by_grid_hmp_sf$grid_id)
 localMI_hmp <- localmoran(total_trips_by_grid_hmp_sf$total_trips, rswm_hmp)
 head(localMI_hmp)
 ```
@@ -814,7 +811,6 @@ head(localMI_hmp)
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
 
 ```{r}
-fips_hep <- order(total_trips_by_grid_hep_sf$grid_id)
 localMI_hep <- localmoran(total_trips_by_grid_hep_sf$total_trips, rswm_hep)
 head(localMI_hep)
 ```
@@ -833,7 +829,7 @@ Note: localmoran() function returns a matrix of values whose columns are:
 
 ## Mapping Local Moran's I values & P-values
 
-Append the local Moran's I dataframe (i.e. localMI) onto total_trips_by_grid patialPolygonDataFrame.
+Append the local Moran's I dataframe (i.e. localMI) onto total_trips_by_grid spatialPolygonDataFrame.
 
 ```{r}
 ttbg_sf.localMI_wdmp <- cbind(total_trips_by_grid_wdmp_sf,localMI_wdmp) %>%
@@ -1053,23 +1049,23 @@ quadrant_hep[localMI_hmp[,5]>signif] <- 0
 
 ### **Plotting LISA map**
 
-Both the local Moran's I values map and its corresponding p-values map next to each other for effective interpretation
+Plot both the local Moran's I values map and its corresponding p-values map next to each other for effective interpretation
 
 #### **Weekday Morning Peak 6am-9am**
 
 ```{r}
-total_trips_wdmp <- qtm(total_trips_by_grid_wdmp_sf, "total_trips")
+total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
 
-total_trips_by_grid_wdmp_sf.localMI_wdmp$quadrant_wdmp <- quadrant_wdmp
+ttbg_sf.localMI_wdmp$quadrant_wdmp <- quadrant_wdmp
 
 colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
 clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
 
-LISAmap_wdmp <- tm_shape(total_trips_by_grid_wdmp_sf.localMI_wdmp$quadrant_wdmp) +
+LISAmap_wdmp <- tm_shape(ttbg_sf.localMI_wdmp) +
   tm_fill(col = "quadrant", 
           style = "cat", 
-          palette = colors[c(sort(unique(quadrant)))+1], 
-          labels = clusters[c(sort(unique(quadrant)))+1],
+          palette = colors[c(sort(unique(quadrant_wdmp)))+1], 
+          labels = clusters[c(sort(unique(quadrant_wdmp)))+1],
           popup.vars = c("")) +
   tm_view(set.zoom.limits = c(11,17)) +
   tm_borders(alpha=0.5)
@@ -1078,16 +1074,14 @@ tmap_arrange(total_trips_wdmp, LISAmap_wdmp,
              asp=1, ncol=2)
 ```
 
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Weekday Morning Peak 6am-9am What statistical observations can you draw from the LISA map above?
+:::
+
 #### **Weekday Afternoon Peak 5pm-8pm**
 
 #### **Weekend/Holiday Morning Peak 11am-2pm**
 
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
 
-```{r}
 
-```
-
-::: {.callout-tip title="Statistical Conclusion" style="color: green"}
-Weekday Morning Peak 6am-9am What statistical observations can you draw from the LISA map above?
-:::
