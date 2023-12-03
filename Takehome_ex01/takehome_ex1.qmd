@@ -976,6 +976,8 @@ Plot both the local Moran's I values map and its corresponding p-values map next
 #### **Weekday Morning Peak 6am-9am**
 
 ```{r}
+tmap_mode(view)
+
 total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
 
 ttbg_sf.localMI_wdmp$quadrant <- quadrant_wdmp
@@ -1003,6 +1005,9 @@ Weekday Morning Peak 6am-9am What statistical observations can you draw from the
 #### **Weekday Afternoon Peak 5pm-8pm**
 
 ```{r}
+
+tmap_mode(plot)
+
 total_trips_wdap <- qtm(ttbg_sf.localMI_wdap, "total_trips")
 
 ttbg_sf.localMI_wdap$quadrant <- quadrant_wdap
