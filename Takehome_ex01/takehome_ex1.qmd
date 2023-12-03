@@ -289,7 +289,7 @@ Plot the Choropleth map
 
 ```{r}
 
-tmap_mode("view")
+tmap_mode("plot")
 
 tm_shape(total_trips_by_grid_wdmp_sf) +
   tm_fill(
@@ -977,7 +977,7 @@ Plot both the local Moran's I values map and its corresponding p-values map next
 
 ```{r}
 
-tmap_mode("view")
+tmap_mode("plot")
 
 total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
 
