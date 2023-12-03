@@ -977,6 +977,8 @@ Plot both the local Moran's I values map and its corresponding p-values map next
 
 ```{r}
 
+tmap_mode("view")
+
 total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
 
 ttbg_sf.localMI_wdmp$quadrant <- quadrant_wdmp
@@ -997,7 +999,7 @@ tmap_arrange(total_trips_wdmp, LISAmap_wdmp,
              asp=1, ncol=2)
 ```
 
-::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekday Morning Peak 6am-9am
 
 Of the hexagons that are significant, there are only regions that are:
@@ -1012,6 +1014,9 @@ High-high hexagons seem to be concentrated at residential areas e.g. Boon Lay, B
 #### **Weekday Afternoon Peak 5pm-8pm**
 
 ```{r}
+
+tmap_mode("view")
+
 total_trips_wdap <- qtm(ttbg_sf.localMI_wdap, "total_trips")
 
 ttbg_sf.localMI_wdap$quadrant <- quadrant_wdap
@@ -1024,7 +1029,7 @@ LISAmap_wdap <- tm_shape(ttbg_sf.localMI_wdap) +
           style = "cat", 
           palette = colors[c(sort(unique(quadrant_wdap)))+1], 
           labels = clusters[c(sort(unique(quadrant_wdap)))+1],
-          popup.vars = c("")) +
+          ) +
   tm_view(set.zoom.limits = c(11,17)) +
   tm_borders(alpha=0.5)
 
@@ -1032,13 +1037,24 @@ tmap_arrange(total_trips_wdap, LISAmap_wdap,
              asp=1, ncol=2)
 ```
 
-::: {.callout-tip title="Statistical Conclusion" style="color: green"}
-Weekday Afternoon Peak 5pm-8pm What statistical observations can you draw from the LISA map above?
+::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
+Weekday Morning Peak 6am-9am
+
+Of the hexagons that are significant, there are only regions that are:
+
+-   Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome
+
+-   High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome
+
+High-high hexagons seem to be concentrated at residential areas e.g. Boon Lay, Bukit Batok, while Low-High hexagons seem to be around industrial/office areas e.g. International Road, CBD
 :::
 
 #### **Weekend/Holiday Morning Peak 11am-2pm**
 
 ```{r}
+
+tmap_mode("plot")
+
 total_trips_hmp <- qtm(ttbg_sf.localMI_hmp, "total_trips")
 
 ttbg_sf.localMI_hmp$quadrant <- quadrant_hmp
@@ -1066,6 +1082,9 @@ Weekend/Holiday Morning Peak 11am-2pm What statistical observations can you draw
 #### **Weekend/Holiday Evening Peak 4pm-7pm**
 
 ```{r}
+
+tmap_mode("plot")
+
 total_trips_hep <- qtm(ttbg_sf.localMI_hep, "total_trips")
 
 ttbg_sf.localMI_hep$quadrant <- quadrant_hep
