@@ -134,105 +134,79 @@ st_crs(wp_sf)
 st_crs(map_poly)
 ```
 
-### Combining wp_sf & map_poly
+Note: Both datasets confirmed to be EPSG 26391
+
+## Proportion of Functional and Non-Functional Water Points
+
+Tidyr and dplyr methods are used to derive the proportion of functional and non-functional water point at LGA level (i.e. ADM2).
+
+```{r}
+wp_sf_status <- wp_sf %>%
+  select(status_clean)
+```
+
+Group data by *status_clean* column and count occurence of each category
+
+```{r}
+wp_sf_status_grp <- wp_sf %>%
+  count(status_clean)
+
+wp_sf_status_grp
+```
+
+Note: Based on the output above, there are 6 categories. We will combine them into 2 categories.
+
+Non-functional: "Abandoned/Decommissioned", "Non-functional", "Non-Functional, dry season"
+
+Functional: "Functional", "Functional, needs repair", "Functional, not in use"
 
 ```{r}
 
-st_intersects(wp_sf, map_poly)
+wp_sf_status_grp <- wp_sf %>%
+  mutate(filtered_status = case_when(
+    status_clean %in% c("Abandoned/Decommissioned", "Non-Functional", "Non-Functional, dry season") ~ "N",
+    status_clean %in% c("Functional", "Functional, needs repair", "Functional, not in use") ~ "F",
+    TRUE ~ as.character(status_clean)  # Keep other categories as is
+  ))
 ```
 
-Save output into rds format
+Group data by *filtered_status* column and count occurrence of each category
 
 ```{r}
-write_rds(wp_map, "data/rds/wp_map.csv")
+count <- wp_sf_status_grp %>%
+  count(filtered_status)
+
+count
 ```
 
-## Plotting the Geospatial Data
-
-```{r}
-plot(map_poly)
-```
-
-Convert the hexagon grid to sf (simple features) object and add a new column grid_id (sequential identifier) to it
-
-```{r}
-honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
-  # add grid ID
-  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
-```
-
-Determine which bus stops is contained within which hexagon using **`st_within`**.
-
-```{r}
-busstop_honeycomb <- st_intersection(honeycomb_grid_sf,busstop) %>%
-  select(BUS_STOP_N, grid_id) %>%
-  st_drop_geometry()
-```
-
-Save output into rds format
-
-```{r}
-write_rds(busstop_honeycomb, "data/rds/busstop_honeycomb.csv")
-```
-
-Check for duplicate records
-
-```{r}
-duplicate <- busstop_honeycomb %>%
-  group_by_all() %>%
-  filter(n()>1) %>%
-  ungroup()
-```
-
-Retain unique records only
-
-```{r}
-busstop_honeycomb <- unique(busstop_honeycomb)
-```
-
-Only include hexagon grid IDs that have bus stop numbers
+Proportion of Functional vs Non-Functional Water Points
 
 ```{r}
 
-busstop_honeycomb <- busstop_honeycomb %>%
-  filter(!is.na(grid_id) & grid_id > 0)
+proportion_summary <- wp_sf_status_grp %>%
+  group_by(filtered_status) %>%
+  summarize(proportion = n() / nrow(wp_sf))
+
+# Print the summary
+print(proportion_summary)
 ```
 
-### Assign Each Bus Stop to a Grid ID
+::: {.callout-tip title="Statistical Conclusion" style="color: blue"}
+Based on the output above, there are:
 
-For all time periods, assign bus stops to a hexagon grid id. All NULL and 0 values are removed.
+|                                      |              |                |
+|--------------------------------------|--------------|----------------|
+| **Functional Status of Water Point** | **Quantity** | **Proportion** |
+| Functional                           | 53015        | 0.5341885      |
+| Non-Functional                       | 46229        | 0.4658115      |
+:::
+
+## Combining wp_sf_status_grp and map_poly
 
 ```{r}
-wdmp_gridid <- left_join(busstop_honeycomb, wdmp,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-wdmp_gridid <- wdmp_gridid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-
-
-wdap_gridid <- left_join(busstop_honeycomb, wdap,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-wdap_gridid <- wdap_gridid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-
-
-hmp_gridid <- left_join(busstop_honeycomb, hmp,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-hmp_gridid <- hmp_gridid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-
-
-hep_gridid <- left_join(busstop_honeycomb, hep,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-hep_gridid <- hep_gridid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-
+wp_map <- st_intersection(wp_sf_status_grp, map_poly) %>%
+  select(BUS_STOP_N, SUBZONE_C)
 ```
-
-Note: Grid id 2955 and 3036 contains bus stops that are not within Singapore (i.e. Malaysia). These are left as they could provide insights to traffic between the Singapore & Malaysia land border.
 
 ## **Choropleth Visualisation**
 
