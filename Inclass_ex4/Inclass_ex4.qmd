@@ -292,57 +292,17 @@ compare_performance(model_list,
 
 Extract the fitted values from each model
 
+Unconstraint Model
+
 ```{r}
 df <- as.data.frame(uncSIM$fitted.values) %>%
   round(digits = 0)
-
-inter_zonal_flow <- inter_zonal_flow %>%
-  mutate(uncTRIPS = df,
-         df = NULL)
-
-
-df <- as.data.frame(orcSIM$fitted.values) %>%
-  round(digits = 0)
-
-inter_zonal_flow <- inter_zonal_flow %>%
-  mutate(orcTRIPS = df,
-         df = NULL)
-
-
-df <- as.data.frame(decSIM$fitted.values) %>%
-  round(digits = 0)
-
-inter_zonal_flow <- inter_zonal_flow %>%
-  mutate(decTRIPS = df,
-         df = NULL)
-
-
-df <- as.data.frame(dbcSIM$fitted.values) %>%
-  round(digits = 0)
-
-inter_zonal_flow <- inter_zonal_flow %>%
-  mutate(dbcTRIPS = df,
-         df = NULL)
-```
-
-Rename columns
-```{r}
-inter_zonal_flow <- inter_zonal_flow %>%
-  rename(
-    uncTRIPS = matches("uncSIM$fitted.values"),
-    orcTRIPS = matches("orcSIM$fitted.values"),
-    decTRIPS = matches("decSIM$fitted.values"),
-    dbcTRIPS = matches("dbcSIM$fitted.values")
-  )
 ```
 
 ```{r}
-inter_zonal_flow$TRIPS <- as.numeric(inter_zonal_flow$TRIPS)
-inter_zonal_flow$uncTRIPS <- as.numeric(inter_zonal_flow$uncTRIPS)
-inter_zonal_flow$orcTRIPS <- as.numeric(inter_zonal_flow$orcTRIPS)
-inter_zonal_flow$decTRIPS <- as.numeric(inter_zonal_flow$decTRIPS)
-inter_zonal_flow$dbcTRIPS <- as.numeric(inter_zonal_flow$dbcTRIPS)
-
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df) %>%
+  rename(uncTRIPS = `uncSIM$fitted.values`)
 ```
 
 
