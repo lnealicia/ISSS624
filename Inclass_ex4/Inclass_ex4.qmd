@@ -162,9 +162,11 @@ flow_data$offset <- ifelse(
   0.000001, 1)
 ```
 
-select flow>1
+
 
 ```{r}
+flow_data <- flow_data %>%
+  filter(FlowNoIntra > 1)
 
 ```
 
