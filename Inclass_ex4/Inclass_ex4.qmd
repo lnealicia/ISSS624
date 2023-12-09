@@ -292,19 +292,47 @@ compare_performance(model_list,
 
 Extract the fitted values from each model
 
-Unconstraint Model
+Unconstrainted Model
 
 ```{r}
 df <- as.data.frame(uncSIM$fitted.values) %>%
   round(digits = 0)
-```
 
-```{r}
 inter_zonal_flow <- inter_zonal_flow %>%
   cbind(df) %>%
-  rename(uncTRIPS = `uncSIM$fitted.values`)
+  rename(uncTRIPS = `uncSIM.fitted.values`)
 ```
 
+Origin Constrained Model
+```{r}
+df <- as.data.frame(orcSIM$fitted.values) %>%
+  round(digits = 0)
+
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df) %>%
+  rename(orcTRIPS = `orcSIM.fitted.values`)
+```
+
+Destination Constrained Model
+```{r}
+df <- as.data.frame(decSIM$fitted.values) %>%
+  round(digits = 0)
+
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df) %>%
+  rename(decTRIPS = `decSIM.fitted.values`)
+```
+
+Doubly Constrained Model
+
+```{r}
+df <- as.data.frame(dbcSIM$fitted.values) %>%
+  round(digits = 0)
+
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df) %>%
+  rename(dbcTRIPS = `dbcSIM.fitted.values`)
+```
 
 Plotting graphs
 
