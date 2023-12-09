@@ -243,7 +243,7 @@ CalcRSquared <- function(observed, estimated){
 Examine how the constraints hold for destinations
 
 ```{r}
-CalcRSquared(orcSIM_Poisson$data$TRIPS, orcSIM_Poisson$fitted.values)
+CalcRSquared(orcSIM$data$TRIPS, orcSIM$fitted.values)
 ```
 
 ## Destination Constrained
@@ -266,8 +266,6 @@ CalcRSquared(decSIM$data$TRIPS, decSIM$fitted.values)
 ## Doubly Constrained
 
 ```{r}
-
-
 dbcSIM <- glm(formula = TRIPS ~
                 ORIGIN_SZ +
                 DESTIN_SZ +
@@ -281,12 +279,13 @@ dbcSIM
 ## Model Comparison
 
 ```{r}
-model_list <- list(unconstrained = uncSIM,
-                   originConstrained = orcSIM,
-                   destinationConstrained = decSIM,
-                   doublyConstrained = dbcSIM)
+model_list <- list(unconstrained=uncSIM,
+                   originConstrained=orcSIM,
+                   destinationConstrained=decSIM,
+                   doublyConstrained=dbcSIM)
+
 compare_performance(model_list,
-                    metrics = "RSME")
+                    metrics = "RMSE")
 ```
 
 ## Visualising Fitted
@@ -294,40 +293,58 @@ compare_performance(model_list,
 Extract the fitted values from each model
 
 ```{r}
-df_unc <- as.data.frame(uncSIM$fitted.values) %>%
+df <- as.data.frame(uncSIM$fitted.values) %>%
   round(digits = 0)
 
 inter_zonal_flow <- inter_zonal_flow %>%
-  cbind(df_unc) %>%
-  rename(uncTRIPS = "uncSIM$fitted.values")
+  mutate(uncTRIPS = df,
+         df = NULL)
+
+
+df <- as.data.frame(orcSIM$fitted.values) %>%
+  round(digits = 0)
+
+inter_zonal_flow <- inter_zonal_flow %>%
+  mutate(orcTRIPS = df,
+         df = NULL)
+
+
+df <- as.data.frame(decSIM$fitted.values) %>%
+  round(digits = 0)
+
+inter_zonal_flow <- inter_zonal_flow %>%
+  mutate(decTRIPS = df,
+         df = NULL)
+
+
+df <- as.data.frame(dbcSIM$fitted.values) %>%
+  round(digits = 0)
+
+inter_zonal_flow <- inter_zonal_flow %>%
+  mutate(dbcTRIPS = df,
+         df = NULL)
+```
+
+Rename columns
+```{r}
+inter_zonal_flow <- inter_zonal_flow %>%
+  rename(
+    uncTRIPS = matches("uncSIM$fitted.values"),
+    orcTRIPS = matches("orcSIM$fitted.values"),
+    decTRIPS = matches("decSIM$fitted.values"),
+    dbcTRIPS = matches("dbcSIM$fitted.values")
+  )
 ```
 
 ```{r}
-df_orc <- as.data.frame(orcSIM$fitted.values) %>%
-  round(digits = 0)
+inter_zonal_flow$TRIPS <- as.numeric(inter_zonal_flow$TRIPS)
+inter_zonal_flow$uncTRIPS <- as.numeric(inter_zonal_flow$uncTRIPS)
+inter_zonal_flow$orcTRIPS <- as.numeric(inter_zonal_flow$orcTRIPS)
+inter_zonal_flow$decTRIPS <- as.numeric(inter_zonal_flow$decTRIPS)
+inter_zonal_flow$dbcTRIPS <- as.numeric(inter_zonal_flow$dbcTRIPS)
 
-inter_zonal_flow <- inter_zonal_flow %>%
-  cbind(df_orc) %>%
-  rename(orcTRIPS = "orcSIM$fitted.values")
 ```
 
-```{r}
-df_dec <- as.data.frame(decSIM$fitted.values) %>%
-  round(digits = 0)
-
-inter_zonal_flow <- inter_zonal_flow %>%
-  cbind(df_dec) %>%
-  rename(decTRIPS = "decSIM$fitted.values")
-```
-
-```{r}
-df_dbc <- as.data.frame(dbcSIM$fitted.values) %>%
-  round(digits = 0)
-
-inter_zonal_flow <- inter_zonal_flow %>%
-  cbind(df_dbc) %>%
-  rename(dbcTRIPS = "dbcSIM$fitted.values")
-```
 
 Plotting graphs
 
@@ -350,7 +367,7 @@ dec_p <- ggplot(data = inter_zonal_flow,
   geom_point() +
   geom_smooth(method = lm)
 
-dbc_p <- ggplot(data = SIM_data,
+dbc_p <- ggplot(data = inter_zonal_flow,
                 aes(x = dbcTRIPS,
                     y = TRIPS)) +
   geom_point() +
