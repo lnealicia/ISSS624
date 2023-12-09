@@ -19,9 +19,10 @@ website:
             href: Handson_ex02/Hands-on_Ex02_3.html
           - text: Hands-on Exercise 3
             href: Handson_ex03/Hands-on_Ex03.html
-          - text: Hands-on Exercise 4
+          - text: Hands-on Exercise 4 (part i)
             href: Handson_ex04/Hands-on_Ex04.html
-          - text: Hands-on Exercise 5
+          - text: Hands-on Exercise 4 (part ii)
+            href: Handson_ex04/Hands-on_Ex04_2.html
       - text: In-class Exercise
         menu:
           - text: In-class Exercise 1
@@ -31,6 +32,7 @@ website:
           - text: In-class Exercise 3
             href: Inclass_ex3/Inclass_ex3.html
           - text: In-Class Exercise 4
+            href: Inclass_ex3/Inclass_ex4.html
           - text: In-Class Exercise 5
       - text: Take-home Exercise
         menu:
