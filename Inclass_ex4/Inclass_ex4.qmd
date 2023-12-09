@@ -152,35 +152,6 @@ Import the rds file into R environment
 flow_data <- read_rds("data/rds/flow_data_tidy.rds") 
 ```
 
-```{r}
-flow_data <- flow_data %>%
-  group_by(ORIGIN_SZ, DESTIN_SZ) %>% 
-  summarize(TRIPS = sum(MORNING_PEAK)) 
-```
-
-```{r}
-flow_data <- flow_data %>%
-  left_join(mpsz_tidy,
-            by = c("DESTIN_SZ" = "SUBZONE_C"))
-```
-
-### Checking for variables with zero values
-
-Since Poisson Regression is based off log and log 0 is undefined, it is important to ensure there are no 0 values
-
-```{r}
-flow_data$SCHOOL_COUNT <- ifelse(
-  flow_data$SCHOOL_COUNT == 0,
-  0.99, flow_data$SCHOOL_COUNT)
-flow_data$BUSINESS_COUNT <- ifelse (
-  flow_data$BUSINESS_COUNT == 0,
-  0.99, flow_data$RETAIL_COUNT
-)
-```
-
-```{r}
-summary(flow_data)
-```
 
 ```{r}
 flow_data$FlowNoIntra <- ifelse(
@@ -189,7 +160,16 @@ flow_data$FlowNoIntra <- ifelse(
 flow_data$offset <- ifelse(
   flow_data$ORIGIN_SZ == flow_data$DESTIN_SZ,
   0.000001, 1)
+```
 
+select flow>1
+
+```{r}
+
+```
+
+
+```{r}
 inter_zonal_flow <- inter_zonal_flow %>%
   rename(TRIP =MORNING_PEAK,
          DIST = dist)
