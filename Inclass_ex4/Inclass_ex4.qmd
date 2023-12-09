@@ -24,7 +24,6 @@ pacman::p_load(tmap, sf, httr, tidyverse)
 Geocoding - process of aspatial description of a location e.g. address
 
 ```{r}
-#| eval: false
 
 url <- "https://www.onemap.gov.sg/api/common/elastic/search"
 
