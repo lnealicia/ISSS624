@@ -30,13 +30,12 @@ website:
           - text: In-class Exercise 3
             href: Inclass_ex3/Inclass_ex3.html
           - text: In-Class Exercise 4
-            href: Inclass_ex3/Inclass_ex4.html
+            href: Inclass_ex4/Inclass_ex4.html
       - text: Take-home Exercise
         menu:
           - text: Take Home Exercise 1
             href: Takehome_ex01/takehome_ex1.html
           - text: Take Home Exercise 2
-            href: Takehome_ex02/takehome_ex2.html
     right:
       - href: index.qmd
         text: Home
