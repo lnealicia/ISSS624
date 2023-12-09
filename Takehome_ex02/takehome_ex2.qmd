@@ -56,64 +56,22 @@ Filter out data that belong to trips that occur on:
       summarise(TRIPS = sum(TOTAL_TRIPS))
     ```
 
--   "Weekday" and "5-8pm" (wdap)
-
-    ```{r}
-    wdap <-  odbus %>%
-      filter(DAY_TYPE == "WEEKDAY") %>%
-      filter(TIME_PER_HOUR >= 17 &
-               TIME_PER_HOUR <= 20) %>%
-      group_by(ORIGIN_PT_CODE) %>%
-      summarise(TRIPS = sum(TOTAL_TRIPS))
-    ```
-
--   "Weekends/Holiday" and "11am-2pm" (hmp)
-
-    ```{r}
-    hmp <- odbus %>%
-      filter(DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
-      filter(TIME_PER_HOUR >= 11 &
-               TIME_PER_HOUR <= 14) %>%
-      group_by(ORIGIN_PT_CODE) %>%
-      summarise(TRIPS = sum(TOTAL_TRIPS))
-    ```
-
--   "Weekends/Holiday" and "4pm-7pm" (hep)
-
-    ```{r}
-    hep <- odbus %>%
-      filter(DAY_TYPE == "WEEKENDS/HOLIDAY") %>%
-      filter(TIME_PER_HOUR >= 16 &
-               TIME_PER_HOUR <= 19) %>%
-      group_by(ORIGIN_PT_CODE) %>%
-      summarise(TRIPS = sum(TOTAL_TRIPS))
-    ```
-
 Check resulting data tables
 
 ```{r}
 kable(head(wdmp)) 
-kable(head(wdap)) 
-kable(head(hmp)) 
-kable(head(hep))
 ```
 
 Output saved in rds format for future use
 
 ```{r}
 write_rds(wdmp, "data/rds/wdmp.rds") 
-write_rds(wdap, "data/rds/wdap.rds") 
-write_rds(hmp, "data/rds/hmp.rds") 
-write_rds(hep, "data/rds/hep.rds")
 ```
 
 Import the rds file into R environment
 
 ```{r}
 wdmp <- read_rds("data/rds/wdmp.rds") 
-wdap <- read_rds("data/rds/wdap.rds") 
-hmp <- read_rds("data/rds/hmp.rds") 
-hep <- read_rds("data/rds/hep.rds")
 ```
 
 ## Working with Geospatial Data
