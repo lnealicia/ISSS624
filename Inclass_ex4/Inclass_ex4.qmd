@@ -166,7 +166,7 @@ flow_data$offset <- ifelse(
 
 ```{r}
 flow_data <- flow_data %>%
-  filter(FlowNoIntra > 1)
+  filter(FlowNoIntra > 0)
 
 ```
 
