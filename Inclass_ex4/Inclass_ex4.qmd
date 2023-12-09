@@ -132,7 +132,7 @@ summary(mpsz$SCHOOL_COUNT)
 ```
 
 ```{r}
-business_sf <- st_read(dsn = "data/geospatial", layer = "Business") %>%
+retail_sf <- st_read(dsn = "data/geospatial", layer = "Retails") %>%
   st_transform(crs = 3414)
 ```
 
@@ -140,7 +140,7 @@ business_sf <- st_read(dsn = "data/geospatial", layer = "Business") %>%
 tmap_options(check.and.fix = TRUE)
 tm_shape(mpsz) +
   tm_polygons() +
-tm_shape(business_sf) +
+tm_shape(retail_sf) +
   tm_dots()
 ```
 
@@ -172,8 +172,8 @@ flow_data <- flow_data %>%
 
 
 ```{r}
-inter_zonal_flow <- inter_zonal_flow %>%
-  rename(TRIP =MORNING_PEAK,
+inter_zonal_flow <- flow_data %>%
+  rename(TRIPS =MORNING_PEAK,
          DIST = dist)
 ```
 
@@ -190,10 +190,10 @@ pacman::p_load(sp, DT, stplanr,
 ```{r}
 uncSIM <- glm(formula = TRIPS ~ 
                 log(SCHOOL_COUNT) + 
-                log(BUSINESS_COUNT) +
-                log(dist),
+                log(RETAIL_COUNT) +
+                log(DIST),
               family = poisson(link = "log"),
-              data = SIM_data,
+              data = inter_zonal_flow,
               na.action = na.exclude)
 uncSIM
 ```
@@ -219,15 +219,15 @@ r2_mcfadden(uncSIM)
 ## Origin constrained SIM
 
 ```{r}
-orcSIM_Poisson <- glm(formula = TRIPS ~
-                ORGIN_SZ +
+orcSIM <- glm(formula = TRIPS ~
+                ORIGIN_SZ +
                 log(SCHOOL_COUNT) +
-                log(BUSINESS_COUNT) +
+                log(RETAIL_COUNT) +
                 log(DIST) - 1,
               family = poisson(link = "log"),
               data = inter_zonal_flow,
               na.action = na.exclude)
-summary(orcSIM_Poisson)
+summary(orcSIM)
 ```
 
 ### Goodness-of-Fit
@@ -243,7 +243,7 @@ CalcRSquared <- function(observed, estimated){
 Examine how the constraints hold for destinations
 
 ```{r}
-CalcRSquared(orcSIM_POisson$data$TRIPS, orcSIM_Poisson$fitted.values)
+CalcRSquared(orcSIM_Poisson$data$TRIPS, orcSIM_Poisson$fitted.values)
 ```
 
 ## Destination Constrained
@@ -252,9 +252,9 @@ CalcRSquared(orcSIM_POisson$data$TRIPS, orcSIM_Poisson$fitted.values)
 decSIM <- glm(formula = TRIPS ~ 
                 DESTIN_SZ + 
                 log(SCHOOL_COUNT) + 
-                log(dist),
+                log(DIST),
               family = poisson(link = "log"),
-              data = SIM_data,
+              data = inter_zonal_flow,
               na.action = na.exclude)
 summary(decSIM)
 ```
@@ -268,14 +268,14 @@ CalcRSquared(decSIM$data$TRIPS, decSIM$fitted.values)
 ```{r}
 
 
-dbcSIM_Poisson <- glm(formula = TRIPS ~
-                ORGIN_SZ +
+dbcSIM <- glm(formula = TRIPS ~
+                ORIGIN_SZ +
                 DESTIN_SZ +
                 log(DIST),
               family = poisson(link = "log"),
               data = inter_zonal_flow,
               na.action = na.exclude)
-dbcSIM_Poisson
+dbcSIM
 ```
 
 ## Model Comparison
@@ -294,57 +294,57 @@ compare_performance(model_list,
 Extract the fitted values from each model
 
 ```{r}
-df <- as.data.frame(uncSIM$fitted.values) %>%
+df_unc <- as.data.frame(uncSIM$fitted.values) %>%
   round(digits = 0)
 
-SIM_data <- SIM_data %>%
-  cbind(df) %>%
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df_unc) %>%
   rename(uncTRIPS = "uncSIM$fitted.values")
 ```
 
 ```{r}
-df <- as.data.frame(orcSIM$fitted.values) %>%
+df_orc <- as.data.frame(orcSIM$fitted.values) %>%
   round(digits = 0)
 
-SIM_data <- SIM_data %>%
-  cbind(df) %>%
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df_orc) %>%
   rename(orcTRIPS = "orcSIM$fitted.values")
 ```
 
 ```{r}
-df <- as.data.frame(decSIM$fitted.values) %>%
+df_dec <- as.data.frame(decSIM$fitted.values) %>%
   round(digits = 0)
 
-SIM_data <- SIM_data %>%
-  cbind(df) %>%
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df_dec) %>%
   rename(decTRIPS = "decSIM$fitted.values")
 ```
 
 ```{r}
-df <- as.data.frame(dbcSIM$fitted.values) %>%
+df_dbc <- as.data.frame(dbcSIM$fitted.values) %>%
   round(digits = 0)
 
-SIM_data <- SIM_data %>%
-  cbind(df) %>%
+inter_zonal_flow <- inter_zonal_flow %>%
+  cbind(df_dbc) %>%
   rename(dbcTRIPS = "dbcSIM$fitted.values")
 ```
 
 Plotting graphs
 
 ```{r}
-unc_p <- ggplot(data = SIM_data,
+unc_p <- ggplot(data = inter_zonal_flow,
                 aes(x = uncTRIPS,
                     y = TRIPS)) +
   geom_point() +
   geom_smooth(method = lm)
 
-orc_p <- ggplot(data = SIM_data,
+orc_p <- ggplot(data = inter_zonal_flow,
                 aes(x = orcTRIPS,
                     y = TRIPS)) +
   geom_point() +
   geom_smooth(method = lm)
 
-dec_p <- ggplot(data = SIM_data,
+dec_p <- ggplot(data = inter_zonal_flow,
                 aes(x = decTRIPS,
                     y = TRIPS)) +
   geom_point() +
