@@ -28,21 +28,21 @@ pacman::p_load(tmap, sf, DT, stplanr,
 
 ### Importing the OD data
 
-Import the **Passenger Volume by Origin Destination Bus Stops** data set downloaded from LTA DataMall
+Import the `Passenger Volume by Origin Destination Bus Stops` data set downloaded from LTA DataMall
 
 ```{r}
 odbus <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
 ```
 
-Check odbus tibble data frame
+Check `odbus` tibble data frame
 
 ```{r}
 glimpse(odbus)
 ```
 
-Note: Values in ORIGIN_PT_CODE and DESTINATION_PT_CODE are character data type
+Note: Values in `ORIGIN_PT_CODE` and `DESTINATION_PT_CODE` are character data type
 
-Converting ORIGIN_PT_CODE and DESTINATION_PT_CODE columns from character data type to factors in R (categorical data type)
+Converting `ORIGIN_PT_CODE` and `DESTINATION_PT_CODE` columns from character data type to factors in R (categorical data type)
 
 ```{r}
 odbus$ORIGIN_PT_CODE <-
@@ -53,9 +53,7 @@ as.factor(odbus$DESTINATION_PT_CODE)
 
 ### Extracting the Study Data
 
-Filter out data that belong to trips that occur during:
-
--   "Weekday" and "6-9am" (wdmp)
+Filter out data that belong to trips that occur during "Weekday" and "6-9am" (wdmp)
 
     ```{r}
     wdmp <- odbus %>%
@@ -65,10 +63,10 @@ Filter out data that belong to trips that occur during:
       summarise(TRIPS = sum(TOTAL_TRIPS))
     ```
 
-Check resulting data tables
+Check resulting data table
 
 ```{r}
-kable(head(wdmp)) 
+head(wdmp)
 ```
 
 Output saved in rds format for future use
@@ -83,29 +81,29 @@ Import the rds file into R environment
 wdmp <- read_rds("data/rds/wdmp.rds") 
 ```
 
-## Working with Geospatial Data
+## Geospatial Data
 
-Two geospatial data (shapefile) will be used for this exercise:
+Two geospatial data will be used for this exercise:
 
 -   BusStop: Provides location of bus stop as at Q4 2022
 
 -   MPSZ-2019: Provides the sub-zone boundary of URA Master Plan 2019
 
-### Importing geospatial data
+### Importing Bus Stop Locations
 
 ```{r}
 busstop <- st_read(dsn = "Data/geospatial",
                    layer = "BusStop") %>%
   st_transform(crs = 3414)
 ```
+### Importing Singapore Map
 
 ```{r}
-mpsz <- st_read(dsn = "data/geospatial",
-                layer = "MPSZ-2019") %>%
-  st_transform(crs = 3414)
+mpsz <- read_rds("data/rds/mpsz.rds")
+mpsz
 ```
 
-Check structure of `busstop` and `MPSZ`  sf tibble data frame
+Check structure of `busstop` and `MPSZ` sf tibble data frame
 
 ```{r}
 glimpse(busstop)
@@ -114,15 +112,14 @@ glimpse(busstop)
 ```{r}
 glimpse(mpsz)
 ```
+### Converting from sf data.table to SpatialPolygonsDataFrame
 
-Write mpsz sf tibble data frame into an rds file
+`mpsz` is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object
 
 ```{r}
-mpsz <- write_rds(mpsz, "data/rds/mpsz.rds")
+mpsz_sp <- as(mpsz, "Spatial")
+mpsz_sp
 ```
-
-
-## Geospatial Data Wrangling
 
 ## Hexagon Grid Setup
 
@@ -130,20 +127,20 @@ An analytical hexagon data of 375m (this distance is the perpendicular distance 
 
 ### Drawing the Hexagon Grid
 
-Draw hexagon grid over the mpsz map
+Draw hexagon grid over the `mpsz` map
 
 ```{r}
 hexagon_grid = st_make_grid(mpsz, c(750, 750), what = "polygons", square = FALSE)
 ```
 
-Convert the hexagon grid to sf (simple features) object and add a new column grid_id (sequential identifier) to it
+Convert the hexagon grid to sf (simple features) object and add a new column *grid_id* (sequential identifier) to it
 
 ```{r}
 grid_sf = st_sf(hexagon_grid) %>%
   mutate(grid_id = 1:length(lengths(hexagon_grid)))
 ```
 
-Determine which bus stops are contained within which hexagons
+Assign bus stops to hexagon *grid_ids*
 
 ```{r}
 busstop_grid <- st_intersection(grid_sf,busstop) %>%
@@ -172,269 +169,55 @@ Retain unique records only
 busstop_grid <- unique(busstop_grid)
 ```
 
-Only keep hexagons that contain bus stops (aka remove hexagons with NULL or 0 bus stops)
+### Replace Bus Stop Code with Corresponding Hexagon Grid ID
+
+`wdmp` left join with `busstop_grid` for *ORIGIN_PT_CODE*
 
 ```{r}
-
-busstop_grid <- busstop_grid %>%
-  filter(!is.na(grid_id) & grid_id > 0)
+wdmp <- wdmp %>%
+  left_join(busstop_grid, by = c("ORIGIN_PT_CODE" = "BUS_STOP_N"))
 ```
-
-### Assign Each Bus Stop to a Grid ID
-
-Only keep hexagons and relevant bus stops that have trips (aka remove bus stops with NULL or 0 trips)
+Rename column to *o_grid_id*
 
 ```{r}
-trips_bsid <- left_join(busstop_grid, wdmp,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-trips_bsid <- trips_bsid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-  filter(!is.na(TRIPS) & TRIPS > 0)
+wdmp <- wdmp %>%
+  rename(o_grid_id = grid_id)
 
 ```
 
-Note: Grid id 2955 and 3036 contains bus stops that are not within Singapore (i.e. Malaysia). These are left as they could provide insights to traffic between the Singapore & Malaysia land border.
-
-## **Choropleth Visualisation**
-
-#### **Weekday Morning Peak 6am-9am**
-
-Sum up the trips per hexagon
+`wdmp` left join with `busstop_grid` for *DESTINATION_PT_CODE*
 
 ```{r}
-total_trips_by_grid_wdmp <- wdmp_gridid %>%
-  group_by(grid_id) %>%
-  summarise(total_trips = sum(TRIPS, na.rm = TRUE))
+wdmp <- wdmp %>%
+  left_join(busstop_grid, by = c("DESTINATION_PT_CODE" = "BUS_STOP_N"))
+```
+
+Rename column to *d_grid_id*
+
+```{r}
+wdmp <- wdmp %>%
+  rename(d_grid_id = grid_id)
+```
+
+Remove bus stop codes
+
+```{r}
+wdmp <- wdmp %>%
+  ungroup() %>%
+  select(-c(ORIGIN_PT_CODE, DESTINATION_PT_CODE))
 
 ```
 
-Merge geospatial data
+Remove trips that have the same origin and destination grid_id
 
 ```{r}
-
-total_trips_by_grid_wdmp <- total_trips_by_grid_wdmp %>%
-  left_join(grid_sf, by = c("grid_id" = "grid_id"))
-
-total_trips_by_grid_wdmp_sf <- st_sf(total_trips_by_grid_wdmp)
+wdmp <- wdmp %>%
+  filter(o_grid_id != d_grid_id)
 ```
 
-Summary Statistics (Hexagon)
-
-```{r}
-summary(wdmp$TRIPS)
-```
-
-Total Trips in the time slot
-
-```{r}
-sum(wdmp$TRIPS)
-```
-
-Plot the Choropleth map
-
-```{r}
-
-tmap_mode("plot")
-
-tm_shape(total_trips_by_grid_wdmp_sf) +
-  tm_fill(
-    col = "total_trips",
-    palette = "Greens",
-    style = "cont",
-    title = "Total Trips Taken - Weekday Morning Peak 6-9am",
-    id = "grid_id",
-    showNA = FALSE,
-    alpha = 0.6,
-    popup.vars = c(
-      "Number of trips: " = "total_trips"
-    ),
-    popup.format = list(
-      total_trips = list(format = "f", digits = 0)
-    )
-  ) +
-  tm_borders(col = "grey40", lwd = 0.4)
-```
-
-::: {.callout-tip title="Description of Spatial Patterns" style="color: green"}
-Weekday Morning Peak 6am-9am
-
-This timeslot has a total of 26,430,413 trips taken. It ranks first by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2184.
-
-Hexagons with greater number of trips are located near:
-
--   Residential areas e.g. Tampines, Ang Mo Kio
-
--   Public transport hubs e.g. Bus Interchange, MRT Interchange e.g. Toa Payoh Interchange, Bedok Interchange
-
--   Immigration checkpoint at Woodlands
-:::
-
-## **Global Spatial Autocorrelation**
-
-Computed to perform spatial complete randomness test for global spatial autocorrelation.
-
-### **Computing Contiguity Spatial Weights**
-
-Use poly2nb() of spdep package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.
-
-#### **Weekday Morning Peak 6am-9am**
-
-```{r}
-wm_wdmp <- poly2nb(total_trips_by_grid_wdmp_sf, 
-                queen=TRUE)
-summary(wm_wdmp)
-```
-
-Note: The summary report above shows that there are 1490 hexagons considered for Weekday Morning Peak 6am-9am. The most connected hexagon has 6 neighbours. There are 43 hexagons with only 1 neighbour.
-
-### Computing Monte Carlo Moran's I Statistic
-
-Seed 1234 is used for consistency and a total of 1000 simulations will be performed
-
-#### **Weekday Morning Peak 6am-9am**
-
-```{r}
-set.seed(1234)
-
-bperm_wdmp = moran.mc(total_trips_by_grid_wdmp_sf$total_trips,
-                      listw = rswm_wdmp,
-                      nsim = 999,
-                      zero.policy = TRUE,
-                      na.action = na.omit)
-bperm_wdmp
-```
-
-## **Cluster and Outlier Analysis**
-
-Evaluare existence of clusters in the spatial arrangement of trips in time periods of interest e.g. Weekday Morning Peak 6am-9am.
-
-### Computing Local Moran's I
-
-#### **Weekday Morning Peak 6am-9am**
-
-```{r}
-localMI_wdmp <- localmoran(total_trips_by_grid_wdmp_sf$total_trips, rswm_wdmp)
-head(localMI_wdmp)
-```
-
-Note: localmoran() function returns a matrix of values whose columns are:
-
--   Ii: the local Moran's I statistics
-
--   E.Ii: the expectation of local Moran statistic under the randomisation hypothesis
-
--   Var.Ii: the variance of local Moran statistic under the randomisation hypothesis
-
--   Z.Ii:the standard deviate of local Moran statistic
-
--   Pr(): the p-value of local Moran statistic
-
-## Mapping Local Moran's I values & P-values
-
-Append the local Moran's I dataframe (i.e. localMI) onto total_trips_by_grid spatialPolygonDataFrame.
-
-```{r}
-ttbg_sf.localMI_wdmp <- cbind(total_trips_by_grid_wdmp_sf,localMI_wdmp) %>%
-  rename(Pr.Ii = Pr.z....E.Ii..)
-
-ttbg_sf.localMI_wdap <- cbind(total_trips_by_grid_wdap_sf,localMI_wdap) %>%
-  rename(Pr.Ii = Pr.z....E.Ii..)
-
-ttbg_sf.localMI_hmp <- cbind(total_trips_by_grid_hmp_sf,localMI_hmp) %>%
-  rename(Pr.Ii = Pr.z....E.Ii..)
-
-ttbg_sf.localMI_hep <- cbind(total_trips_by_grid_hep_sf,localMI_hep) %>%
-  rename(Pr.Ii = Pr.z....E.Ii..)
-```
-
-## Creating a LISA Cluster Map
-
-Shows the significant locations colour coded by type of spatial autocorrelation.
-
-### **Preparing LISA Map Classes**
-
-Create an empty numeric vector named quadrant with a length equal to the number of rows in the object localMI
-
-```{r}
-quadrant_wdmp <- vector(mode="numeric",length=nrow(localMI_wdmp))
-
-quadrant_wdap <- vector(mode="numeric",length=nrow(localMI_wdap))
-
-quadrant_hmp <- vector(mode="numeric",length=nrow(localMI_hmp))
-
-quadrant_hep <- vector(mode="numeric",length=nrow(localMI_hep))
-```
-
-Setting Significance Level
-
-```{r}
-signif <- 0.05
-```
-
-#### **Weekday Morning Peak 6am-9am**
-
-```{r}
-
-# Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean
-
-total_trips_by_grid_wdmp_sf$total_trips_lag <- lag.listw(rswm_wdmp, total_trips_by_grid_wdmp_sf$total_trips)
-DV_wdmp <- total_trips_by_grid_wdmp_sf$total_trips_lag - mean(total_trips_by_grid_wdmp_sf$total_trips_lag)
-
-#centering the local Moran’s around the mean
-
-LM_I_wdmp <- localMI_wdmp[,1]
-
-#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.
-
-quadrant_wdmp[DV_wdmp <0 & LM_I_wdmp>0] <- 1
-quadrant_wdmp[DV_wdmp >0 & LM_I_wdmp<0] <- 2
-quadrant_wdmp[DV_wdmp <0 & LM_I_wdmp<0] <- 3  
-quadrant_wdmp[DV_wdmp >0 & LM_I_wdmp>0] <- 4    
-
-#non-significant Moran placed in the category 0
-
-quadrant_wdmp[localMI_wdmp[,5]>signif] <- 0
-```
-
-### **Plotting LISA map**
-
-Plot both the local Moran's I values map and its corresponding p-values map next to each other for effective interpretation
-
-#### **Weekday Morning Peak 6am-9am**
-
-```{r}
-
-tmap_mode("plot")
-
-total_trips_wdmp <- qtm(ttbg_sf.localMI_wdmp, "total_trips")
-
-ttbg_sf.localMI_wdmp$quadrant <- quadrant_wdmp
-
-colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
-clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
-
-LISAmap_wdmp <- tm_shape(ttbg_sf.localMI_wdmp) +
-  tm_fill(col = "quadrant", 
-          style = "cat", 
-          palette = colors[c(sort(unique(quadrant_wdmp)))+1], 
-          labels = clusters[c(sort(unique(quadrant_wdmp)))+1],
-          alpha = 0.6) +
-  tm_view(set.zoom.limits = c(11,17)) +
-  tm_borders(alpha=0.5)
-
-tmap_arrange(total_trips_wdmp, LISAmap_wdmp, 
-             asp=1, ncol=2)
-```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekday Morning Peak 6am-9am
 
-Of the hexagons that are significant, there are only regions that are:
-
--   Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome
-
--   High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome
-
-High-high hexagons seem to be concentrated at residential areas e.g. Boon Lay, Bukit Batok, while Low-High hexagons seem to be around industrial/office areas e.g. International Road, CBD
+Describe spatial pattern <= 100 words
 :::
