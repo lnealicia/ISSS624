@@ -35,9 +35,9 @@ website:
             href: Takehome_ex01/takehome_ex1.html
           - text: Take Home Exercise 2
     right:
-      - href: index.qmd
+      - href: index.html
         text: Home
-      - about.qmd
+      - about.html
 
 format:
   html:
