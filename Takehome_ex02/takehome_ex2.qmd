@@ -18,21 +18,23 @@ pacman::p_load(tmap,sf,spdep,sfdep,tidyverse,knitr,plotly,zoo,Kendall)
 
 ## Preparing the Flow Data
 
-### Importing the OD data
+### Importing the Origin & Destination data
 
-Firstly, we will import the **Passenger Volume by Origin Destination Bus Stops** data set downloaded from LTA DataMall by using read_csv() of **readr** package.
+Import the **Passenger Volume by Origin Destination Bus Stops** data set downloaded from LTA DataMall
 
 ```{r}
 odbus <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
 ```
 
-Check odbus tibble data frame that values in OROGIN_PT_CODE and DESTINATION_PT_CODE are in numeric data type.
+Check odbus tibble data frame
 
 ```{r}
 glimpse(odbus)
 ```
+Note: Values in ORIGIN_PT_CODE and DESTINATION_PT_CODE are character data type
 
-Origin & Destination Bus Stop Code
+
+Converting ORIGIN_PT_CODE and DESTINATION_PT_CODE columns from character data type to factors in R (categorical data type)
 
 ```{r}
 odbus$ORIGIN_PT_CODE <-
@@ -43,17 +45,16 @@ as.factor(odbus$DESTINATION_PT_CODE)
 
 ### Extracting the Study Data
 
-Filter out data that belong to trips that occur on:
+Filter out data that belong to trips that occur during:
 
 -   "Weekday" and "6-9am" (wdmp)
 
     ```{r}
-    wdmp <-  odbus %>%
-      filter(DAY_TYPE == "WEEKDAY") %>%
-      filter(TIME_PER_HOUR >= 6 &
-               TIME_PER_HOUR <= 9) %>%
-      group_by(ORIGIN_PT_CODE) %>%
-      summarise(TRIPS = sum(TOTAL_TRIPS))
+    wdmp <- odbus %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 6 & TIME_PER_HOUR <= 9) %>%
+  group_by(ORIGIN_PT_CODE, DESTINATION_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
     ```
 
 Check resulting data tables
@@ -80,7 +81,7 @@ Two geospatial data (shapefile) will be used for this exercise:
 
 -   BusStop: Provides location of bus stop as at Q4 2022
 
--   MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019
+-   MPSZ-2019: Provides the sub-zone boundary of URA Master Plan 2019
 
 ### Importing geospatial data
 
@@ -88,7 +89,9 @@ Two geospatial data (shapefile) will be used for this exercise:
 busstop <- st_read(dsn = "Data/geospatial",
                    layer = "BusStop") %>%
   st_transform(crs = 3414)
+```
 
+```{r}
 mpsz <- st_read(dsn = "data/geospatial",
                 layer = "MPSZ-2019") %>%
   st_transform(crs = 3414)
@@ -98,12 +101,15 @@ Check structure of `busstop` and `MPSZ`  sf tibble data frame
 
 ```{r}
 glimpse(busstop)
+```
+
+```{r}
 glimpse(mpsz)
 ```
 
 ## Geospatial Data Wrangling
 
-### Combining Busstop & mpsz
+### Combining busstop & mpsz
 
 ```{r}
 busstop_mpsz <- st_intersection(busstop, mpsz) %>%
@@ -114,7 +120,13 @@ busstop_mpsz <- st_intersection(busstop, mpsz) %>%
 Save output into rds format
 
 ```{r}
-write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")
+write_rds(busstop_mpsz, "data/rds/busstop_mpsz.rds")
+```
+
+Import the rds file into R environment
+
+```{r}
+busstop_mpsz <- read_rds("data/rds/busstop_mpsz.rds") 
 ```
 
 ## Hexagon Grid Setup
@@ -124,21 +136,20 @@ write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")
 Draw hexagon grid over the mpsz map
 
 ```{r}
-area_honeycomb_grid = st_make_grid(mpsz, c(750, 750), what = "polygons", square = FALSE)
+hexagon_grid = st_make_grid(mpsz, c(750, 750), what = "polygons", square = FALSE)
 ```
 
 Convert the hexagon grid to sf (simple features) object and add a new column grid_id (sequential identifier) to it
 
 ```{r}
-honeycomb_grid_sf = st_sf(area_honeycomb_grid) %>%
-  # add grid ID
-  mutate(grid_id = 1:length(lengths(area_honeycomb_grid)))
+grid_sf = st_sf(hexagon_grid) %>%
+  mutate(grid_id = 1:length(lengths(hexagon_grid)))
 ```
 
-Determine which bus stops is contained within which hexagon using **`st_within`**.
+Determine which bus stops are contained within which hexagons
 
 ```{r}
-busstop_honeycomb <- st_intersection(honeycomb_grid_sf,busstop) %>%
+busstop_grid <- st_intersection(grid_sf,busstop) %>%
   select(BUS_STOP_N, grid_id) %>%
   st_drop_geometry()
 ```
@@ -146,13 +157,19 @@ busstop_honeycomb <- st_intersection(honeycomb_grid_sf,busstop) %>%
 Save output into rds format
 
 ```{r}
-write_rds(busstop_honeycomb, "data/rds/busstop_honeycomb.csv")
+write_rds(busstop_grid, "data/rds/busstop_grid.rds")
+```
+
+Import the rds file into R environment
+
+```{r}
+busstop_grid <- read_rds("data/rds/busstop_grid.rds") 
 ```
 
 Check for duplicate records
 
 ```{r}
-duplicate <- busstop_honeycomb %>%
+duplicate <- busstop_grid %>%
   group_by_all() %>%
   filter(n()>1) %>%
   ungroup()
@@ -161,47 +178,27 @@ duplicate <- busstop_honeycomb %>%
 Retain unique records only
 
 ```{r}
-busstop_honeycomb <- unique(busstop_honeycomb)
+busstop_grid <- unique(busstop_grid)
 ```
 
-Only include hexagon grid IDs that have bus stop numbers
+Only keep hexagons that contain bus stops (aka remove hexagons with NULL or 0 bus stops)
 
 ```{r}
 
-busstop_honeycomb <- busstop_honeycomb %>%
+busstop_grid <- busstop_grid %>%
   filter(!is.na(grid_id) & grid_id > 0)
 ```
 
 ### Assign Each Bus Stop to a Grid ID
 
-For all time periods, assign bus stops to a hexagon grid id. All NULL and 0 values are removed.
+Only keep hexagons and relevant bus stops that have trips (aka remove bus stops with NULL or 0 trips)
 
 ```{r}
-wdmp_gridid <- left_join(busstop_honeycomb, wdmp,
+trips_bsid <- left_join(busstop_grid, wdmp,
             by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
 
-wdmp_gridid <- wdmp_gridid %>%
+trips_bsid <- trips_bsid %>%
   filter(!is.na(TRIPS) & TRIPS > 0)
-
-
-wdap_gridid <- left_join(busstop_honeycomb, wdap,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-wdap_gridid <- wdap_gridid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-
-
-hmp_gridid <- left_join(busstop_honeycomb, hmp,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-hmp_gridid <- hmp_gridid %>%
-  filter(!is.na(TRIPS) & TRIPS > 0)
-
-
-hep_gridid <- left_join(busstop_honeycomb, hep,
-            by = c("BUS_STOP_N" = "ORIGIN_PT_CODE")) 
-
-hep_gridid <- hep_gridid %>%
   filter(!is.na(TRIPS) & TRIPS > 0)
 
 ```
@@ -226,7 +223,7 @@ Merge geospatial data
 ```{r}
 
 total_trips_by_grid_wdmp <- total_trips_by_grid_wdmp %>%
-  left_join(honeycomb_grid_sf, by = c("grid_id" = "grid_id"))
+  left_join(grid_sf, by = c("grid_id" = "grid_id"))
 
 total_trips_by_grid_wdmp_sf <- st_sf(total_trips_by_grid_wdmp)
 ```
