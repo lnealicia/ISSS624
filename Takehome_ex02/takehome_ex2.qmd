@@ -112,14 +112,6 @@ glimpse(busstop)
 ```{r}
 glimpse(mpsz)
 ```
-### Converting from sf data.table to SpatialPolygonsDataFrame
-
-`mpsz` is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object
-
-```{r}
-mpsz_sp <- as(mpsz, "Spatial")
-mpsz_sp
-```
 
 ## Hexagon Grid Setup
 
@@ -215,6 +207,65 @@ wdmp <- wdmp %>%
   filter(o_grid_id != d_grid_id)
 ```
 
+## Converting from sf data.table to SpatialPolygonsDataFrame
+
+`grid_sf` is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object
+
+```{r}
+grid_sp <- as(grid_sf, "Spatial")
+grid_sp
+```
+
+## Computing the distance matrix
+
+
+Euclidean distance between the centroids of the hexagons
+
+```{r}
+euc_dist <- spDists(grid_sp, 
+                longlat = FALSE)
+head(euc_dist, n=c(10, 10))
+```
+Note: Output distance is a matrix object class of R. Column headers and row headers are also not labeled with the hexagon grid id.
+
+## Labelling column and row headers of a distance matrix
+
+Create a list sorted according to the the distance matrix by hexagon grid id
+
+```{r}
+grid_id <- grid_sf$grid_id
+```
+
+Attach `grid_id` to row and column for distance matrix matching
+
+```{r}
+colnames(euc_dist) <- paste0(grid_id)
+rownames(euc_dist) <- paste0(grid_id)
+```
+
+### Pivoting distance value by `grid_id`
+
+Pivot the distance matrix into a long table by using the row and column hexagons
+
+```{r}
+dist_pair <- melt(euc_dist) %>%
+  rename(euc_dist = value)
+head(dist_pair, 10)
+```
+
+Note: Within zone distance is 0
+
+### Updating intra-zonal distances
+
+Append a constant value to replace the intra-zonal distance of 0.
+
+Select and find out the minimum value of the distance
+
+```{r}
+dist_pair %>%
+  filter(euc_dist > 0) %>%
+  summary()
+```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekday Morning Peak 6am-9am
