@@ -219,12 +219,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#importing-bus-stop-locations" id="toc-importing-bus-stop-locations" class="nav-link" data-scroll-target="#importing-bus-stop-locations">Importing Bus Stop Locations</a></li>
   <li><a href="#importing-singapore-map" id="toc-importing-singapore-map" class="nav-link" data-scroll-target="#importing-singapore-map">Importing Singapore Map</a></li>
-  <li><a href="#converting-from-sf-data.table-to-spatialpolygonsdataframe" id="toc-converting-from-sf-data.table-to-spatialpolygonsdataframe" class="nav-link" data-scroll-target="#converting-from-sf-data.table-to-spatialpolygonsdataframe">Converting from sf data.table to SpatialPolygonsDataFrame</a></li>
   </ul></li>
   <li><a href="#hexagon-grid-setup" id="toc-hexagon-grid-setup" class="nav-link" data-scroll-target="#hexagon-grid-setup">Hexagon Grid Setup</a>
   <ul class="collapse">
   <li><a href="#drawing-the-hexagon-grid" id="toc-drawing-the-hexagon-grid" class="nav-link" data-scroll-target="#drawing-the-hexagon-grid">Drawing the Hexagon Grid</a></li>
   <li><a href="#replace-bus-stop-code-with-corresponding-hexagon-grid-id" id="toc-replace-bus-stop-code-with-corresponding-hexagon-grid-id" class="nav-link" data-scroll-target="#replace-bus-stop-code-with-corresponding-hexagon-grid-id">Replace Bus Stop Code with Corresponding Hexagon Grid ID</a></li>
+  </ul></li>
+  <li><a href="#visualising-spatial-interaction" id="toc-visualising-spatial-interaction" class="nav-link" data-scroll-target="#visualising-spatial-interaction">Visualising Spatial Interaction</a>
+  <ul class="collapse">
+  <li><a href="#removing-intra-zonal-flows" id="toc-removing-intra-zonal-flows" class="nav-link" data-scroll-target="#removing-intra-zonal-flows">Removing intra-zonal flows</a></li>
+  <li><a href="#creating-desire-lines" id="toc-creating-desire-lines" class="nav-link" data-scroll-target="#creating-desire-lines">Creating desire lines</a></li>
+  <li><a href="#visualising-the-desire-lines" id="toc-visualising-the-desire-lines" class="nav-link" data-scroll-target="#visualising-the-desire-lines">Visualising the desire lines</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -252,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">December 10, 2023</p>
+      <p class="date-modified">December 11, 2023</p>
     </div>
   </div>
     
@@ -432,24 +437,6 @@ $ geometry   &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((33222.98 29..., MULTIPOLYG
 </div>
 </div>
 </section>
-<section id="converting-from-sf-data.table-to-spatialpolygonsdataframe" class="level3">
-<h3 class="anchored" data-anchor-id="converting-from-sf-data.table-to-spatialpolygonsdataframe">Converting from sf data.table to SpatialPolygonsDataFrame</h3>
-<p><code>mpsz</code> is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mpsz_sp <span class="ot">&lt;-</span> <span class="fu">as</span>(mpsz, <span class="st">"Spatial"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mpsz_sp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatialPolygonsDataFrame 
-features    : 332 
-extent      : 2667.538, 56396.44, 15748.72, 50256.33  (xmin, xmax, ymin, ymax)
-crs         : +proj=tmerc +lat_0=1.36666666666667 +lon_0=103.833333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-variables   : 6
-names       : SUBZONE_N, SUBZONE_C, PLN_AREA_N, PLN_AREA_C,       REGION_N, REGION_C 
-min values  : ADMIRALTY,    AMSZ01, ANG MO KIO,         AM, CENTRAL REGION,       CR 
-max values  :    YUNNAN,    YSSZ09,     YISHUN,         YS,    WEST REGION,       WR </code></pre>
-</div>
-</div>
-</section>
 </section>
 <section id="hexagon-grid-setup" class="level2">
 <h2 class="anchored" data-anchor-id="hexagon-grid-setup">Hexagon Grid Setup</h2>
@@ -458,67 +445,107 @@ max values  :    YUNNAN,    YSSZ09,     YISHUN,         YS,    WEST REGION,     
 <h3 class="anchored" data-anchor-id="drawing-the-hexagon-grid">Drawing the Hexagon Grid</h3>
 <p>Draw hexagon grid over the <code>mpsz</code> map</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>hexagon_grid <span class="ot">=</span> <span class="fu">st_make_grid</span>(mpsz, <span class="fu">c</span>(<span class="dv">750</span>, <span class="dv">750</span>), <span class="at">what =</span> <span class="st">"polygons"</span>, <span class="at">square =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hexagon_grid <span class="ot">=</span> <span class="fu">st_make_grid</span>(mpsz, <span class="fu">c</span>(<span class="dv">750</span>, <span class="dv">750</span>), <span class="at">what =</span> <span class="st">"polygons"</span>, <span class="at">square =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Convert the hexagon grid to sf (simple features) object and add a new column <em>grid_id</em> (sequential identifier) to it</p>
+<p>Convert the hexagon grid to sf (simple features) object and add a new column <strong>grid_id</strong> (sequential identifier) to it</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>grid_sf <span class="ot">=</span> <span class="fu">st_sf</span>(hexagon_grid) <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grid_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">lengths</span>(hexagon_grid)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>grid_sf <span class="ot">=</span> <span class="fu">st_sf</span>(hexagon_grid) <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grid_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">lengths</span>(hexagon_grid)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Assign bus stops to hexagon <em>grid_ids</em></p>
+<p>Assign bus stops to hexagon <strong>grid_ids</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>busstop_grid <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(grid_sf,busstop) <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(BUS_STOP_N, grid_id) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>busstop_grid <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(grid_sf,busstop) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(BUS_STOP_N, grid_id) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Save output into rds format</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(busstop_grid, <span class="st">"data/rds/busstop_grid.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(busstop_grid, <span class="st">"data/rds/busstop_grid.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check for duplicate records</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>duplicate <span class="ot">&lt;-</span> busstop_grid <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by_all</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>()<span class="sc">&gt;</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>duplicate <span class="ot">&lt;-</span> busstop_grid <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by_all</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>()<span class="sc">&gt;</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Retain unique records only</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>busstop_grid <span class="ot">&lt;-</span> <span class="fu">unique</span>(busstop_grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>busstop_grid <span class="ot">&lt;-</span> <span class="fu">unique</span>(busstop_grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="replace-bus-stop-code-with-corresponding-hexagon-grid-id" class="level3">
 <h3 class="anchored" data-anchor-id="replace-bus-stop-code-with-corresponding-hexagon-grid-id">Replace Bus Stop Code with Corresponding Hexagon Grid ID</h3>
-<p><code>wdmp</code> left join with <code>busstop_grid</code> for <em>ORIGIN_PT_CODE</em></p>
+<p><code>wdmp</code> left join with <code>busstop_grid</code> for <strong>ORIGIN_PT_CODE</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(busstop_grid, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ORIGIN_PT_CODE"</span> <span class="ot">=</span> <span class="st">"BUS_STOP_N"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Rename column to <strong>ori_grid</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">ori_grid =</span> grid_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>wdmp</code> left join with <code>busstop_grid</code> for <strong>DESTINATION_PT_CODE</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(busstop_grid, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ORIGIN_PT_CODE"</span> <span class="ot">=</span> <span class="st">"BUS_STOP_N"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(busstop_grid, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"DESTINATION_PT_CODE"</span> <span class="ot">=</span> <span class="st">"BUS_STOP_N"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Rename column to <em>o_grid_id</em></p>
+<p>Rename column to <strong>desti_grid</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">o_grid_id =</span> grid_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><code>wdmp</code> left join with <code>busstop_grid</code> for <em>DESTINATION_PT_CODE</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(busstop_grid, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"DESTINATION_PT_CODE"</span> <span class="ot">=</span> <span class="st">"BUS_STOP_N"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Rename column to <em>d_grid_id</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">d_grid_id =</span> grid_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">desti_grid =</span> grid_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Remove bus stop codes</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(ORIGIN_PT_CODE, DESTINATION_PT_CODE))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(ORIGIN_PT_CODE, DESTINATION_PT_CODE))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Remove trips that have the same origin and destination grid_id</p>
+<p>Remove any NA values</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(o_grid_id <span class="sc">!=</span> d_grid_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(wdmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Reorder columns to Origin, Destination, Number of Trips</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> wdmp <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ori_grid, desti_grid, TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="visualising-spatial-interaction" class="level2">
+<h2 class="anchored" data-anchor-id="visualising-spatial-interaction">Visualising Spatial Interaction</h2>
+<section id="removing-intra-zonal-flows" class="level3">
+<h3 class="anchored" data-anchor-id="removing-intra-zonal-flows">Removing intra-zonal flows</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>wdmp1 <span class="ot">&lt;-</span> wdmp[wdmp<span class="sc">$</span>ori_grid <span class="sc">!=</span> wdmp<span class="sc">$</span>desti_grid, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-desire-lines" class="level3">
+<h3 class="anchored" data-anchor-id="creating-desire-lines">Creating desire lines</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>flowLine <span class="ot">&lt;-</span> <span class="fu">od2line</span>(<span class="at">flow =</span> wdmp1, </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">zones =</span> grid_sf,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">zone_code =</span> <span class="st">"grid_id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="visualising-the-desire-lines" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-the-desire-lines">Visualising the desire lines</h3>
+<p>Flow data is very messy and highly skewed, thus focus is placed on selected flows e.g.&nbsp;flow &gt;= 5000</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz) <span class="sc">+</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>flowLine <span class="sc">%&gt;%</span>  </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TRIPS <span class="sc">&gt;=</span> <span class="dv">5000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>() <span class="sc">+</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_lines</span>(<span class="at">lwd =</span> <span class="st">"TRIPS"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">style =</span> <span class="st">"quantile"</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">scale =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">10</span>),</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">n =</span> <span class="dv">6</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: gray">
 <div class="callout-header d-flex align-content-center">
