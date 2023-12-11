@@ -307,8 +307,6 @@ dist_pair <- melt(euc_dist) %>%
 head(dist_pair, 10)
 ```
 
-
-
 #Spatial Interaction Modelling
 
 Calibrate spatial interactive models to determine factors affecting urban commuting flows at the selected time interval.
