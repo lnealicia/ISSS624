@@ -201,30 +201,34 @@ wdmp <- wdmp %>%
 
 ```
 
+Remove any NA values
+```{r}
+wdmp <- na.omit(wdmp)
+```
+
 ## Visualising Spatial Interaction
 
 ### Removing intra-zonal flows
 
 ```{r}
-od_data1 <- od_data[od_data$ORIGIN_SZ!=od_data$DESTIN_SZ,]
+wdmp1 <- wdmp[wdmp$o_grid_id!=wdmp$d_grid_id,]
 ```
 
 ### Creating desire lines
 
 ```{r}
-flowLine <- od2line(flow = od_data1, 
-                    zones = mpsz,
-                    zone_code = "SUBZONE_C")
+flowLine <- od2line(flow = wdmp1, 
+                    zones = grid_sf,
+                    zone_code = "grid_id")
 ```
 
 ### Visualising the desire lines
 
-
 ```{r}
-tm_shape(mpsz) +
+tm_shape(grid_sf) +
   tm_polygons() +
 flowLine %>%  
-  filter(MORNING_PEAK >= 5000) %>%
+  filter(TRIPS >= 0) %>%
 tm_shape() +
   tm_lines(lwd = "MORNING_PEAK",
            style = "quantile",
@@ -232,7 +236,7 @@ tm_shape() +
            n = 6,
            alpha = 0.3)
 ```
-```
+
 
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
