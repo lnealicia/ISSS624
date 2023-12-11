@@ -125,14 +125,14 @@ Draw hexagon grid over the `mpsz` map
 hexagon_grid = st_make_grid(mpsz, c(750, 750), what = "polygons", square = FALSE)
 ```
 
-Convert the hexagon grid to sf (simple features) object and add a new column *grid_id* (sequential identifier) to it
+Convert the hexagon grid to sf (simple features) object and add a new column **grid_id** (sequential identifier) to it
 
 ```{r}
 grid_sf = st_sf(hexagon_grid) %>%
   mutate(grid_id = 1:length(lengths(hexagon_grid)))
 ```
 
-Assign bus stops to hexagon *grid_ids*
+Assign bus stops to hexagon **grid_ids**
 
 ```{r}
 busstop_grid <- st_intersection(grid_sf,busstop) %>%
@@ -163,13 +163,13 @@ busstop_grid <- unique(busstop_grid)
 
 ### Replace Bus Stop Code with Corresponding Hexagon Grid ID
 
-`wdmp` left join with `busstop_grid` for *ORIGIN_PT_CODE*
+`wdmp` left join with `busstop_grid` for **ORIGIN_PT_CODE**
 
 ```{r}
 wdmp <- wdmp %>%
   left_join(busstop_grid, by = c("ORIGIN_PT_CODE" = "BUS_STOP_N"))
 ```
-Rename column to *o_grid_id*
+Rename column to **o_grid_id**
 
 ```{r}
 wdmp <- wdmp %>%
@@ -177,14 +177,14 @@ wdmp <- wdmp %>%
 
 ```
 
-`wdmp` left join with `busstop_grid` for *DESTINATION_PT_CODE*
+`wdmp` left join with `busstop_grid` for **DESTINATION_PT_CODE**
 
 ```{r}
 wdmp <- wdmp %>%
   left_join(busstop_grid, by = c("DESTINATION_PT_CODE" = "BUS_STOP_N"))
 ```
 
-Rename column to *d_grid_id*
+Rename column to **d_grid_id**
 
 ```{r}
 wdmp <- wdmp %>%
@@ -198,13 +198,6 @@ wdmp <- wdmp %>%
   ungroup() %>%
   select(-c(ORIGIN_PT_CODE, DESTINATION_PT_CODE))
 
-```
-
-Remove trips that have the same origin and destination grid_id
-
-```{r}
-wdmp <- wdmp %>%
-  filter(o_grid_id != d_grid_id)
 ```
 
 ## Converting from sf data.table to SpatialPolygonsDataFrame
@@ -228,7 +221,7 @@ head(euc_dist, n=c(10, 10))
 ```
 Note: Output distance is a matrix object class of R. Column headers and row headers are also not labeled with the hexagon grid id.
 
-## Labelling column and row headers of a distance matrix
+## Labelling column and row headers of distance matrix
 
 Create a list sorted according to the the distance matrix by hexagon grid id
 
@@ -253,18 +246,42 @@ dist_pair <- melt(euc_dist) %>%
 head(dist_pair, 10)
 ```
 
-Note: Within zone distance is 0
+Note: Within zone distance (aka origin and destination grid) is 0
 
 ### Updating intra-zonal distances
 
-Append a constant value to replace the intra-zonal distance of 0.
+Select and find out the minimum distance
 
-Select and find out the minimum value of the distance
+```{r}
+summary(dist_pair)
+```
+
+Append a small constant value of 50m to replace the intra-zonal distance of 0. 
+
+```{r}
+table(dist_pair$dist == 0)
+
+```
+
+
+```{r}
+dist_pair$dist <- ifelse(dist_pair$dist < 1,
+                        50, dist_pair$dist)
+```
+
+Check resulting data frame
 
 ```{r}
 dist_pair %>%
-  filter(euc_dist > 0) %>%
   summary()
+```
+
+Rename the origin and destination fields
+
+```{r}
+distPair <- distPair %>%
+  rename(orig = Var1,
+         dest = Var2)
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
