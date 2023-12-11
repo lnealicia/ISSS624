@@ -248,5 +248,6 @@ tm_shape() +
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekday Morning Peak 6am-9am
 
-Describe spatial pattern <= 100 words
+During the weekday morning peak period in Singapore, significant flows are concentrated between residential areas such as Bukit Batok and work areas like Tuas, as well as from Woodlands Checkpoint to industrial parks in locations like Loyang. This concentration suggests a predominant pattern of people commuting from their homes in residential estates or across the border from Malaysia to their workplaces in office and industrial areas. The observed flow dynamics highlight key commuting routes, likely reflecting the spatial distribution of residences and employment centers in the region.
+
 :::
