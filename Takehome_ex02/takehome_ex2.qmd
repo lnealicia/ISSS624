@@ -169,6 +169,7 @@ busstop_grid <- unique(busstop_grid)
 wdmp <- wdmp %>%
   left_join(busstop_grid, by = c("ORIGIN_PT_CODE" = "BUS_STOP_N"))
 ```
+
 Rename column to **o_grid_id**
 
 ```{r}
@@ -200,89 +201,7 @@ wdmp <- wdmp %>%
 
 ```
 
-## Converting from sf data.table to SpatialPolygonsDataFrame
-
-`grid_sf` is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object
-
-```{r}
-grid_sp <- as(grid_sf, "Spatial")
-grid_sp
-```
-
-## Computing the distance matrix
-
-
-Euclidean distance between the centroids of the hexagons
-
-```{r}
-euc_dist <- spDists(grid_sp, 
-                longlat = FALSE)
-head(euc_dist, n=c(10, 10))
-```
-Note: Output distance is a matrix object class of R. Column headers and row headers are also not labeled with the hexagon grid id.
-
-## Labelling column and row headers of distance matrix
-
-Create a list sorted according to the the distance matrix by hexagon grid id
-
-```{r}
-grid_id <- grid_sf$grid_id
-```
-
-Attach `grid_id` to row and column for distance matrix matching
-
-```{r}
-colnames(euc_dist) <- paste0(grid_id)
-rownames(euc_dist) <- paste0(grid_id)
-```
-
-### Pivoting distance value by `grid_id`
-
-Pivot the distance matrix into a long table by using the row and column hexagons
-
-```{r}
-dist_pair <- melt(euc_dist) %>%
-  rename(euc_dist = value)
-head(dist_pair, 10)
-```
-
-Note: Within zone distance (aka origin and destination grid) is 0
-
-### Updating intra-zonal distances
-
-Select and find out the minimum distance
-
-```{r}
-summary(dist_pair)
-```
-
-Append a small constant value of 50m to replace the intra-zonal distance of 0. 
-
-```{r}
-table(dist_pair$dist == 0)
-
-```
-
-
-```{r}
-dist_pair$dist <- ifelse(dist_pair$dist < 1,
-                        50, dist_pair$dist)
-```
-
-Check resulting data frame
-
-```{r}
-dist_pair %>%
-  summary()
-```
-
-Rename the origin and destination fields
-
-```{r}
-distPair <- distPair %>%
-  rename(orig = Var1,
-         dest = Var2)
-```
+**
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekday Morning Peak 6am-9am
