@@ -258,6 +258,28 @@ During the weekday morning peak period in Singapore, significant flows are conce
 
 Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
 
+### Importing & tidying School data
+
+```{r}
+school <- read_csv("Data/Aspatial/Generalinformationofschools.csv")
+
+```
+
+### Importing & tidying Business data
+
+```{r}
+business <- st_read(dsn = "Data/geospatial",
+                   layer = "Business") %>%
+  st_transform(crs = 3414)
+```
+
+### Importing & tidying Train Station Exit Layer data
+
+```{r}
+mrtexit <- st_read(dsn = "Data/geospatial",
+                   layer = "Train_Station_Exit_Layer") %>%
+  st_transform(crs = 3414)
+```
 
 ## Distance matrix
 

@@ -151,7 +151,6 @@ Import the rds file into R environment
 flow_data <- read_rds("data/rds/flow_data_tidy.rds") 
 ```
 
-
 ```{r}
 flow_data$FlowNoIntra <- ifelse(
   flow_data$ORIGIN_SZ == flow_data$DESTIN_SZ,
@@ -161,14 +160,11 @@ flow_data$offset <- ifelse(
   0.000001, 1)
 ```
 
-
-
 ```{r}
 flow_data <- flow_data %>%
   filter(FlowNoIntra > 0)
 
 ```
-
 
 ```{r}
 inter_zonal_flow <- flow_data %>%
@@ -303,6 +299,7 @@ inter_zonal_flow <- inter_zonal_flow %>%
 ```
 
 Origin Constrained Model
+
 ```{r}
 df <- as.data.frame(orcSIM$fitted.values) %>%
   round(digits = 0)
@@ -313,6 +310,7 @@ inter_zonal_flow <- inter_zonal_flow %>%
 ```
 
 Destination Constrained Model
+
 ```{r}
 df <- as.data.frame(decSIM$fitted.values) %>%
   round(digits = 0)
