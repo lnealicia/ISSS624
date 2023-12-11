@@ -170,11 +170,11 @@ wdmp <- wdmp %>%
   left_join(busstop_grid, by = c("ORIGIN_PT_CODE" = "BUS_STOP_N"))
 ```
 
-Rename column to **o_grid_id**
+Rename column to **ori_grid**
 
 ```{r}
 wdmp <- wdmp %>%
-  rename(o_grid_id = grid_id)
+  rename(ori_grid = grid_id)
 
 ```
 
@@ -185,11 +185,11 @@ wdmp <- wdmp %>%
   left_join(busstop_grid, by = c("DESTINATION_PT_CODE" = "BUS_STOP_N"))
 ```
 
-Rename column to **d_grid_id**
+Rename column to **desti_grid**
 
 ```{r}
 wdmp <- wdmp %>%
-  rename(d_grid_id = grid_id)
+  rename(desti_grid = grid_id)
 ```
 
 Remove bus stop codes
@@ -206,12 +206,19 @@ Remove any NA values
 wdmp <- na.omit(wdmp)
 ```
 
+Reorder columns to Origin, Destination, Number of Trips
+```{r}
+wdmp <- wdmp %>%
+  select(ori_grid, desti_grid, TRIPS)
+```
+
+
 ## Visualising Spatial Interaction
 
 ### Removing intra-zonal flows
 
 ```{r}
-wdmp1 <- wdmp[wdmp$o_grid_id!=wdmp$d_grid_id,]
+wdmp1 <- wdmp[wdmp$ori_grid != wdmp$desti_grid, ]
 ```
 
 ### Creating desire lines
@@ -230,7 +237,7 @@ tm_shape(grid_sf) +
 flowLine %>%  
   filter(TRIPS >= 0) %>%
 tm_shape() +
-  tm_lines(lwd = "MORNING_PEAK",
+  tm_lines(lwd = "TRIPS",
            style = "quantile",
            scale = c(0.1, 1, 3, 5, 7, 10),
            n = 6,
