@@ -23,7 +23,7 @@ editor: visual
 ```{r}
 pacman::p_load(tmap, sf, sp, DT, stplanr,
                performance, reshape2,
-               ggpubr, tidyverse)
+               ggpubr, tidyverse, httr)
 ```
 
 ## Preparing the Flow Data
@@ -258,11 +258,70 @@ During the weekday morning peak period in Singapore, significant flows are conce
 
 Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
 
-### Importing & tidying School data
+### Importing & tidying HDB data
+
+Geocoding using SLA API
 
 ```{r}
-school <- read_csv("Data/Aspatial/Generalinformationofschools.csv")
+url <- "https://www.onemap.gov.sg/api/common/elastic/search"
 
+csv <- read_csv("data/aspatial/hdb.csv")
+postcodes <- csv$`postal`
+
+found <- data.frame()
+not_found <- data.frame()
+
+for(postcode in postcodes){
+  query<-list('searchVal'=postcode,'returnGeom'='Y','getAddrDetails'='Y', 'pageNum'='1')
+  res <- GET(url,query=query)
+  
+  if((content(res)$found)!=0){
+    found <- rbind(found, data.frame(content(res))[4:13])
+  } else{
+    not_found = data.frame(postcode)
+  }
+}
+```
+
+Check for any missing data
+
+```{r}
+not_found
+```
+
+Note: No missing data, data is complete
+
+Append Coordinates
+
+```{r}
+merged = merge(csv, found, by.x= 'postal_code', by.y = 'results.POSTAL', all=TRUE)
+write.csv(merged, file = "data/geospatial/HDB.csv")
+```
+
+```{r}
+
+hdb <- merged %>%
+  rename(latitude = "results.LATITUDE", longitude = "results.LONGITUDE") %>%
+  select(postal_code, school_name, latitude, longitude)
+```
+
+Note: schools is a tibble dataframe object class
+
+### **Converting an aspatial data into a simple features tibble data.frame**
+
+```{r}
+schools_sf <- st_as_sf(schools,
+                       coords = c("longitude", "latitude"),
+                       crs =4326) %>%
+  st_transform(crs = 3414)
+```
+
+### Importing & tidying Financial Services data
+
+```{r}
+finserv <- st_read(dsn = "Data/geospatial",
+                   layer = "FinServ") %>%
+  st_transform(crs = 3414)
 ```
 
 ### Importing & tidying Business data
@@ -273,13 +332,31 @@ business <- st_read(dsn = "Data/geospatial",
   st_transform(crs = 3414)
 ```
 
-### Importing & tidying Train Station Exit Layer data
+## Plotting a point simple feature layer
 
 ```{r}
-mrtexit <- st_read(dsn = "Data/geospatial",
-                   layer = "Train_Station_Exit_Layer") %>%
-  st_transform(crs = 3414)
+tmap_mode("view")
+
+# Plot HDB
+mrtexit_map <- tm_shape(hdb) +
+  tm_dots(col = "red") + tm_view(set.zoom.limits = c(11,14))   
+
+# Plot Business
+business_map <- tm_shape(business) +
+  tm_dots("green") + tm_view(set.zoom.limits = c(11,14)) 
+
+# Plot Finserv
+finserv_map <- tm_shape(finserv) +
+  tm_dots(col = "blue") + tm_view(set.zoom.limits = c(11,14))  
+
+# Combine the maps
+final_map <- tmap_arrange(business_map, mrtexit_map, finserv_map, asp = 1, ncol = 3)
+
+# View the map
+final_map
+tmap_mode("plot")
 ```
+
 
 ## Distance matrix
 
