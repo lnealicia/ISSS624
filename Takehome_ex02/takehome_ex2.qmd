@@ -235,7 +235,7 @@ flowLine <- od2line(flow = wdmp1,
 tm_shape(grid_sf) +
   tm_polygons() +
 flowLine %>%  
-  filter(TRIPS >= 0) %>%
+  filter(TRIPS >= 5000) %>%
 tm_shape() +
   tm_lines(lwd = "TRIPS",
            style = "quantile",
