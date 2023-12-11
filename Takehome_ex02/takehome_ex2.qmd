@@ -132,7 +132,7 @@ grid_sf = st_sf(hexagon_grid) %>%
   mutate(grid_id = 1:length(lengths(hexagon_grid)))
 ```
 
-Assign bus stops to hexagon **grid_ids**
+Assign bus stops to hexagon **grid_id**
 
 ```{r}
 busstop_grid <- st_intersection(grid_sf,busstop) %>%
