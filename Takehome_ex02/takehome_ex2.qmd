@@ -10,6 +10,8 @@ execute:
 editor: visual
 ---
 
+# Geospatial Data Science
+
 ## Getting Started
 
 -   sf - importing, integrating, processing and transforming geospatial data.
@@ -19,8 +21,8 @@ editor: visual
 -   tmap - creating thematic maps.
 
 ```{r}
-pacman::p_load(tmap, sf, DT, stplanr,
-               performance,
+pacman::p_load(tmap, sf, sp, DT, stplanr,
+               performance, reshape2,
                ggpubr, tidyverse)
 ```
 
@@ -251,3 +253,66 @@ Weekday Morning Peak 6am-9am
 During the weekday morning peak period in Singapore, significant flows are concentrated between residential areas such as Bukit Batok and work areas like Tuas, as well as from Woodlands Checkpoint to industrial parks in locations like Loyang. This concentration suggests a predominant pattern of people commuting from their homes in residential estates or across the border from Malaysia to their workplaces in office and industrial areas. The observed flow dynamics highlight key commuting routes, likely reflecting the spatial distribution of residences and employment centers in the region.
 
 :::
+
+## Propulsive and Attractiveness Variables
+
+Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
+
+
+## Distance matrix
+
+### Converting from sf data.table to SpatialPolygonsDataFrame
+
+`grid_sf` is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object
+
+```{r}
+grid_sp <- as(grid_sf, "Spatial")
+grid_sp
+```
+
+### Computing the distance matrix
+
+Euclidean distance between the centroids of the hexagons
+
+```{r}
+euc_dist <- spDists(grid_sp, 
+                longlat = FALSE)
+head(euc_dist, n=c(10, 10))
+```
+
+Note: Output distance is a matrix object class of R. Column headers and row headers are also not labeled with the hexagon grid id.
+
+### Labelling column and row headers of distance matrix
+
+Create a list sorted according to the the distance matrix by hexagon grid id
+
+```{r}
+grid_id <- grid_sf$grid_id
+```
+
+Attach `grid_id` to row and column for distance matrix matching
+
+```{r}
+colnames(euc_dist) <- paste0(grid_id)
+rownames(euc_dist) <- paste0(grid_id)
+```
+
+### Pivoting distance value by `grid_id`
+
+Pivot the distance matrix into a long table by using the row and column hexagons
+
+```{r}
+dist_pair <- melt(euc_dist) %>%
+  rename(euc_dist = value)
+head(dist_pair, 10)
+```
+
+
+
+#Spatial Interaction Modelling
+
+Calibrate spatial interactive models to determine factors affecting urban commuting flows at the selected time interval.
+
+Present the modelling results by using appropriate geovisualisation and graphical visualisation methods. (Not more than 5 visuals)
+
+With reference to the Spatial Interaction Model output tables, maps and data visualisation prepared, describe the modelling results. (not more than 100 words per visual).
