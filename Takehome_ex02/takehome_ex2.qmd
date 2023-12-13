@@ -258,14 +258,27 @@ During the weekday morning peak period in Singapore, significant flows are conce
 
 Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
 
-### Importing & tidying HDB data
-
-Geocoding using SLA API
+### **Geocoding using SLA API**
 
 ```{r}
-url <- "https://www.onemap.gov.sg/api/common/elastic/search"
-
 csv <- read_csv("data/aspatial/hdb.csv")
+```
+
+Note: Some postal codes are missing from hdb.csv. Manually update:
+
+```{r}
+hdb <- hdb %>%
+  mutate(
+    postal = ifelse(addr == "115 BISHAN STREET 12", 570115, postal),
+    postal = ifelse(addr == "12 KAMPONG ARANG ROAD", 431012, postal),
+    postal = ifelse(addr == "12 KAMPONG ARANG ROAD", 431012, postal),
+  )
+```
+
+
+```{r}
+
+url <- "https://www.onemap.gov.sg/api/common/elastic/search"
 postcodes <- csv$`postal`
 
 found <- data.frame()
@@ -283,37 +296,36 @@ for(postcode in postcodes){
 }
 ```
 
-Check for any missing data
-
-```{r}
-not_found
-```
-
-Note: No missing data, data is complete
-
-Append Coordinates
-
 ```{r}
 merged = merge(csv, found, by.x= 'postal_code', by.y = 'results.POSTAL', all=TRUE)
-write.csv(merged, file = "data/geospatial/HDB.csv")
+write.csv(merged, file = "data/aspatial/schools.csv")
+write.csv(not_found, file = "data/aspatial/not_found.csv")
 ```
+Rename columns
 
 ```{r}
+hdb <- hdb %>%
+  rename(
+    POI_NAME = building,
+    POI_ST_NUM = blk_no,
+    POI_ST_NAM = street
+  )
 
-hdb <- merged %>%
-  rename(latitude = "results.LATITUDE", longitude = "results.LONGITUDE") %>%
-  select(postal_code, school_name, latitude, longitude)
 ```
 
-Note: schools is a tibble dataframe object class
+Note: hdb is a tibble dataframe object class
 
-### **Converting an aspatial data into a simple features tibble data.frame**
+### Converting an aspatial data into a simple features tibble data.frame
 
 ```{r}
-schools_sf <- st_as_sf(schools,
-                       coords = c("longitude", "latitude"),
-                       crs =4326) %>%
+hdb_sf <- st_as_sf(hdb,
+                       coords = c("lng", "lat"),
+                       crs =3414)  %>%
   st_transform(crs = 3414)
+```
+
+```{r}
+print(hdb_sf)
 ```
 
 ### Importing & tidying Financial Services data
@@ -338,7 +350,7 @@ business <- st_read(dsn = "Data/geospatial",
 tmap_mode("view")
 
 # Plot HDB
-mrtexit_map <- tm_shape(hdb) +
+hdb_map <- tm_shape(hdb_sf) +
   tm_dots(col = "red") + tm_view(set.zoom.limits = c(11,14))   
 
 # Plot Business
@@ -350,7 +362,7 @@ finserv_map <- tm_shape(finserv) +
   tm_dots(col = "blue") + tm_view(set.zoom.limits = c(11,14))  
 
 # Combine the maps
-final_map <- tmap_arrange(business_map, mrtexit_map, finserv_map, asp = 1, ncol = 3)
+final_map <- tmap_arrange(business_map, hdb_map, finserv_map, asp = 1, ncol = 3)
 
 # View the map
 final_map
