@@ -301,8 +301,6 @@ Upon examination, a notable trend emerges with heightened activity at transit po
 
 ## Propulsive and Attractiveness Variables
 
-\~\~Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
-
 ## Effect of Distance on Number of Trips
 
 ### Converting from sf data.table to SpatialPolygonsDataFrame
@@ -495,12 +493,28 @@ mrt_exit <- st_read(dsn = "Data/geospatial",
   st_transform(crs = 3414)
 ```
 
+### Number of Train Station Exits per Location
+
+```{r}
+grid_attr$mrt_exit <- lengths(st_intersects(grid_sf, mrt_exit))
+
+summary(grid_attr$mrt_exit)
+```
+
 ### Importing of F&B locations
 
 ```{r}
 fnb <- st_read(dsn = "Data/geospatial",
                    layer = "F&B") %>%
   st_transform(crs = 3414)
+```
+
+### Number of F&B per Location
+
+```{r}
+grid_attr$fnb <- lengths(st_intersects(grid_sf, fnb))
+
+summary(grid_attr$fnb)
 ```
 
 ### Importing of residential HDBs
@@ -547,6 +561,14 @@ hdb_sf <- st_as_sf(hdb,
   st_transform(crs = 3414)
 ```
 
+### Number of HDB per Location
+
+```{r}
+grid_attr$fnb <- lengths(st_intersects(grid_sf, fnb))
+
+summary(grid_attr$fnb)
+```
+
 ## Attractive Attributes
 
 Since the time period being analysed is Weekday Morning Peak, attractive attributes are likely related to:
@@ -563,12 +585,29 @@ biz <- st_read(dsn = "Data/geospatial",
   st_transform(crs = 3414)
 ```
 
+### Number of Business Offices per Location
+
+```{r}
+grid_attr <- grid_sf %>%
+  mutate(biz_no = lengths(st_intersects(grid_sf, biz)))
+
+summary(biz_grid_attr$biz_no)
+```
+
 ### Importing of Financial Services Locations
 
 ```{r}
 fs <- st_read(dsn = "Data/geospatial",
                    layer = "FinServ") %>%
   st_transform(crs = 3414)
+```
+
+### Number of Financial Services per Location
+
+```{r}
+grid_attr$fs <- lengths(st_intersects(grid_sf, fs))
+
+summary(grid_attr$fs)
 ```
 
 ### Importing of School Locations
@@ -612,7 +651,13 @@ sch_sf <- st_as_sf(sch,
   st_transform(crs = 3414)
 ```
 
+### Number of Schools per Location
 
+```{r}
+grid_attr$sch <- lengths(st_intersects(grid_sf, sch_sf))
+
+summary(grid_attr$sch)
+```
 
 
 #Spatial Interaction Modelling
