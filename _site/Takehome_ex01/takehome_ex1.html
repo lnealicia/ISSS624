@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-11-27">
+
+<title>ISSS624 - Take Home Exercise 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">ISSS624</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Hands-on Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
+        <li>
+    <a class="dropdown-item" href="../Handson_ex01/Hands-on_Ex01.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 1 (part i)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Handson_ex01/Hands-on_Ex01_2.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 1 (part ii)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Handson_ex02/Hands-on_Ex02.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 2 (part i)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Handson_ex02/Hands-on_Ex02_2.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 2 (part ii)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Handson_ex02/Hands-on_Ex02_3.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 2 (part iii)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Handson_ex03/Hands-on_Ex03.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">In-class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../Inclass_ex1/inclass_ex1.html" rel="" target="">
+ <span class="dropdown-text">In-class Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Inclass_ex2/inclass_ex2.html" rel="" target="">
+ <span class="dropdown-text">In-class Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Inclass_ex3/Inclass_ex3.html" rel="" target="">
+ <span class="dropdown-text">In-class Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Inclass_ex4/Inclass_ex4.html" rel="" target="">
+ <span class="dropdown-text">In-Class Exercise 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Take-home Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
+        <li>
+    <a class="dropdown-item" href="../Takehome_ex01/takehome_ex1.html" rel="" target="">
+ <span class="dropdown-text">Take Home Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Takehome_ex02/takehome_ex2.html" rel="" target="">
+ <span class="dropdown-text">Take Home Exercise 2</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#preparing-the-flow-data" id="toc-preparing-the-flow-data" class="nav-link" data-scroll-target="#preparing-the-flow-data">Preparing the Flow Data</a>
+  <ul class="collapse">
+  <li><a href="#importing-the-od-data" id="toc-importing-the-od-data" class="nav-link" data-scroll-target="#importing-the-od-data">Importing the OD data</a></li>
+  <li><a href="#extracting-the-study-data" id="toc-extracting-the-study-data" class="nav-link" data-scroll-target="#extracting-the-study-data">Extracting the Study Data</a></li>
+  </ul></li>
+  <li><a href="#working-with-geospatial-data" id="toc-working-with-geospatial-data" class="nav-link" data-scroll-target="#working-with-geospatial-data">Working with Geospatial Data</a>
+  <ul class="collapse">
+  <li><a href="#importing-geospatial-data" id="toc-importing-geospatial-data" class="nav-link" data-scroll-target="#importing-geospatial-data">Importing geospatial data</a></li>
+  </ul></li>
+  <li><a href="#geospatial-data-wrangling" id="toc-geospatial-data-wrangling" class="nav-link" data-scroll-target="#geospatial-data-wrangling">Geospatial Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#combining-busstop-mpsz" id="toc-combining-busstop-mpsz" class="nav-link" data-scroll-target="#combining-busstop-mpsz">Combining Busstop &amp; mpsz</a></li>
+  </ul></li>
+  <li><a href="#hexagon-grid-setup" id="toc-hexagon-grid-setup" class="nav-link" data-scroll-target="#hexagon-grid-setup">Hexagon Grid Setup</a>
+  <ul class="collapse">
+  <li><a href="#drawing-the-hexagon-grid" id="toc-drawing-the-hexagon-grid" class="nav-link" data-scroll-target="#drawing-the-hexagon-grid">Drawing the Hexagon Grid</a></li>
+  <li><a href="#assign-each-bus-stop-to-a-grid-id" id="toc-assign-each-bus-stop-to-a-grid-id" class="nav-link" data-scroll-target="#assign-each-bus-stop-to-a-grid-id">Assign Each Bus Stop to a Grid ID</a></li>
+  </ul></li>
+  <li><a href="#choropleth-visualisation" id="toc-choropleth-visualisation" class="nav-link" data-scroll-target="#choropleth-visualisation"><strong>Choropleth Visualisation</strong></a></li>
+  <li><a href="#global-spatial-autocorrelation" id="toc-global-spatial-autocorrelation" class="nav-link" data-scroll-target="#global-spatial-autocorrelation"><strong>Global Spatial Autocorrelation</strong></a>
+  <ul class="collapse">
+  <li><a href="#computing-contiguity-spatial-weights" id="toc-computing-contiguity-spatial-weights" class="nav-link" data-scroll-target="#computing-contiguity-spatial-weights"><strong>Computing Contiguity Spatial Weights</strong></a></li>
+  <li><a href="#row-standardised-weights-matrix" id="toc-row-standardised-weights-matrix" class="nav-link" data-scroll-target="#row-standardised-weights-matrix"><strong>Row-standardised weights matrix</strong></a></li>
+  <li><a href="#global-spatial-autocorrelation-morans-i-test" id="toc-global-spatial-autocorrelation-morans-i-test" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-morans-i-test"><strong>Global Spatial Autocorrelation: Moran’s I test</strong></a></li>
+  <li><a href="#computing-monte-carlo-morans-i-statistic" id="toc-computing-monte-carlo-morans-i-statistic" class="nav-link" data-scroll-target="#computing-monte-carlo-morans-i-statistic">Computing Monte Carlo Moran’s I Statistic</a></li>
+  <li><a href="#visualising-carlo-morans-i" id="toc-visualising-carlo-morans-i" class="nav-link" data-scroll-target="#visualising-carlo-morans-i">Visualising Carlo Moran’s I</a></li>
+  </ul></li>
+  <li><a href="#cluster-and-outlier-analysis" id="toc-cluster-and-outlier-analysis" class="nav-link" data-scroll-target="#cluster-and-outlier-analysis"><strong>Cluster and Outlier Analysis</strong></a>
+  <ul class="collapse">
+  <li><a href="#computing-local-morans-i" id="toc-computing-local-morans-i" class="nav-link" data-scroll-target="#computing-local-morans-i">Computing Local Moran’s I</a></li>
+  </ul></li>
+  <li><a href="#mapping-local-morans-i-values-p-values" id="toc-mapping-local-morans-i-values-p-values" class="nav-link" data-scroll-target="#mapping-local-morans-i-values-p-values">Mapping Local Moran’s I values &amp; P-values</a></li>
+  <li><a href="#creating-a-lisa-cluster-map" id="toc-creating-a-lisa-cluster-map" class="nav-link" data-scroll-target="#creating-a-lisa-cluster-map">Creating a LISA Cluster Map</a>
+  <ul class="collapse">
+  <li><a href="#preparing-lisa-map-classes" id="toc-preparing-lisa-map-classes" class="nav-link" data-scroll-target="#preparing-lisa-map-classes"><strong>Preparing LISA Map Classes</strong></a></li>
+  <li><a href="#plotting-lisa-map" id="toc-plotting-lisa-map" class="nav-link" data-scroll-target="#plotting-lisa-map"><strong>Plotting LISA map</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Take Home Exercise 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 27, 2023</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">December 3, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tmap,sf,spdep,sfdep,tidyverse,knitr,plotly,zoo,Kendall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="preparing-the-flow-data" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-the-flow-data">Preparing the Flow Data</h2>
+<section id="importing-the-od-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-the-od-data">Importing the OD data</h3>
+<p>Firstly, we will import the <strong>Passenger Volume by Origin Destination Bus Stops</strong> data set downloaded from LTA DataMall by using read_csv() of <strong>readr</strong> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>odbus <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/origin_destination_bus_202308.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check odbus tibble data frame that values in OROGIN_PT_CODE and DESTINATION_PT_CODE are in numeric data type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(odbus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,709,512
+Columns: 7
+$ YEAR_MONTH          &lt;chr&gt; "2023-08", "2023-08", "2023-08", "2023-08", "2023-…
+$ DAY_TYPE            &lt;chr&gt; "WEEKDAY", "WEEKENDS/HOLIDAY", "WEEKENDS/HOLIDAY",…
+$ TIME_PER_HOUR       &lt;dbl&gt; 16, 16, 14, 14, 17, 17, 17, 17, 7, 17, 14, 10, 10,…
+$ PT_TYPE             &lt;chr&gt; "BUS", "BUS", "BUS", "BUS", "BUS", "BUS", "BUS", "…
+$ ORIGIN_PT_CODE      &lt;chr&gt; "04168", "04168", "80119", "80119", "44069", "4406…
+$ DESTINATION_PT_CODE &lt;chr&gt; "10051", "10051", "90079", "90079", "17229", "1722…
+$ TOTAL_TRIPS         &lt;dbl&gt; 7, 2, 3, 10, 5, 4, 3, 22, 3, 3, 7, 1, 3, 1, 3, 1, …</code></pre>
+</div>
+</div>
+<p>Origin &amp; Destination Bus Stop Code</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>odbus<span class="sc">$</span>ORIGIN_PT_CODE <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.factor</span>(odbus<span class="sc">$</span>ORIGIN_PT_CODE)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>odbus<span class="sc">$</span>DESTINATION_PT_CODE <span class="ot">&lt;-</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">as.factor</span>(odbus<span class="sc">$</span>DESTINATION_PT_CODE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="extracting-the-study-data" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-the-study-data">Extracting the Study Data</h3>
+<p>Filter out data that belong to trips that occur on:</p>
+<ul>
+<li><p>“Weekday” and “6-9am” (wdmp)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span>  odbus <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DAY_TYPE <span class="sc">==</span> <span class="st">"WEEKDAY"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TIME_PER_HOUR <span class="sc">&gt;=</span> <span class="dv">6</span> <span class="sc">&amp;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>           TIME_PER_HOUR <span class="sc">&lt;=</span> <span class="dv">9</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ORIGIN_PT_CODE) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TRIPS =</span> <span class="fu">sum</span>(TOTAL_TRIPS))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>“Weekday” and “5-8pm” (wdap)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>wdap <span class="ot">&lt;-</span>  odbus <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DAY_TYPE <span class="sc">==</span> <span class="st">"WEEKDAY"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TIME_PER_HOUR <span class="sc">&gt;=</span> <span class="dv">17</span> <span class="sc">&amp;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>           TIME_PER_HOUR <span class="sc">&lt;=</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ORIGIN_PT_CODE) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TRIPS =</span> <span class="fu">sum</span>(TOTAL_TRIPS))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>“Weekends/Holiday” and “11am-2pm” (hmp)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>hmp <span class="ot">&lt;-</span> odbus <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DAY_TYPE <span class="sc">==</span> <span class="st">"WEEKENDS/HOLIDAY"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TIME_PER_HOUR <span class="sc">&gt;=</span> <span class="dv">11</span> <span class="sc">&amp;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>           TIME_PER_HOUR <span class="sc">&lt;=</span> <span class="dv">14</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ORIGIN_PT_CODE) <span class="sc">%&gt;%</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TRIPS =</span> <span class="fu">sum</span>(TOTAL_TRIPS))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>“Weekends/Holiday” and “4pm-7pm” (hep)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>hep <span class="ot">&lt;-</span> odbus <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DAY_TYPE <span class="sc">==</span> <span class="st">"WEEKENDS/HOLIDAY"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TIME_PER_HOUR <span class="sc">&gt;=</span> <span class="dv">16</span> <span class="sc">&amp;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>           TIME_PER_HOUR <span class="sc">&lt;=</span> <span class="dv">19</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ORIGIN_PT_CODE) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TRIPS =</span> <span class="fu">sum</span>(TOTAL_TRIPS))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+</ul>
+<p>Check resulting data tables</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(wdmp)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">ORIGIN_PT_CODE</th>
+<th style="text-align: right;">TRIPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01012</td>
+<td style="text-align: right;">1973</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01013</td>
+<td style="text-align: right;">952</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01019</td>
+<td style="text-align: right;">1789</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01029</td>
+<td style="text-align: right;">2561</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01039</td>
+<td style="text-align: right;">2938</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01059</td>
+<td style="text-align: right;">1651</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(wdap)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">ORIGIN_PT_CODE</th>
+<th style="text-align: right;">TRIPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01012</td>
+<td style="text-align: right;">8448</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01013</td>
+<td style="text-align: right;">7328</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01019</td>
+<td style="text-align: right;">3608</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01029</td>
+<td style="text-align: right;">9317</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01039</td>
+<td style="text-align: right;">12937</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01059</td>
+<td style="text-align: right;">2133</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(hmp)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">ORIGIN_PT_CODE</th>
+<th style="text-align: right;">TRIPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01012</td>
+<td style="text-align: right;">2273</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01013</td>
+<td style="text-align: right;">1697</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01019</td>
+<td style="text-align: right;">1511</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01029</td>
+<td style="text-align: right;">3272</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01039</td>
+<td style="text-align: right;">5424</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01059</td>
+<td style="text-align: right;">1062</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(hep))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">ORIGIN_PT_CODE</th>
+<th style="text-align: right;">TRIPS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01012</td>
+<td style="text-align: right;">3208</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01013</td>
+<td style="text-align: right;">2796</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01019</td>
+<td style="text-align: right;">1623</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01029</td>
+<td style="text-align: right;">4244</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">01039</td>
+<td style="text-align: right;">7403</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01059</td>
+<td style="text-align: right;">1190</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Output saved in rds format for future use</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(wdmp, <span class="st">"data/rds/wdmp.rds"</span>) </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(wdap, <span class="st">"data/rds/wdap.rds"</span>) </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(hmp, <span class="st">"data/rds/hmp.rds"</span>) </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(hep, <span class="st">"data/rds/hep.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Import the rds file into R environment</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/wdmp.rds"</span>) </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>wdap <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/wdap.rds"</span>) </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>hmp <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/hmp.rds"</span>) </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>hep <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/hep.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="working-with-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-geospatial-data">Working with Geospatial Data</h2>
+<p>Two geospatial data (shapefile) will be used for this exercise:</p>
+<ul>
+<li><p>BusStop: Provides location of bus stop as at Q4 2022</p></li>
+<li><p>MPSZ-2019: This data provides the sub-zone boundary of URA Master Plan 2019</p></li>
+</ul>
+<section id="importing-geospatial-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-geospatial-data">Importing geospatial data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>busstop <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"Data/geospatial"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">layer =</span> <span class="st">"BusStop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `BusStop' from data source 
+  `C:\lnealicia\ISSS624\Takehome_ex01\Data\Geospatial' using driver `ESRI Shapefile'
+Simple feature collection with 5161 features and 3 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 3970.122 ymin: 26482.1 xmax: 48284.56 ymax: 52983.82
+Projected CRS: SVY21</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"MPSZ-2019"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `MPSZ-2019' from data source 
+  `C:\lnealicia\ISSS624\Takehome_ex01\Data\Geospatial' using driver `ESRI Shapefile'
+Simple feature collection with 332 features and 6 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>Check structure of <code>busstop</code> and <code>MPSZ</code> &nbsp;sf tibble data frame</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(busstop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,161
+Columns: 4
+$ BUS_STOP_N &lt;chr&gt; "22069", "32071", "44331", "96081", "11561", "66191", "2338…
+$ BUS_ROOF_N &lt;chr&gt; "B06", "B23", "B01", "B05", "B05", "B03", "B02A", "B02", "B…
+$ LOC_DESC   &lt;chr&gt; "OPP CEVA LOGISTICS", "AFT TRACK 13", "BLK 239", "GRACE IND…
+$ geometry   &lt;POINT [m]&gt; POINT (13576.31 32883.65), POINT (13228.59 44206.38),…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 332
+Columns: 7
+$ SUBZONE_N  &lt;chr&gt; "MARINA EAST", "INSTITUTION HILL", "ROBERTSON QUAY", "JURON…
+$ SUBZONE_C  &lt;chr&gt; "MESZ01", "RVSZ05", "SRSZ01", "WISZ01", "MUSZ02", "MPSZ05",…
+$ PLN_AREA_N &lt;chr&gt; "MARINA EAST", "RIVER VALLEY", "SINGAPORE RIVER", "WESTERN …
+$ PLN_AREA_C &lt;chr&gt; "ME", "RV", "SR", "WI", "MU", "MP", "WI", "WI", "SI", "SI",…
+$ REGION_N   &lt;chr&gt; "CENTRAL REGION", "CENTRAL REGION", "CENTRAL REGION", "WEST…
+$ REGION_C   &lt;chr&gt; "CR", "CR", "CR", "WR", "CR", "CR", "WR", "WR", "CR", "CR",…
+$ geometry   &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((33222.98 29..., MULTIPOLYGON (…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="geospatial-data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="geospatial-data-wrangling">Geospatial Data Wrangling</h2>
+<section id="combining-busstop-mpsz" class="level3">
+<h3 class="anchored" data-anchor-id="combining-busstop-mpsz">Combining Busstop &amp; mpsz</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>busstop_mpsz <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(busstop, mpsz) <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(BUS_STOP_N, SUBZONE_C) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Save output into rds format</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(busstop_mpsz, <span class="st">"data/rds/busstop_mpsz.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="hexagon-grid-setup" class="level2">
+<h2 class="anchored" data-anchor-id="hexagon-grid-setup">Hexagon Grid Setup</h2>
+<section id="drawing-the-hexagon-grid" class="level3">
+<h3 class="anchored" data-anchor-id="drawing-the-hexagon-grid">Drawing the Hexagon Grid</h3>
+<p>Draw hexagon grid over the mpsz map</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>area_honeycomb_grid <span class="ot">=</span> <span class="fu">st_make_grid</span>(mpsz, <span class="fu">c</span>(<span class="dv">500</span>, <span class="dv">500</span>), <span class="at">what =</span> <span class="st">"polygons"</span>, <span class="at">square =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Convert the hexagon grid to sf (simple features) object and add a new column grid_id (sequential identifier) to it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>honeycomb_grid_sf <span class="ot">=</span> <span class="fu">st_sf</span>(area_honeycomb_grid) <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add grid ID</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grid_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">lengths</span>(area_honeycomb_grid)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Determine which bus stops is contained within which hexagon using <strong><code>st_within</code></strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>busstop_honeycomb <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(honeycomb_grid_sf,busstop) <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(BUS_STOP_N, grid_id) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Save output into rds format</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(busstop_honeycomb, <span class="st">"data/rds/busstop_honeycomb.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check for duplicate records</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>duplicate <span class="ot">&lt;-</span> busstop_honeycomb <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by_all</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>()<span class="sc">&gt;</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Retain unique records only</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>busstop_honeycomb <span class="ot">&lt;-</span> <span class="fu">unique</span>(busstop_honeycomb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Only include hexagon grid IDs that have bus stop numbers</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>busstop_honeycomb <span class="ot">&lt;-</span> busstop_honeycomb <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(grid_id) <span class="sc">&amp;</span> grid_id <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="assign-each-bus-stop-to-a-grid-id" class="level3">
+<h3 class="anchored" data-anchor-id="assign-each-bus-stop-to-a-grid-id">Assign Each Bus Stop to a Grid ID</h3>
+<p>For all time periods, assign bus stops to a hexagon grid id. All NULL and 0 values are removed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>wdmp_gridid <span class="ot">&lt;-</span> <span class="fu">left_join</span>(busstop_honeycomb, wdmp,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"BUS_STOP_N"</span> <span class="ot">=</span> <span class="st">"ORIGIN_PT_CODE"</span>)) </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>wdmp_gridid <span class="ot">&lt;-</span> wdmp_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TRIPS) <span class="sc">&amp;</span> TRIPS <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>wdap_gridid <span class="ot">&lt;-</span> <span class="fu">left_join</span>(busstop_honeycomb, wdap,</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"BUS_STOP_N"</span> <span class="ot">=</span> <span class="st">"ORIGIN_PT_CODE"</span>)) </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>wdap_gridid <span class="ot">&lt;-</span> wdap_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TRIPS) <span class="sc">&amp;</span> TRIPS <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>hmp_gridid <span class="ot">&lt;-</span> <span class="fu">left_join</span>(busstop_honeycomb, hmp,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"BUS_STOP_N"</span> <span class="ot">=</span> <span class="st">"ORIGIN_PT_CODE"</span>)) </span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>hmp_gridid <span class="ot">&lt;-</span> hmp_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TRIPS) <span class="sc">&amp;</span> TRIPS <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>hep_gridid <span class="ot">&lt;-</span> <span class="fu">left_join</span>(busstop_honeycomb, hep,</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"BUS_STOP_N"</span> <span class="ot">=</span> <span class="st">"ORIGIN_PT_CODE"</span>)) </span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>hep_gridid <span class="ot">&lt;-</span> hep_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TRIPS) <span class="sc">&amp;</span> TRIPS <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note: Grid id 2955 and 3036 contains bus stops that are not within Singapore (i.e.&nbsp;Malaysia). These are left as they could provide insights to traffic between the Singapore &amp; Malaysia land border.</p>
+</section>
+</section>
+<section id="choropleth-visualisation" class="level2">
+<h2 class="anchored" data-anchor-id="choropleth-visualisation"><strong>Choropleth Visualisation</strong></h2>
+<section id="weekday-morning-peak-6am-9am" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<p>Sum up the trips per hexagon</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdmp <span class="ot">&lt;-</span> wdmp_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grid_id) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_trips =</span> <span class="fu">sum</span>(TRIPS, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Merge geospatial data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdmp <span class="ot">&lt;-</span> total_trips_by_grid_wdmp <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(honeycomb_grid_sf, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"grid_id"</span> <span class="ot">=</span> <span class="st">"grid_id"</span>))</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdmp_sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(total_trips_by_grid_wdmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Summary Statistics (Hexagon)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wdmp<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+     1.0    469.2   2183.5   5267.1   6261.2 365871.0 </code></pre>
+</div>
+</div>
+<p>Total Trips in the time slot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(wdmp<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 26430413</code></pre>
+</div>
+</div>
+<p>Plot the Choropleth map</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(total_trips_by_grid_wdmp_sf) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"total_trips"</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Greens"</span>,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Total Trips Taken - Weekday Morning Peak 6-9am"</span>,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"grid_id"</span>,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">showNA =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.vars =</span> <span class="fu">c</span>(</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Number of trips: "</span> <span class="ot">=</span> <span class="st">"total_trips"</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.format =</span> <span class="fu">list</span>(</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">total_trips =</span> <span class="fu">list</span>(<span class="at">format =</span> <span class="st">"f"</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">lwd =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Description of Spatial Patterns" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Description of Spatial Patterns
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekday Morning Peak 6am-9am</p>
+<p>This timeslot has a total of 26,430,413 trips taken. It ranks first by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2184.</p>
+<p>Hexagons with greater number of trips are located near:</p>
+<ul>
+<li><p>Residential areas e.g.&nbsp;Tampines, Ang Mo Kio</p></li>
+<li><p>Public transport hubs e.g.&nbsp;Bus Interchange, MRT Interchange e.g.&nbsp;Toa Payoh Interchange, Bedok Interchange</p></li>
+<li><p>Immigration checkpoint at Woodlands</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<p>Sum up the trips per hexagon</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdap <span class="ot">&lt;-</span> wdap_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grid_id) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_trips =</span> <span class="fu">sum</span>(TRIPS, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Merge geospatial data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdap <span class="ot">&lt;-</span> total_trips_by_grid_wdap <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(honeycomb_grid_sf, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"grid_id"</span> <span class="ot">=</span> <span class="st">"grid_id"</span>))</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdap_sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(total_trips_by_grid_wdap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Summary Statistics (Hexagon)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wdap<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     719    2055    5114    4752  536630 </code></pre>
+</div>
+</div>
+<p>Total Trips in the time slot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(wdap<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25748484</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(wdap<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25748484</code></pre>
+</div>
+</div>
+<p>Plot the Choropleth map</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(total_trips_by_grid_wdap_sf) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"total_trips"</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Greens"</span>,</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span>,</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Total Trips Taken - Weekday Afternoon Peak 6-9am"</span>,</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"grid_id"</span>,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">showNA =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.vars =</span> <span class="fu">c</span>(</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Number of trips: "</span> <span class="ot">=</span> <span class="st">"total_trips"</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.format =</span> <span class="fu">list</span>(</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">total_trips =</span> <span class="fu">list</span>(<span class="at">format =</span> <span class="st">"f"</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">lwd =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Description of Spatial Patterns" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Description of Spatial Patterns
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekday Afternoon Peak 6am-9am</p>
+<p>This timeslot has a total of 25,748,484 trips taken. It ranks second by total volume of trips among our time periods of interest. The median number of trips per hexagon is 2055. Over all, the distribution of trips remain similar, but are more concentrated at public transport hubs.</p>
+<p>Hexagons with greater number of trips are located near:</p>
+<ul>
+<li><p>Public transport hubs e.g.&nbsp;Bus Interchange, MRT Interchange e.g.&nbsp;Serangoon Interchange, Woodlands Interchange</p></li>
+<li><p>School clusters e.g.&nbsp;Commonwealth Avenue West</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm"><strong>Weekend/Holiday Morning Peak</strong> <strong>11am-2pm</strong></h4>
+<p>Sum up the trips per hexagon</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hmp <span class="ot">&lt;-</span> hmp_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grid_id) <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_trips =</span> <span class="fu">sum</span>(TRIPS, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Merge geospatial data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hmp <span class="ot">&lt;-</span> total_trips_by_grid_hmp <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(honeycomb_grid_sf, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"grid_id"</span> <span class="ot">=</span> <span class="st">"grid_id"</span>))</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hmp_sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(total_trips_by_grid_hmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Summary Statistics Per Hexagon</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hmp<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     186     671    1546    1695  102210 </code></pre>
+</div>
+</div>
+<p>Total Trips in the time slot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(hmp<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7738503</code></pre>
+</div>
+</div>
+<p>Plot the Choropleth map</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(total_trips_by_grid_hmp_sf) <span class="sc">+</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"total_trips"</span>,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Greens"</span>,</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span>,</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Total Trips Taken - Weekend/Holiday Morning Peak 11am-2pm"</span>,</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"grid_id"</span>,</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">showNA =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.vars =</span> <span class="fu">c</span>(</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Number of trips: "</span> <span class="ot">=</span> <span class="st">"total_trips"</span></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.format =</span> <span class="fu">list</span>(</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">total_trips =</span> <span class="fu">list</span>(<span class="at">format =</span> <span class="st">"f"</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">lwd =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Description of Spatial Patterns" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Description of Spatial Patterns
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekend/Holiday Morning Peak 11am-2pm</p>
+<p>This timeslot has a total of 7,738,503 trips taken. It ranks third by total volume of trips among our time periods of interest. The median number of trips per hexagon is 671.</p>
+<p>Hexagons with greater number of trips are located near:</p>
+<ul>
+<li><p>Public transport hubs e.g.&nbsp;Bus Interchange, MRT Interchange e.g.&nbsp;Choa Chu Kang Interchange, Toa Payoh Interchange</p></li>
+<li><p>Residential Areas e.g.&nbsp;Bukit Batok Central</p></li>
+</ul>
+</div>
+</div>
+<p>Additional Note: Overall drop in volume could be contributed by leisure travels, and foreign students/workers leaving for their home countries.</p>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<p>Sum up the trips per hexagon</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hep <span class="ot">&lt;-</span> hep_gridid <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grid_id) <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_trips =</span> <span class="fu">sum</span>(TRIPS, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Merge geospatial data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hep <span class="ot">&lt;-</span> total_trips_by_grid_hep <span class="sc">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(honeycomb_grid_sf, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"grid_id"</span> <span class="ot">=</span> <span class="st">"grid_id"</span>))</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hep_sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(total_trips_by_grid_hep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Summary Statistics (Hexagon)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hep<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1     202     631    1549    1475  143443 </code></pre>
+</div>
+</div>
+<p>Total Trips in the time slot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(hep<span class="sc">$</span>TRIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7721570</code></pre>
+</div>
+</div>
+<p>Plot the Choropleth map</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(total_trips_by_grid_hep_sf) <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"total_trips"</span>,</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"Greens"</span>,</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span>,</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Total Trips Taken - Weekend/Holiday Evening Peak 4pm-7pm"</span>,</span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"grid_id"</span>,</span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">showNA =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.vars =</span> <span class="fu">c</span>(</span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Number of trips: "</span> <span class="ot">=</span> <span class="st">"total_trips"</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup.format =</span> <span class="fu">list</span>(</span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">total_trips =</span> <span class="fu">list</span>(<span class="at">format =</span> <span class="st">"f"</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">lwd =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Description of Spatial Patterns" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Description of Spatial Patterns
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekend/Holiday Evening Peak 4pm-7pm</p>
+<p>This timeslot has a total of 7,721,570 trips taken. It ranks fourth (i.e.&nbsp;last) by total volume of trips among our time periods of interest. The median number of trips per hexagon is 631.</p>
+<p>Hexagons with greater number of trips are located near:</p>
+<p>Public transport hubs e.g.&nbsp;Bus Interchange, MRT Interchange e.g.&nbsp;Choa Chu Kang Interchange, Serangoon Interchange</p>
+<p>These locations also happen to be:</p>
+<p>Places of Interest/Shopping Center: e.g.&nbsp;Lot 1 Shopping Center (Choa Chu Kang Interchange), NEX water playground (Serangoon)</p>
+</div>
+</div>
+<p>Additional Note: It is interesting to see that the Central Business District, as well as industrial areas, while serviced by public transport, are not as highly utilised when compared to other areas e.g.&nbsp;residential area. This could be due to commuters using alternate forms of transport e.g.&nbsp;private cars, taxi, company shuttle bus`</p>
+</section>
+</section>
+<section id="global-spatial-autocorrelation" class="level2">
+<h2 class="anchored" data-anchor-id="global-spatial-autocorrelation"><strong>Global Spatial Autocorrelation</strong></h2>
+<p>Computed to perform spatial complete randomness test for global spatial autocorrelation.</p>
+<section id="computing-contiguity-spatial-weights" class="level3">
+<h3 class="anchored" data-anchor-id="computing-contiguity-spatial-weights"><strong>Computing Contiguity Spatial Weights</strong></h3>
+<p>Use&nbsp;poly2nb()&nbsp;of&nbsp;spdep&nbsp;package to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries.</p>
+<section id="weekday-morning-peak-6am-9am-1" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-1"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>wm_wdmp <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(total_trips_by_grid_wdmp_sf, </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">queen=</span><span class="cn">TRUE</span>)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_wdmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 1490 
+Number of nonzero links: 6766 
+Percentage nonzero weights: 0.304761 
+Average number of links: 4.54094 
+12 regions with no links:
+1 279 552 591 714 978 1030 1476 1477 1480 1483 1490
+21 disjoint connected subgraphs
+Link number distribution:
+
+  0   1   2   3   4   5   6 
+ 12  43 101 183 264 406 481 
+43 least connected regions:
+3 20 21 34 42 69 165 175 185 186 211 258 268 310 432 440 455 468 487 553 656 666 696 697 698 709 738 751 756 783 834 993 1008 1021 1031 1069 1206 1254 1384 1471 1472 1481 1489 with 1 link
+481 most connected regions:
+12 17 18 24 26 29 51 52 56 59 63 66 71 72 74 75 77 78 81 82 84 85 89 90 95 101 106 110 116 119 122 127 128 131 138 140 144 145 150 151 152 159 160 169 170 171 179 180 181 189 190 191 192 198 199 200 205 206 207 216 228 238 242 243 244 245 249 251 254 261 283 290 292 293 294 296 301 302 303 304 305 308 309 312 313 314 315 316 317 319 325 326 327 328 329 330 331 342 343 344 347 357 358 363 369 370 382 383 393 396 397 404 412 416 417 423 429 430 433 435 436 442 443 444 451 452 456 458 459 464 472 480 482 483 484 496 497 507 508 518 528 537 539 540 541 542 543 546 547 549 555 560 567 568 570 575 583 584 588 593 594 595 598 599 601 602 603 608 612 613 614 617 619 625 626 630 631 637 641 642 643 648 649 651 652 663 664 665 670 672 673 674 681 682 688 692 693 694 701 703 704 705 712 716 717 718 729 730 744 746 748 758 764 765 766 770 773 778 779 780 785 786 791 792 798 804 805 810 811 826 828 829 831 832 833 835 836 840 842 843 846 848 849 850 853 859 860 861 862 863 864 867 868 870 871 874 876 877 878 879 880 883 885 888 889 890 894 895 896 897 898 902 903 905 906 909 910 911 912 913 914 915 920 924 925 927 930 931 932 933 934 935 939 940 941 942 944 945 948 949 955 956 957 958 959 960 970 971 972 973 974 975 981 982 983 985 996 997 1010 1011 1015 1017 1023 1026 1027 1028 1033 1038 1039 1040 1043 1044 1045 1048 1049 1050 1058 1060 1061 1062 1063 1065 1066 1072 1076 1077 1082 1084 1085 1088 1090 1096 1102 1107 1114 1115 1117 1118 1122 1123 1127 1133 1134 1135 1140 1142 1146 1147 1148 1149 1150 1151 1154 1157 1158 1159 1160 1161 1166 1167 1170 1171 1172 1173 1174 1180 1182 1183 1184 1185 1189 1190 1194 1195 1196 1204 1208 1209 1210 1211 1215 1216 1221 1227 1233 1235 1236 1237 1242 1243 1247 1248 1252 1255 1256 1263 1265 1266 1268 1271 1273 1274 1275 1277 1282 1283 1290 1291 1294 1295 1300 1301 1305 1306 1307 1308 1313 1314 1315 1322 1323 1325 1329 1334 1335 1341 1342 1348 1349 1350 1351 1356 1357 1364 1367 1372 1375 1381 1382 1387 1389 1396 1397 1398 1402 1403 1404 1405 1409 1411 1415 1420 1422 1423 1424 1427 1433 1436 1443 1444 1448 with 6 links</code></pre>
+</div>
+</div>
+<p>Note: The summary report above shows that there are 1490 hexagons considered for Weekday Morning Peak 6am-9am. The most connected hexagon has 6 neighbours. There are 43 hexagons with only 1 neighbour.</p>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-1" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-1"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>wm_wdap <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(total_trips_by_grid_wdap_sf, </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">queen=</span><span class="cn">TRUE</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_wdap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 1491 
+Number of nonzero links: 6772 
+Percentage nonzero weights: 0.3046223 
+Average number of links: 4.541918 
+11 regions with no links:
+1 279 552 591 714 978 1477 1478 1481 1484 1491
+20 disjoint connected subgraphs
+Link number distribution:
+
+  0   1   2   3   4   5   6 
+ 11  43 102 183 265 406 481 
+43 least connected regions:
+3 20 21 34 42 69 165 175 185 186 211 258 268 310 432 440 455 468 487 553 656 666 696 697 698 709 738 751 756 783 834 993 1021 1031 1032 1070 1207 1255 1385 1472 1473 1482 1490 with 1 link
+481 most connected regions:
+12 17 18 24 26 29 51 52 56 59 63 66 71 72 74 75 77 78 81 82 84 85 89 90 95 101 106 110 116 119 122 127 128 131 138 140 144 145 150 151 152 159 160 169 170 171 179 180 181 189 190 191 192 198 199 200 205 206 207 216 228 238 242 243 244 245 249 251 254 261 283 290 292 293 294 296 301 302 303 304 305 308 309 312 313 314 315 316 317 319 325 326 327 328 329 330 331 342 343 344 347 357 358 363 369 370 382 383 393 396 397 404 412 416 417 423 429 430 433 435 436 442 443 444 451 452 456 458 459 464 472 480 482 483 484 496 497 507 508 518 528 537 539 540 541 542 543 546 547 549 555 560 567 568 570 575 583 584 588 593 594 595 598 599 601 602 603 608 612 613 614 617 619 625 626 630 631 637 641 642 643 648 649 651 652 663 664 665 670 672 673 674 681 682 688 692 693 694 701 703 704 705 712 716 717 718 729 730 744 746 748 758 764 765 766 770 773 778 779 780 785 786 791 792 798 804 805 810 811 826 828 829 831 832 833 835 836 840 842 843 846 848 849 850 853 859 860 861 862 863 864 867 868 870 871 874 876 877 878 879 880 883 885 888 889 890 894 895 896 897 898 902 903 905 906 909 910 911 912 913 914 915 920 924 925 927 930 931 932 933 934 935 939 940 941 942 944 945 948 949 955 956 957 958 959 960 970 971 972 973 974 975 981 982 983 985 996 997 1010 1011 1015 1017 1024 1027 1028 1029 1034 1039 1040 1041 1044 1045 1046 1049 1050 1051 1059 1061 1062 1063 1064 1066 1067 1073 1077 1078 1083 1085 1086 1089 1091 1097 1103 1108 1115 1116 1118 1119 1123 1124 1128 1134 1135 1136 1141 1143 1147 1148 1149 1150 1151 1152 1155 1158 1159 1160 1161 1162 1167 1168 1171 1172 1173 1174 1175 1181 1183 1184 1185 1186 1190 1191 1195 1196 1197 1205 1209 1210 1211 1212 1216 1217 1222 1228 1234 1236 1237 1238 1243 1244 1248 1249 1253 1256 1257 1264 1266 1267 1269 1272 1274 1275 1276 1278 1283 1284 1291 1292 1295 1296 1301 1302 1306 1307 1308 1309 1314 1315 1316 1323 1324 1326 1330 1335 1336 1342 1343 1349 1350 1351 1352 1357 1358 1365 1368 1373 1376 1382 1383 1388 1390 1397 1398 1399 1403 1404 1405 1406 1410 1412 1416 1421 1423 1424 1425 1428 1434 1437 1444 1445 1449 with 6 links</code></pre>
+</div>
+</div>
+<p>Note: The summary report above shows that there are 1491 hexagons considered for Weekday Afternoon Peak 5pm-8pm, 1 more than Weekday Morning Peak 6am-9am. Similar to Weekday Morning Peak 6am-9am, the most connected hexagon has 6 neighbours and there are 43 hexagons with only 1 neighbour.</p>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-1" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-1"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>wm_hmp <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(total_trips_by_grid_hmp_sf, </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">queen=</span><span class="cn">TRUE</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_hmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 1499 
+Number of nonzero links: 6802 
+Percentage nonzero weights: 0.3027146 
+Average number of links: 4.537692 
+10 regions with no links:
+1 554 592 715 979 1485 1486 1489 1492 1499
+20 disjoint connected subgraphs
+Link number distribution:
+
+  0   1   2   3   4   5   6 
+ 10  45 103 182 273 403 483 
+45 least connected regions:
+3 20 21 34 42 69 164 174 184 185 210 257 258 270 282 313 434 442 457 470 489 555 657 667 697 698 699 710 739 752 757 784 835 994 1022 1032 1033 1071 1211 1260 1393 1480 1481 1490 1498 with 1 link
+483 most connected regions:
+12 17 18 24 26 29 51 52 56 59 63 66 71 72 74 75 77 78 81 84 85 88 100 105 109 115 118 121 126 127 130 137 139 143 144 149 150 151 158 159 168 169 170 178 179 180 188 189 190 191 197 198 199 204 205 206 215 227 237 241 242 243 244 248 250 253 261 286 293 295 296 297 299 304 305 306 307 308 311 312 315 316 317 318 319 320 322 328 329 330 331 332 333 334 345 346 347 350 360 361 366 372 373 385 386 396 399 400 407 414 418 419 425 431 432 435 437 438 444 445 446 453 454 458 460 461 466 474 482 484 485 486 498 499 509 510 520 530 539 541 542 543 544 545 548 549 551 557 562 568 569 571 576 584 585 589 594 595 596 599 600 602 603 604 609 613 614 615 618 620 626 627 631 632 638 642 643 644 649 650 652 653 664 665 666 671 673 674 675 682 683 689 693 694 695 702 704 705 706 713 717 718 719 730 731 745 747 749 759 765 766 767 771 774 779 780 781 786 787 792 793 799 805 806 811 812 827 829 830 832 833 834 836 837 841 843 844 847 849 850 851 854 860 861 862 863 864 865 868 869 871 872 875 877 878 879 880 881 884 886 889 890 891 895 896 897 898 899 903 904 906 907 910 911 912 913 914 915 916 921 925 926 928 931 932 933 934 935 936 940 941 942 943 945 946 949 950 956 957 958 959 960 961 971 972 973 974 975 976 982 983 984 986 997 998 1011 1012 1016 1018 1025 1028 1029 1030 1035 1040 1041 1042 1045 1046 1047 1050 1051 1052 1060 1062 1063 1064 1065 1067 1068 1074 1078 1079 1084 1086 1087 1090 1092 1098 1104 1109 1116 1117 1119 1120 1124 1125 1129 1135 1136 1137 1142 1144 1148 1149 1150 1151 1152 1154 1157 1160 1161 1162 1163 1164 1169 1170 1173 1174 1175 1176 1177 1184 1186 1187 1188 1189 1192 1193 1194 1198 1199 1200 1209 1213 1214 1215 1216 1220 1221 1226 1231 1232 1238 1240 1242 1243 1248 1249 1253 1254 1258 1261 1262 1269 1271 1272 1274 1277 1279 1280 1281 1283 1288 1289 1295 1296 1297 1301 1302 1306 1307 1308 1313 1314 1315 1316 1321 1322 1323 1329 1330 1331 1333 1338 1343 1344 1350 1351 1357 1358 1359 1360 1365 1366 1373 1376 1381 1384 1390 1391 1396 1398 1405 1406 1407 1411 1412 1413 1414 1418 1420 1424 1429 1431 1432 1433 1436 1442 1445 1452 1453 1457 with 6 links</code></pre>
+</div>
+</div>
+<p>Note: The summary report above shows that there are 1499 hexagons considered for Weekend/Holiday Morning Peak 11am-2pm, the highest number among the time periods of interests. Similar to Weekday Morning Peak 6am-9am, the most connected hexagon has 6 neighbours, but there are 45 hexagons with only 1 neighbour. 2 more than Weekday Morning Peak 6am-9am and Weekday Afternoon Peak 5pm-8pm.</p>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-1" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-1"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>wm_hep <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(total_trips_by_grid_hep_sf, </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">queen=</span><span class="cn">TRUE</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_hep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 1489 
+Number of nonzero links: 6750 
+Percentage nonzero weights: 0.3044489 
+Average number of links: 4.533244 
+10 regions with no links:
+1 555 593 713 975 1477 1478 1481 1484 1489
+20 disjoint connected subgraphs
+Link number distribution:
+
+  0   1   2   3   4   5   6 
+ 10  44 109 175 274 395 482 
+44 least connected regions:
+3 20 21 34 42 69 165 175 185 186 211 258 259 271 283 314 435 443 458 471 490 556 655 665 695 696 697 708 737 750 755 782 831 990 1018 1028 1029 1067 1207 1256 1389 1472 1473 1482 with 1 link
+482 most connected regions:
+12 17 18 24 26 29 51 52 56 59 63 66 71 72 74 75 77 78 81 82 84 85 89 90 95 101 106 110 116 119 122 127 128 131 138 140 144 145 150 151 152 159 160 169 170 171 179 180 181 189 190 191 192 198 199 200 205 206 207 216 228 238 242 243 244 245 249 251 254 262 287 294 296 297 298 300 305 306 307 308 309 312 313 316 317 318 319 320 321 323 329 330 331 332 333 334 335 346 347 348 351 361 362 367 373 374 386 387 397 400 401 408 415 419 420 426 432 433 436 438 439 445 446 447 454 455 459 461 462 467 475 483 485 486 487 499 500 510 511 521 531 540 542 543 544 545 546 549 550 552 558 563 569 570 572 577 585 586 590 595 596 597 600 601 603 604 605 610 614 615 616 617 619 625 626 630 631 637 640 641 642 647 650 651 662 663 664 669 671 672 673 680 681 687 691 692 693 700 702 703 704 711 715 716 717 728 729 743 745 747 757 763 764 765 769 772 777 778 779 784 785 789 790 796 802 803 807 808 823 828 829 830 832 833 837 839 840 845 846 847 850 856 857 858 859 860 861 864 865 867 868 871 873 874 875 876 877 880 882 885 886 887 891 892 893 894 895 899 900 902 903 906 907 908 909 910 911 912 917 921 922 924 927 928 929 930 931 932 936 937 938 939 941 942 945 946 952 953 954 955 956 957 967 968 969 970 971 972 978 979 980 982 993 994 1007 1008 1012 1014 1021 1024 1025 1026 1031 1036 1037 1038 1041 1042 1043 1046 1047 1048 1056 1058 1059 1060 1061 1063 1064 1070 1074 1075 1080 1082 1083 1086 1088 1094 1100 1105 1112 1113 1115 1116 1120 1121 1125 1131 1132 1133 1138 1140 1144 1145 1146 1147 1148 1150 1153 1156 1157 1158 1159 1160 1165 1166 1169 1170 1171 1172 1173 1180 1182 1183 1184 1185 1188 1189 1190 1194 1195 1196 1205 1209 1210 1211 1212 1216 1217 1222 1227 1228 1234 1236 1238 1239 1244 1245 1249 1250 1254 1257 1258 1265 1267 1268 1270 1273 1275 1276 1277 1279 1284 1285 1291 1292 1293 1297 1298 1302 1303 1304 1309 1310 1311 1312 1317 1318 1319 1325 1326 1327 1329 1334 1339 1340 1346 1347 1353 1354 1355 1356 1361 1362 1369 1372 1377 1380 1386 1387 1392 1394 1401 1402 1403 1407 1408 1409 1410 1414 1416 1420 1425 1427 1428 1429 1432 1438 1441 1448 1449 1453 with 6 links</code></pre>
+</div>
+</div>
+<p>Note: The summary report above shows that there are 1489 hexagons considered for Weekend/Holiday Evening Peak 4pm-7pm, second to Weekend/Holiday Morning Peak 11am-2pm. Similar to other time periods of interest, the most connected hexagon has 6 neighbours, but there are 44 hexagons with only 1 neighbour. 1 less than Weekend/Holiday Morning Peak 11am-2pm.</p>
+</section>
+</section>
+<section id="row-standardised-weights-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="row-standardised-weights-matrix"><strong>Row-standardised weights matrix</strong></h3>
+<p>Assign weights to each neighboring polygon</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>rswm_wdmp <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_wdmp, </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">style=</span><span class="st">"W"</span>, </span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>rswm_wdmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Characteristics of weights list object:
+Neighbour list object:
+Number of regions: 1490 
+Number of nonzero links: 6766 
+Percentage nonzero weights: 0.304761 
+Average number of links: 4.54094 
+12 regions with no links:
+1 279 552 591 714 978 1030 1476 1477 1480 1483 1490
+21 disjoint connected subgraphs
+
+Weights style: W 
+Weights constants summary:
+     n      nn   S0       S1      S2
+W 1478 2184484 1478 734.3072 5993.11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>rswm_wdap <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_wdap, </span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">style=</span><span class="st">"W"</span>, </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>rswm_wdap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Characteristics of weights list object:
+Neighbour list object:
+Number of regions: 1491 
+Number of nonzero links: 6772 
+Percentage nonzero weights: 0.3046223 
+Average number of links: 4.541918 
+11 regions with no links:
+1 279 552 591 714 978 1477 1478 1481 1484 1491
+20 disjoint connected subgraphs
+
+Weights style: W 
+Weights constants summary:
+     n      nn   S0     S1       S2
+W 1480 2190400 1480 735.71 6001.568</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>rswm_hmp <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_hmp, </span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">style=</span><span class="st">"W"</span>, </span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>rswm_hmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Characteristics of weights list object:
+Neighbour list object:
+Number of regions: 1499 
+Number of nonzero links: 6802 
+Percentage nonzero weights: 0.3027146 
+Average number of links: 4.537692 
+10 regions with no links:
+1 554 592 715 979 1485 1486 1489 1492 1499
+20 disjoint connected subgraphs
+
+Weights style: W 
+Weights constants summary:
+     n      nn   S0       S1       S2
+W 1489 2217121 1489 742.6317 6039.784</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>rswm_hep <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_hep, </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">style=</span><span class="st">"W"</span>, </span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>rswm_hep</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Characteristics of weights list object:
+Neighbour list object:
+Number of regions: 1489 
+Number of nonzero links: 6750 
+Percentage nonzero weights: 0.3044489 
+Average number of links: 4.533244 
+10 regions with no links:
+1 555 593 713 975 1477 1478 1481 1484 1489
+20 disjoint connected subgraphs
+
+Weights style: W 
+Weights constants summary:
+     n      nn   S0       S1       S2
+W 1479 2187441 1479 739.6156 5998.413</code></pre>
+</div>
+</div>
+</section>
+<section id="global-spatial-autocorrelation-morans-i-test" class="level3">
+<h3 class="anchored" data-anchor-id="global-spatial-autocorrelation-morans-i-test"><strong>Global Spatial Autocorrelation: Moran’s I test</strong></h3>
+<section id="weekday-morning-peak-6am-9am-2" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-2"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips, </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">listw=</span>rswm_wdmp, </span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">zero.policy =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">na.action=</span>na.omit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  total_trips_by_grid_wdmp_sf$total_trips  
+weights: rswm_wdmp  n reduced by no-neighbour observations
+  
+
+Moran I statistic standard deviate = 12.742, p-value &lt; 2.2e-16
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     0.2292764263     -0.0006770481      0.0003257039 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Weekday Morning Peak 6am-9am</strong></p>
+<p>The Moran’s I statistic is significantly different from what would be expected under spatial randomness. The positive Moran’s I value and the small p-value (&lt;0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.</p>
+</div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-2" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-2"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips, </span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">listw=</span>rswm_wdap, </span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">zero.policy =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">na.action=</span>na.omit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  total_trips_by_grid_wdap_sf$total_trips  
+weights: rswm_wdap  n reduced by no-neighbour observations
+  
+
+Moran I statistic standard deviate = 3.4817, p-value = 0.0002491
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     0.0610506378     -0.0006761325      0.0003143077 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Weekday Afternoon Peak 5pm-8pm</strong></p>
+<p>The Moran’s I statistic is significantly different from what would be expected under spatial randomness. The positive Moran’s I value and the small p-value (&lt;0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.</p>
+</div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-2" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-2"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips, </span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">listw=</span>rswm_hmp, </span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">zero.policy =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">na.action=</span>na.omit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  total_trips_by_grid_hmp_sf$total_trips  
+weights: rswm_hmp  n reduced by no-neighbour observations
+  
+
+Moran I statistic standard deviate = 8.8665, p-value &lt; 2.2e-16
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     0.1586637121     -0.0006720430      0.0003229402 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></p>
+<p>The Moran’s I statistic is significantly different from what would be expected under spatial randomness. The positive Moran’s I value and the small p-value (&lt;0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.</p>
+</div>
+</div>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-2" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-2"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips, </span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">listw=</span>rswm_hep, </span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">zero.policy =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">na.action=</span>na.omit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  total_trips_by_grid_hep_sf$total_trips  
+weights: rswm_hep  n reduced by no-neighbour observations
+  
+
+Moran I statistic standard deviate = 6.0195, p-value = 8.749e-10
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     0.1072318731     -0.0006765900      0.0003213607 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></p>
+<p>The Moran’s I statistic is significantly different from what would be expected under spatial randomness. The positive Moran’s I value and the small p-value (&lt;0.05) suggest a statistically significant spatial clustering pattern. Therefore, there is evidence of spatial autocorrelation in the variable being analysed. The alternative hypothesis that there is a spatial clustering pattern is supported.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="computing-monte-carlo-morans-i-statistic" class="level3">
+<h3 class="anchored" data-anchor-id="computing-monte-carlo-morans-i-statistic">Computing Monte Carlo Moran’s I Statistic</h3>
+<p>Seed 1234 is used for consistency and a total of 1000 simulations will be performed</p>
+<section id="weekday-morning-peak-6am-9am-3" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-3"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>bperm_wdmp <span class="ot">=</span> <span class="fu">moran.mc</span>(total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips,</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">listw =</span> rswm_wdmp,</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nsim =</span> <span class="dv">999</span>,</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zero.policy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">na.action =</span> na.omit)</span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>bperm_wdmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  total_trips_by_grid_wdmp_sf$total_trips 
+weights: rswm_wdmp  
+number of simulations + 1: 1000 
+
+statistic = 0.22928, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-3" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-3"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>bperm_wdap <span class="ot">=</span> <span class="fu">moran.mc</span>(total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips,</span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">listw =</span> rswm_wdap,</span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nsim =</span> <span class="dv">999</span>,</span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zero.policy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">na.action =</span> na.omit)</span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a>bperm_wdap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  total_trips_by_grid_wdap_sf$total_trips 
+weights: rswm_wdap  
+number of simulations + 1: 1000 
+
+statistic = 0.061051, observed rank = 995, p-value = 0.005
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-3" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-3"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>bperm_hmp <span class="ot">=</span> <span class="fu">moran.mc</span>(total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips,</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">listw =</span> rswm_hmp,</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nsim =</span> <span class="dv">999</span>,</span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zero.policy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">na.action =</span> na.omit)</span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>bperm_hmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  total_trips_by_grid_hmp_sf$total_trips 
+weights: rswm_hmp  
+number of simulations + 1: 1000 
+
+statistic = 0.15866, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-3" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-3"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>bperm_hep <span class="ot">=</span> <span class="fu">moran.mc</span>(total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips,</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">listw =</span> rswm_hep,</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nsim =</span> <span class="dv">999</span>,</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zero.policy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">na.action =</span> na.omit)</span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>bperm_hep</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  total_trips_by_grid_hep_sf$total_trips 
+weights: rswm_hep  
+number of simulations + 1: 1000 
+
+statistic = 0.10723, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="visualising-carlo-morans-i" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-carlo-morans-i">Visualising Carlo Moran’s I</h3>
+<section id="weekday-morning-peak-6am-9am-4" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-4"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(bperm_wdmp<span class="sc">$</span>res, </span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq=</span><span class="cn">TRUE</span>, </span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks=</span><span class="dv">20</span>, </span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Simulated Moran's I"</span>)</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>, </span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-4" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-4"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(bperm_wdap<span class="sc">$</span>res, </span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq=</span><span class="cn">TRUE</span>, </span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks=</span><span class="dv">20</span>, </span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Simulated Moran's I"</span>)</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>, </span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-4" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-4"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(bperm_hmp<span class="sc">$</span>res, </span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq=</span><span class="cn">TRUE</span>, </span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks=</span><span class="dv">20</span>, </span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Simulated Moran's I"</span>)</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>, </span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-4" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-4"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(bperm_hep<span class="sc">$</span>res, </span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq=</span><span class="cn">TRUE</span>, </span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks=</span><span class="dv">20</span>, </span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Simulated Moran's I"</span>)</span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>, </span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="cluster-and-outlier-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-and-outlier-analysis"><strong>Cluster and Outlier Analysis</strong></h2>
+<p>Evaluare existence of clusters in the spatial arrangement of trips in time periods of interest e.g.&nbsp;Weekday Morning Peak 6am-9am.</p>
+<section id="computing-local-morans-i" class="level3">
+<h3 class="anchored" data-anchor-id="computing-local-morans-i">Computing Local Moran’s I</h3>
+<section id="weekday-morning-peak-6am-9am-5" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-5"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>localMI_wdmp <span class="ot">&lt;-</span> <span class="fu">localmoran</span>(total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips, rswm_wdmp)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(localMI_wdmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Ii          E.Ii     Var.Ii      Z.Ii Pr(z != E(Ii))
+1 0.0000000  0.0000000000 0.00000000       NaN            NaN
+2 0.3876098 -0.0002654821 0.13164395 1.0690344      0.2850542
+3 0.3913315 -0.0002606211 0.38822420 0.6284817      0.5296884
+4 0.3754844 -0.0002575348 0.12770412 1.0514466      0.2930535
+5 0.3799712 -0.0002646032 0.09833996 1.2125174      0.2253144
+6 0.3915797 -0.0002650274 0.19726039 0.8822549      0.3776390</code></pre>
+</div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-5" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-5"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>localMI_wdap <span class="ot">&lt;-</span> <span class="fu">localmoran</span>(total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips, rswm_wdap)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(localMI_wdap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Ii          E.Ii     Var.Ii      Z.Ii Pr(z != E(Ii))
+1 0.0000000  0.0000000000 0.00000000       NaN            NaN
+2 0.1972772 -0.0001390095 0.06898534 0.7516307      0.4522732
+3 0.1856309 -0.0001125847 0.16784487 0.4533770      0.6502773
+4 0.1838751 -0.0001385604 0.06876250 0.7017367      0.4828434
+5 0.1954830 -0.0001394927 0.05188390 0.8588207      0.3904394
+6 0.1940601 -0.0001378633 0.10269389 0.6059995      0.5445151</code></pre>
+</div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-5" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-5"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>localMI_hmp <span class="ot">&lt;-</span> <span class="fu">localmoran</span>(total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips, rswm_hmp)</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(localMI_hmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Ii          E.Ii    Var.Ii      Z.Ii Pr(z != E(Ii))
+1 0.0000000  0.0000000000 0.0000000       NaN            NaN
+2 0.2975814 -0.0002076460 0.1035937 0.9252138      0.3548547
+3 0.3023594 -0.0001958899 0.2935814 0.5583938      0.5765755
+4 0.2858696 -0.0002011985 0.1003777 0.9029319      0.3665620
+5 0.2812909 -0.0002037164 0.0761742 1.0199201      0.3077664
+6 0.3053191 -0.0002079752 0.1557409 0.7741916      0.4388175</code></pre>
+</div>
+</div>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-5" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-5"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>localMI_hep <span class="ot">&lt;-</span> <span class="fu">localmoran</span>(total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips, rswm_hep)</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(localMI_hep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Ii          E.Ii     Var.Ii      Z.Ii Pr(z != E(Ii))
+1 0.0000000  0.0000000000 0.00000000       NaN            NaN
+2 0.2089841 -0.0001498115 0.07424533 0.7675203      0.4427722
+3 0.2112013 -0.0001338894 0.19933457 0.4733480      0.6359649
+4 0.1972885 -0.0001476763 0.07318729 0.7298084      0.4655073
+5 0.2005562 -0.0001509447 0.05606732 0.8476332      0.3966423
+6 0.2157506 -0.0001504670 0.11193053 0.6453281      0.5187146</code></pre>
+</div>
+</div>
+<p>Note: localmoran() function returns a matrix of values whose columns are:</p>
+<ul>
+<li><p>Ii: the local Moran’s I statistics</p></li>
+<li><p>E.Ii: the expectation of local Moran statistic under the randomisation hypothesis</p></li>
+<li><p>Var.Ii: the variance of local Moran statistic under the randomisation hypothesis</p></li>
+<li><p>Z.Ii:the standard deviate of local Moran statistic</p></li>
+<li><p>Pr(): the p-value of local Moran statistic</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="mapping-local-morans-i-values-p-values" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-local-morans-i-values-p-values">Mapping Local Moran’s I values &amp; P-values</h2>
+<p>Append the local Moran’s I dataframe (i.e.&nbsp;localMI) onto total_trips_by_grid spatialPolygonDataFrame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_wdmp <span class="ot">&lt;-</span> <span class="fu">cbind</span>(total_trips_by_grid_wdmp_sf,localMI_wdmp) <span class="sc">%&gt;%</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Pr.Ii =</span> Pr.z....E.Ii..)</span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_wdap <span class="ot">&lt;-</span> <span class="fu">cbind</span>(total_trips_by_grid_wdap_sf,localMI_wdap) <span class="sc">%&gt;%</span></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Pr.Ii =</span> Pr.z....E.Ii..)</span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_hmp <span class="ot">&lt;-</span> <span class="fu">cbind</span>(total_trips_by_grid_hmp_sf,localMI_hmp) <span class="sc">%&gt;%</span></span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Pr.Ii =</span> Pr.z....E.Ii..)</span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_hep <span class="ot">&lt;-</span> <span class="fu">cbind</span>(total_trips_by_grid_hep_sf,localMI_hep) <span class="sc">%&gt;%</span></span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Pr.Ii =</span> Pr.z....E.Ii..)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-a-lisa-cluster-map" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-lisa-cluster-map">Creating a LISA Cluster Map</h2>
+<p>Shows the significant locations colour coded by type of spatial autocorrelation.</p>
+<section id="preparing-lisa-map-classes" class="level3">
+<h3 class="anchored" data-anchor-id="preparing-lisa-map-classes"><strong>Preparing LISA Map Classes</strong></h3>
+<p>Create an empty numeric vector named quadrant with a length equal to the number of rows in the object localMI</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>quadrant_wdmp <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="st">"numeric"</span>,<span class="at">length=</span><span class="fu">nrow</span>(localMI_wdmp))</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>quadrant_wdap <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="st">"numeric"</span>,<span class="at">length=</span><span class="fu">nrow</span>(localMI_wdap))</span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>quadrant_hmp <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="st">"numeric"</span>,<span class="at">length=</span><span class="fu">nrow</span>(localMI_hmp))</span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>quadrant_hep <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="st">"numeric"</span>,<span class="at">length=</span><span class="fu">nrow</span>(localMI_hep))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Setting Significance Level</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>signif <span class="ot">&lt;-</span> <span class="fl">0.05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="weekday-morning-peak-6am-9am-6" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-6"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips_lag <span class="ot">&lt;-</span> <span class="fu">lag.listw</span>(rswm_wdmp, total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips)</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>DV_wdmp <span class="ot">&lt;-</span> total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips_lag <span class="sc">-</span> <span class="fu">mean</span>(total_trips_by_grid_wdmp_sf<span class="sc">$</span>total_trips_lag)</span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a><span class="co">#centering the local Moran’s around the mean</span></span>
+<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-8"><a href="#cb111-8" aria-hidden="true" tabindex="-1"></a>LM_I_wdmp <span class="ot">&lt;-</span> localMI_wdmp[,<span class="dv">1</span>]</span>
+<span id="cb111-9"><a href="#cb111-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-10"><a href="#cb111-10" aria-hidden="true" tabindex="-1"></a><span class="co">#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.</span></span>
+<span id="cb111-11"><a href="#cb111-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-12"><a href="#cb111-12" aria-hidden="true" tabindex="-1"></a>quadrant_wdmp[DV_wdmp <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdmp<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb111-13"><a href="#cb111-13" aria-hidden="true" tabindex="-1"></a>quadrant_wdmp[DV_wdmp <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdmp<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb111-14"><a href="#cb111-14" aria-hidden="true" tabindex="-1"></a>quadrant_wdmp[DV_wdmp <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdmp<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">3</span>  </span>
+<span id="cb111-15"><a href="#cb111-15" aria-hidden="true" tabindex="-1"></a>quadrant_wdmp[DV_wdmp <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdmp<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">4</span>    </span>
+<span id="cb111-16"><a href="#cb111-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-17"><a href="#cb111-17" aria-hidden="true" tabindex="-1"></a><span class="co">#non-significant Moran placed in the category 0</span></span>
+<span id="cb111-18"><a href="#cb111-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-19"><a href="#cb111-19" aria-hidden="true" tabindex="-1"></a>quadrant_wdmp[localMI_wdmp[,<span class="dv">5</span>]<span class="sc">&gt;</span>signif] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-6" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-6"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips_lag <span class="ot">&lt;-</span> <span class="fu">lag.listw</span>(rswm_wdap, total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips)</span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>DV_wdap <span class="ot">&lt;-</span> total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips_lag <span class="sc">-</span> <span class="fu">mean</span>(total_trips_by_grid_wdap_sf<span class="sc">$</span>total_trips_lag)</span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a><span class="co">#centering the local Moran’s around the mean</span></span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>LM_I_wdap <span class="ot">&lt;-</span> localMI_wdap[,<span class="dv">1</span>]</span>
+<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a><span class="co">#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.</span></span>
+<span id="cb112-11"><a href="#cb112-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-12"><a href="#cb112-12" aria-hidden="true" tabindex="-1"></a>quadrant_wdap[DV_wdap <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdap<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb112-13"><a href="#cb112-13" aria-hidden="true" tabindex="-1"></a>quadrant_wdap[DV_wdap <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdap<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb112-14"><a href="#cb112-14" aria-hidden="true" tabindex="-1"></a>quadrant_wdap[DV_wdap <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdap<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">3</span>  </span>
+<span id="cb112-15"><a href="#cb112-15" aria-hidden="true" tabindex="-1"></a>quadrant_wdap[DV_wdap <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_wdap<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">4</span>    </span>
+<span id="cb112-16"><a href="#cb112-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-17"><a href="#cb112-17" aria-hidden="true" tabindex="-1"></a><span class="co">#non-significant Moran placed in the category 0</span></span>
+<span id="cb112-18"><a href="#cb112-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-19"><a href="#cb112-19" aria-hidden="true" tabindex="-1"></a>quadrant_wdap[localMI_wdap[,<span class="dv">5</span>]<span class="sc">&gt;</span>signif] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-6" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-6"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips_lag <span class="ot">&lt;-</span> <span class="fu">lag.listw</span>(rswm_hmp, total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips)</span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a>DV_hmp <span class="ot">&lt;-</span> total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips_lag <span class="sc">-</span> <span class="fu">mean</span>(total_trips_by_grid_hmp_sf<span class="sc">$</span>total_trips_lag)</span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a><span class="co">#centering the local Moran’s around the mean</span></span>
+<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a>LM_I_hmp <span class="ot">&lt;-</span> localMI_hmp[,<span class="dv">1</span>]</span>
+<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a><span class="co">#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.</span></span>
+<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-12"><a href="#cb113-12" aria-hidden="true" tabindex="-1"></a>quadrant_hmp[DV_hmp <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hmp<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb113-13"><a href="#cb113-13" aria-hidden="true" tabindex="-1"></a>quadrant_hmp[DV_hmp <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hmp<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb113-14"><a href="#cb113-14" aria-hidden="true" tabindex="-1"></a>quadrant_hmp[DV_hmp <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hmp<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">3</span>  </span>
+<span id="cb113-15"><a href="#cb113-15" aria-hidden="true" tabindex="-1"></a>quadrant_hmp[DV_hmp <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hmp<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">4</span>    </span>
+<span id="cb113-16"><a href="#cb113-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-17"><a href="#cb113-17" aria-hidden="true" tabindex="-1"></a><span class="co">#non-significant Moran placed in the category 0</span></span>
+<span id="cb113-18"><a href="#cb113-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-19"><a href="#cb113-19" aria-hidden="true" tabindex="-1"></a>quadrant_hmp[localMI_hmp[,<span class="dv">5</span>]<span class="sc">&gt;</span>signif] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-6" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-6"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Derives the spatially lagged variable of interest (i.e. Total Trips) and centers the spatially lagged variable around its mean</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips_lag <span class="ot">&lt;-</span> <span class="fu">lag.listw</span>(rswm_hep, total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips)</span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a>DV_hep <span class="ot">&lt;-</span> total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips_lag <span class="sc">-</span> <span class="fu">mean</span>(total_trips_by_grid_hep_sf<span class="sc">$</span>total_trips_lag)</span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a><span class="co">#centering the local Moran’s around the mean</span></span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-8"><a href="#cb114-8" aria-hidden="true" tabindex="-1"></a>LM_I_hep <span class="ot">&lt;-</span> localMI_hep[,<span class="dv">1</span>]</span>
+<span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-10"><a href="#cb114-10" aria-hidden="true" tabindex="-1"></a><span class="co">#The four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.</span></span>
+<span id="cb114-11"><a href="#cb114-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-12"><a href="#cb114-12" aria-hidden="true" tabindex="-1"></a>quadrant_hep[DV_hep <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hep<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb114-13"><a href="#cb114-13" aria-hidden="true" tabindex="-1"></a>quadrant_hep[DV_hep <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hep<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb114-14"><a href="#cb114-14" aria-hidden="true" tabindex="-1"></a>quadrant_hep[DV_hep <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hep<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">3</span>  </span>
+<span id="cb114-15"><a href="#cb114-15" aria-hidden="true" tabindex="-1"></a>quadrant_hep[DV_hep <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I_hep<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">4</span>    </span>
+<span id="cb114-16"><a href="#cb114-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-17"><a href="#cb114-17" aria-hidden="true" tabindex="-1"></a><span class="co">#non-significant Moran placed in the category 0</span></span>
+<span id="cb114-18"><a href="#cb114-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-19"><a href="#cb114-19" aria-hidden="true" tabindex="-1"></a>quadrant_hep[localMI_hep[,<span class="dv">5</span>]<span class="sc">&gt;</span>signif] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="plotting-lisa-map" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-lisa-map"><strong>Plotting LISA map</strong></h3>
+<p>Plot both the local Moran’s I values map and its corresponding p-values map next to each other for effective interpretation</p>
+<section id="weekday-morning-peak-6am-9am-7" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-morning-peak-6am-9am-7"><strong>Weekday Morning Peak 6am-9am</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>total_trips_wdmp <span class="ot">&lt;-</span> <span class="fu">qtm</span>(ttbg_sf.localMI_wdmp, <span class="st">"total_trips"</span>)</span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_wdmp<span class="sc">$</span>quadrant <span class="ot">&lt;-</span> quadrant_wdmp</span>
+<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#ffffff"</span>, <span class="st">"#2c7bb6"</span>, <span class="st">"#abd9e9"</span>, <span class="st">"#fdae61"</span>, <span class="st">"#d7191c"</span>)</span>
+<span id="cb115-8"><a href="#cb115-8" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"insignificant"</span>, <span class="st">"low-low"</span>, <span class="st">"low-high"</span>, <span class="st">"high-low"</span>, <span class="st">"high-high"</span>)</span>
+<span id="cb115-9"><a href="#cb115-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-10"><a href="#cb115-10" aria-hidden="true" tabindex="-1"></a>LISAmap_wdmp <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(ttbg_sf.localMI_wdmp) <span class="sc">+</span></span>
+<span id="cb115-11"><a href="#cb115-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"quadrant"</span>, </span>
+<span id="cb115-12"><a href="#cb115-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"cat"</span>, </span>
+<span id="cb115-13"><a href="#cb115-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> colors[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_wdmp)))<span class="sc">+</span><span class="dv">1</span>], </span>
+<span id="cb115-14"><a href="#cb115-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> clusters[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_wdmp)))<span class="sc">+</span><span class="dv">1</span>],</span>
+<span id="cb115-15"><a href="#cb115-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb115-16"><a href="#cb115-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_view</span>(<span class="at">set.zoom.limits =</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">17</span>)) <span class="sc">+</span></span>
+<span id="cb115-17"><a href="#cb115-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>)</span>
+<span id="cb115-18"><a href="#cb115-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-19"><a href="#cb115-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(total_trips_wdmp, LISAmap_wdmp, </span>
+<span id="cb115-20"><a href="#cb115-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: gray">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekday Morning Peak 6am-9am</p>
+<p>Of the hexagons that are significant, there are only regions that are:</p>
+<ul>
+<li><p>Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome</p></li>
+<li><p>High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome</p></li>
+</ul>
+<p>High-high hexagons seem to be concentrated at residential areas e.g.&nbsp;Boon Lay, Bukit Batok, while Low-High hexagons seem to be around industrial/office areas e.g.&nbsp;International Road, CBD</p>
+</div>
+</div>
+</section>
+<section id="weekday-afternoon-peak-5pm-8pm-7" class="level4">
+<h4 class="anchored" data-anchor-id="weekday-afternoon-peak-5pm-8pm-7"><strong>Weekday Afternoon Peak 5pm-8pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>total_trips_wdap <span class="ot">&lt;-</span> <span class="fu">qtm</span>(ttbg_sf.localMI_wdap, <span class="st">"total_trips"</span>)</span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_wdap<span class="sc">$</span>quadrant <span class="ot">&lt;-</span> quadrant_wdap</span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#ffffff"</span>, <span class="st">"#2c7bb6"</span>, <span class="st">"#abd9e9"</span>, <span class="st">"#fdae61"</span>, <span class="st">"#d7191c"</span>)</span>
+<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"insignificant"</span>, <span class="st">"low-low"</span>, <span class="st">"low-high"</span>, <span class="st">"high-low"</span>, <span class="st">"high-high"</span>)</span>
+<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-10"><a href="#cb116-10" aria-hidden="true" tabindex="-1"></a>LISAmap_wdap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(ttbg_sf.localMI_wdap) <span class="sc">+</span></span>
+<span id="cb116-11"><a href="#cb116-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"quadrant"</span>, </span>
+<span id="cb116-12"><a href="#cb116-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"cat"</span>, </span>
+<span id="cb116-13"><a href="#cb116-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> colors[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_wdap)))<span class="sc">+</span><span class="dv">1</span>], </span>
+<span id="cb116-14"><a href="#cb116-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> clusters[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_wdap)))<span class="sc">+</span><span class="dv">1</span>],</span>
+<span id="cb116-15"><a href="#cb116-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb116-16"><a href="#cb116-16" aria-hidden="true" tabindex="-1"></a>          ) <span class="sc">+</span></span>
+<span id="cb116-17"><a href="#cb116-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_view</span>(<span class="at">set.zoom.limits =</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">17</span>)) <span class="sc">+</span></span>
+<span id="cb116-18"><a href="#cb116-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>)</span>
+<span id="cb116-19"><a href="#cb116-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-20"><a href="#cb116-20" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(total_trips_wdap, LISAmap_wdap, </span>
+<span id="cb116-21"><a href="#cb116-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-74-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: gray">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekday Afternoon Peak 5pm-8pm</p>
+<p>Of the hexagons that are significant, there are only regions that are:</p>
+<ul>
+<li><p>Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome</p></li>
+<li><p>High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome</p></li>
+</ul>
+<p>High-high hexagons seem to be concentrated at public transport hubs/Shopping areas e.g.&nbsp;Bedok, New Upper Changi Road (Decathlon - Bedok, Harvey Norman Factory Outlet) while Low-High hexagons seem to be around residential areas e.g.&nbsp;Lorong Lew Lian, Lorong Biawak</p>
+</div>
+</div>
+</section>
+<section id="weekendholiday-morning-peak-11am-2pm-7" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-morning-peak-11am-2pm-7"><strong>Weekend/Holiday Morning Peak 11am-2pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>total_trips_hmp <span class="ot">&lt;-</span> <span class="fu">qtm</span>(ttbg_sf.localMI_hmp, <span class="st">"total_trips"</span>)</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_hmp<span class="sc">$</span>quadrant <span class="ot">&lt;-</span> quadrant_hmp</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#ffffff"</span>, <span class="st">"#2c7bb6"</span>, <span class="st">"#abd9e9"</span>, <span class="st">"#fdae61"</span>, <span class="st">"#d7191c"</span>)</span>
+<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"insignificant"</span>, <span class="st">"low-low"</span>, <span class="st">"low-high"</span>, <span class="st">"high-low"</span>, <span class="st">"high-high"</span>)</span>
+<span id="cb117-9"><a href="#cb117-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-10"><a href="#cb117-10" aria-hidden="true" tabindex="-1"></a>LISAmap_hmp <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(ttbg_sf.localMI_hmp) <span class="sc">+</span></span>
+<span id="cb117-11"><a href="#cb117-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"quadrant"</span>, </span>
+<span id="cb117-12"><a href="#cb117-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"cat"</span>, </span>
+<span id="cb117-13"><a href="#cb117-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> colors[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_hmp)))<span class="sc">+</span><span class="dv">1</span>], </span>
+<span id="cb117-14"><a href="#cb117-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> clusters[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_hmp)))<span class="sc">+</span><span class="dv">1</span>],</span>
+<span id="cb117-15"><a href="#cb117-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb117-16"><a href="#cb117-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_view</span>(<span class="at">set.zoom.limits =</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">17</span>)) <span class="sc">+</span></span>
+<span id="cb117-17"><a href="#cb117-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>)</span>
+<span id="cb117-18"><a href="#cb117-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-19"><a href="#cb117-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(total_trips_hmp, LISAmap_hmp, </span>
+<span id="cb117-20"><a href="#cb117-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: gray">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekend/Holiday Morning Peak 11am-2pm</p>
+<p>Of the hexagons that are significant, there are only regions that are:</p>
+<ul>
+<li><p>Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome</p></li>
+<li><p>High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome</p></li>
+</ul>
+<p>High-high hexagons seem to be concentrated at public transport hubs/Shopping areas e.g.&nbsp;Bedok, New Upper Changi Road (Decathlon - Bedok, Harvey Norman Factory Outlet) while Low-High hexagons seem to be around residential areas e.g.&nbsp;Lorong Lew Lian, Lorong Biawak</p>
+</div>
+</div>
+</section>
+<section id="weekendholiday-evening-peak-4pm-7pm-7" class="level4">
+<h4 class="anchored" data-anchor-id="weekendholiday-evening-peak-4pm-7pm-7"><strong>Weekend/Holiday Evening Peak 4pm-7pm</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>total_trips_hep <span class="ot">&lt;-</span> <span class="fu">qtm</span>(ttbg_sf.localMI_hep, <span class="st">"total_trips"</span>)</span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a>ttbg_sf.localMI_hep<span class="sc">$</span>quadrant <span class="ot">&lt;-</span> quadrant_hep</span>
+<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#ffffff"</span>, <span class="st">"#2c7bb6"</span>, <span class="st">"#abd9e9"</span>, <span class="st">"#fdae61"</span>, <span class="st">"#d7191c"</span>)</span>
+<span id="cb118-8"><a href="#cb118-8" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"insignificant"</span>, <span class="st">"low-low"</span>, <span class="st">"low-high"</span>, <span class="st">"high-low"</span>, <span class="st">"high-high"</span>)</span>
+<span id="cb118-9"><a href="#cb118-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-10"><a href="#cb118-10" aria-hidden="true" tabindex="-1"></a>LISAmap_hep <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(ttbg_sf.localMI_hep) <span class="sc">+</span></span>
+<span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"quadrant"</span>, </span>
+<span id="cb118-12"><a href="#cb118-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"cat"</span>, </span>
+<span id="cb118-13"><a href="#cb118-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> colors[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_hep)))<span class="sc">+</span><span class="dv">1</span>], </span>
+<span id="cb118-14"><a href="#cb118-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> clusters[<span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(quadrant_hep)))<span class="sc">+</span><span class="dv">1</span>],</span>
+<span id="cb118-15"><a href="#cb118-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb118-16"><a href="#cb118-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_view</span>(<span class="at">set.zoom.limits =</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">17</span>)) <span class="sc">+</span></span>
+<span id="cb118-17"><a href="#cb118-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>)</span>
+<span id="cb118-18"><a href="#cb118-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-19"><a href="#cb118-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(total_trips_hep, LISAmap_hep, </span>
+<span id="cb118-20"><a href="#cb118-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex1_files/figure-html/unnamed-chunk-76-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: gray">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Weekend/Holiday Evening Peak 4pm-7pm</p>
+<p>Of the hexagons that are significant, there are only regions that are:</p>
+<ul>
+<li><p>Low-High (low values of total travels but have neighbors that also have high values of total travels) - contribute significantly to a positive global spatial autocorrelation outcome</p></li>
+<li><p>High-High (high values of total travels and have neighbors that also have high values of total travels) - contribute significantly to a negative global spatial autocorrelation outcome</p></li>
+</ul>
+<p>The general pattern is similar to that of Weekend/Holiday Morning Peak, with less Low-High hexagons, meaning that while overall trips are lower, it is more concentrated in specific areas.</p>
+<p>High-high hexagons seem to be concentrated at Leisure/Shopping areas e.g.&nbsp;Jalan Besar (Mustafa, New World Center), Bencoolen St (The Mind Cafe, The Loft Gym) while Low-High hexagons seem to be around residential areas e.g.&nbsp;Boon Lay, Pasir Ris Drive 1</p>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
