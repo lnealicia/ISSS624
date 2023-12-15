@@ -593,7 +593,7 @@ biz <- st_read(dsn = "Data/geospatial",
 grid_attr$biz <- grid_sf %>%
   mutate(biz_no = lengths(st_intersects(., biz)))
 
-summary(grid_attr$biz_no)
+summary(grid_attr$biz)
 ```
 
 ### Importing of Financial Services Locations
