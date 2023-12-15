@@ -235,7 +235,7 @@ flowLine <- od2line(flow = wdmp1,
 
 ### Visualising the desire lines
 
-Flow data is very messy and highly skewed, thus focus is placed on selected flows e.g. flow \>= 5000
+Flow data is very messy and highly skewed, thus focus is placed on selected flows e.g. flow >= 5000
 
 ```{r}
 tm_shape(mpsz) +
@@ -310,7 +310,7 @@ Upon examination, a notable trend emerges with heightened activity at transit po
 
 ## Propulsive and Attractiveness Variables
 
-Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
+~~Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
 
 ## Effect of Distance on Number of Trips
 
