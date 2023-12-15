@@ -57,26 +57,19 @@ as.factor(odbus$DESTINATION_PT_CODE)
 
 Filter out data that belong to trips that occur during "Weekday" and "6-9am" (wdmp)
 
-    ```{r}
-    wdmp <- odbus %>%
-      filter(DAY_TYPE == "WEEKDAY") %>%
-      filter(TIME_PER_HOUR >= 6 & TIME_PER_HOUR <= 9) %>%
-      group_by(ORIGIN_PT_CODE, DESTINATION_PT_CODE) %>%
-      summarise(TRIPS = sum(TOTAL_TRIPS))
-    ```
+```{{r}}
+wdmp <- odbus %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 6 & TIME_PER_HOUR <= 9) %>%
+  group_by(ORIGIN_PT_CODE, DESTINATION_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+```
 
 Check resulting data table
 
 ```{r}
 head(wdmp)
 ```
-
-Summary Statistics
-
-```{r}
-summary(wdmp)
-```
-
 
 Output saved in rds format for future use
 
@@ -105,6 +98,7 @@ busstop <- st_read(dsn = "Data/geospatial",
                    layer = "BusStop") %>%
   st_transform(crs = 3414)
 ```
+
 ### Importing Singapore Map
 
 ```{r}
@@ -211,16 +205,17 @@ wdmp <- wdmp %>%
 ```
 
 Remove any NA values
+
 ```{r}
 wdmp <- na.omit(wdmp)
 ```
 
 Reorder columns to Origin, Destination, Number of Trips
+
 ```{r}
 wdmp <- wdmp %>%
   select(ori_grid, desti_grid, TRIPS)
 ```
-
 
 ## Visualising Spatial Interaction
 
@@ -239,7 +234,8 @@ flowLine <- od2line(flow = wdmp1,
 ```
 
 ### Visualising the desire lines
-Flow data is very messy and highly skewed, thus focus is placed on selected flows e.g. flow >= 5000
+
+Flow data is very messy and highly skewed, thus focus is placed on selected flows e.g. flow \>= 5000
 
 ```{r}
 tm_shape(mpsz) +
@@ -254,151 +250,69 @@ tm_shape() +
            alpha = 0.3)
 ```
 
+Hexagons involved in most taken bus route
+
+```{r}
+max_wdmp_row <- wdmp[which.max(wdmp$TRIPS), ]
+
+ori_grid_max <- max_wdmp_row$ori_grid
+desti_grid_max <- max_wdmp_row$desti_grid
+```
+
+Hexagons with the highest volume of trips
+
+```{r}
+max_wdmp_row
+```
+
+Note: Trips originating from grid id 1350, with destination 1375 has the highest volume (i.e. 96630 trips)
+
+Locating the bus stops contained within the hexagons and their locations
+
+```{r}
+ori_busstop <- busstop_grid$BUS_STOP_N[busstop_grid$grid_id == ori_grid_max]
+
+desti_busstop <- busstop_grid$BUS_STOP_N[busstop_grid$grid_id == desti_grid_max]
+```
+
+List of bus stops of interest
+
+```{r}
+ori_busstop
+desti_busstop
+```
+
+Location of bus stops of interest
+
+```{r}
+busstop_locations_ori <- busstop$LOC_DESC[match(ori_busstop, busstop$BUS_STOP_N)]
+busstop_locations_desti <- busstop$LOC_DESC[match(desti_busstop, busstop$BUS_STOP_N)]
+```
+
+```{r}
+busstop_locations_ori 
+busstop_locations_desti
+```
+
+Note: We can see that the locations with the highest volume of trips involve trips that originate from Malaysia into Singapore, across the causeway. Bus Stop 46159 Blk 206 and Bus Stop 46151 Blk 212 both correspond to Marsiling Lane, which is near the Woodlands checkpoint.
+
+Information from:
+
+[TransitLink Bus Stop 46159](https://www.transitlink.com.sg/eservice/eguide/bscode_idx.php?bs_code=46159)
+
+[TransitLink Bus Stop 46151](https://www.transitlink.com.sg/eservice/eguide/bscode_idx.php?bs_code=46151)
+
 ::: {.callout-tip title="Statistical Conclusion" style="color: gray"}
 Weekday Morning Peak 6am-9am
 
-During the weekday morning peak period in Singapore, significant flows are concentrated between residential areas such as Bukit Batok and work areas like Tuas, as well as from Woodlands Checkpoint to industrial parks in locations like Loyang. This concentration suggests a predominant pattern of people commuting from their homes in residential estates or across the border from Malaysia to their workplaces in office and industrial areas. The observed flow dynamics highlight key commuting routes, likely reflecting the spatial distribution of residences and employment centers in the region.
-
+Upon examination, a notable trend emerges with heightened activity at transit points like Woodlands checkpoint, indicating substantial cross-border commuting. Specifically, bus stops 46159 Blk 206 and 46151 Blk 212 also located near the checkpoint highlight the significance of these transit nodes. With bus stops servicing this area having the greatest trips volume.  In addition, the observed concentration of trips between residential zones (e.g., Bukit Batok) and industrial hubs (e.g., Tuas, Loyang) also reveals a distinct commuting pattern. This concentration suggests a predominant pattern of people commuting from their homes in residential estates or across the border from Malaysia to their workplaces in office and industrial areas. 
 :::
 
 ## Propulsive and Attractiveness Variables
 
 Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
 
-### Importing HDB data
-
-```{r}
-csv <- read_csv("data/aspatial/hdb.csv")
-```
-
-Remove duplicates, keep only residential properties, select relevant columns, rename columns for ease of analysis
-
-```{r}
-csv_unique <- csv %>% 
-  distinct(lat, lng, addr, .keep_all = TRUE)
-
-csv <- csv_unique %>% 
-  filter(residential == "Y") %>% 
-  select(latitude = lat,
-         longitude = lng,
-         POI_NAME = building,
-         POI_ST_NUM = blk_no,
-         POI_ST_NAM = street,
-         postal,
-         addr,
-         total_dwelling_units,
-         SUBZONE_N)
-```
-
-### Geocoding using SLA API
-
-Note: Ideally, using the hdb postal code, we can get its corresponding latitude and longitude. However, upon opening the hdb.csv file, we notice that 79 postal codes are missing (i.e. NIL instead of number). For those that have missing postal codes, we use the addr column to get the corresponding latitude and longitude.
-
-```{r}
-url <- "https://www.onemap.gov.sg/api/common/elastic/search"
-csv <- read_csv("data/aspatial/hdb.csv")
-postcodes <- csv$`postal`
-
-found <- data.frame()
-not_found <- data.frame()
-
-for(postcode in postcodes){
-  query <- list('searchVal' = postcode, 'returnGeom' = 'Y', 'getAddrDetails' = 'Y', 'pageNum' = '1')
-  res <- GET(url, query = query)
-  
-  if (content(res)$found != 0) {
-    found <- rbind(found, data.frame(content(res))[4:13])
-  } else {
-    if (postcode == "NIL") {
-      # Use addr to pull in correct data for postal
-      addr_query <- list('searchVal' = csv$`addr`, 'returnGeom' = 'Y', 'getAddrDetails' = 'Y', 'pageNum' = '1')
-      addr_res <- GET(url, query = addr_query)
-      
-      if (content(addr_res)$found != 0) {
-        found <- rbind(found, data.frame(content(addr_res))[4:13])
-      } else {
-        not_found <- rbind(not_found, data.frame(postcode))
-      }
-    } else {
-      not_found <- rbind(not_found, data.frame(postcode))
-    }
-  }
-}
-```
-
-Checking for data that could still be missing
-
-```{r}
-not_found
-```
-
-Note:
-
-Info for xyz still missing. Convert corresponding latitude and longitude into x and y coordinates
-
-```{r}
-
-```
-
-
-Note: hdb_filtered is a tibble dataframe object class
-
-### Converting an aspatial data into a simple features tibble data.frame
-
-```{r}
-hdb_sf <- st_as_sf(hdb_filtered,
-                       coords = c("longitude", "latitude"),
-                       crs =3414)  %>%
-  st_transform(crs = 3414)
-```
-
-```{r}
-print(hdb_sf)
-```
-
-### Importing & tidying Financial Services data
-
-```{r}
-finserv <- st_read(dsn = "Data/geospatial",
-                   layer = "FinServ") %>%
-  st_transform(crs = 3414)
-```
-
-### Importing & tidying Business data
-
-```{r}
-business <- st_read(dsn = "Data/geospatial",
-                   layer = "Business") %>%
-  st_transform(crs = 3414)
-```
-
-## Plotting a point simple feature layer
-
-```{r}
-tmap_mode("view")
-
-# Plot HDB
-hdb_map <- tm_shape(hdb_sf) +
-  tm_dots(col = "red") + tm_view(set.zoom.limits = c(11,14))   
-
-# Plot Business
-business_map <- tm_shape(business) +
-  tm_dots("green") + tm_view(set.zoom.limits = c(11,14)) 
-
-# Plot Finserv
-finserv_map <- tm_shape(finserv) +
-  tm_dots(col = "blue") + tm_view(set.zoom.limits = c(11,14))  
-
-# Combine the maps
-final_map <- tmap_arrange(business_map, hdb_map, finserv_map, asp = 1, ncol = 3)
-
-# View the map
-final_map
-tmap_mode("plot")
-```
-
-
-## Distance matrix
+## Effect of Distance on Number of Trips
 
 ### Converting from sf data.table to SpatialPolygonsDataFrame
 
@@ -438,12 +352,53 @@ rownames(euc_dist) <- paste0(grid_id)
 
 ### Pivoting distance value by `grid_id`
 
-Pivot the distance matrix into a long table by using the row and column hexagons
+Pivot the distance matrix into a long table by using the row and column hexagons. Columns are renamed for easy reference.
 
 ```{r}
 dist_pair <- melt(euc_dist) %>%
-  rename(euc_dist = value)
+  rename(ori_grid = Var1,
+         desti_grid = Var2,
+         euc_dist = value)
 head(dist_pair, 10)
+```
+
+### Find mininum inter-zonal difference
+
+An analytical hexagon has an inter-zonal difference of 0 when compared to itself, which inaccurately represents intra-zonal disparity. Thus, a small constant value i.e. smaller than the minimum inter-zonal difference, replaces all instances where the intra-zonal difference is '0'. Therefore, allowing for a more accurate reflection of intra-zonal differences in the distance computation.
+
+```{r}
+dist_pair %>%
+  filter(euc_dist > 0) %>%
+  summary()
+```
+
+Note: The smallest distance inter-zonal difference is 750m, which is the the distance between the centres of two adjacent analytical hexagons in this analysis. The intra-zonal distance is thus set to 50m.
+
+```{r}
+dist_pair$euc_dist <- ifelse(dist_pair$euc_dist == 0,
+                        50, dist_pair$euc_dist)
+```
+
+Check resulting data frame
+
+```{r}
+dist_pair %>%
+  summary()
+```
+
+Converting `ori_grid` and `desti_grid` columns to factors in R (categorical data type)
+
+```{r}
+dist_pair$ori_grid <-
+as.factor(dist_pair$ori_grid)
+dist_pair$desti_grid <-
+as.factor(dist_pair$desti_grid)
+```
+
+Save the dataframe as rds format
+
+```{r}
+write_rds(dist_pair, "data/rds/dist_pair.rds") 
 ```
 
 #Spatial Interaction Modelling
