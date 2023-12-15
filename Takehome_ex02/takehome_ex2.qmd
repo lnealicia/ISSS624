@@ -496,7 +496,9 @@ mrt_exit <- st_read(dsn = "Data/geospatial",
 ### Number of Train Station Exits per Location
 
 ```{r}
-grid_attr$mrt_exit <- lengths(st_intersects(grid_sf, mrt_exit))
+
+grid_attr <- grid_sf %>%
+  mutate(mrt_exit_count = lengths(st_intersects(., mrt_exit)))
 
 summary(grid_attr$mrt_exit)
 ```
@@ -564,7 +566,9 @@ hdb_sf <- st_as_sf(hdb,
 ### Number of HDB per Location
 
 ```{r}
+grid_attr$fnb <- lengths(st_intersects(grid_sf, fnb))
 
+summary(grid_attr$fnb)
 ```
 
 ## Attractive Attributes
@@ -586,10 +590,10 @@ biz <- st_read(dsn = "Data/geospatial",
 ### Number of Business Offices per Location
 
 ```{r}
-grid_attr <- grid_sf %>%
-  mutate(biz_no = lengths(st_intersects(grid_sf, biz)))
+grid_attr$biz <- grid_sf %>%
+  mutate(biz_no = lengths(st_intersects(., biz)))
 
-summary(biz_grid_attr$biz_no)
+summary(grid_attr$biz_no)
 ```
 
 ### Importing of Financial Services Locations
