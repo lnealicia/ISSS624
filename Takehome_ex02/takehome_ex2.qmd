@@ -57,7 +57,7 @@ as.factor(odbus$DESTINATION_PT_CODE)
 
 Filter out data that belong to trips that occur during "Weekday" and "6-9am" (wdmp)
 
-```{{r}}
+```{r}
 wdmp <- odbus %>%
   filter(DAY_TYPE == "WEEKDAY") %>%
   filter(TIME_PER_HOUR >= 6 & TIME_PER_HOUR <= 9) %>%

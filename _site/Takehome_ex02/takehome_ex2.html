@@ -209,7 +209,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#geospatial-data-science" id="toc-geospatial-data-science" class="nav-link active" data-scroll-target="#geospatial-data-science">Geospatial Data Science</a>
+  <ul class="collapse">
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
   <li><a href="#preparing-the-flow-data" id="toc-preparing-the-flow-data" class="nav-link" data-scroll-target="#preparing-the-flow-data">Preparing the Flow Data</a>
   <ul class="collapse">
   <li><a href="#importing-the-od-data" id="toc-importing-the-od-data" class="nav-link" data-scroll-target="#importing-the-od-data">Importing the OD data</a></li>
@@ -230,6 +232,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#removing-intra-zonal-flows" id="toc-removing-intra-zonal-flows" class="nav-link" data-scroll-target="#removing-intra-zonal-flows">Removing intra-zonal flows</a></li>
   <li><a href="#creating-desire-lines" id="toc-creating-desire-lines" class="nav-link" data-scroll-target="#creating-desire-lines">Creating desire lines</a></li>
   <li><a href="#visualising-the-desire-lines" id="toc-visualising-the-desire-lines" class="nav-link" data-scroll-target="#visualising-the-desire-lines">Visualising the desire lines</a></li>
+  </ul></li>
+  <li><a href="#propulsive-and-attractiveness-variables" id="toc-propulsive-and-attractiveness-variables" class="nav-link" data-scroll-target="#propulsive-and-attractiveness-variables">Propulsive and Attractiveness Variables</a></li>
+  <li><a href="#effect-of-distance-on-number-of-trips" id="toc-effect-of-distance-on-number-of-trips" class="nav-link" data-scroll-target="#effect-of-distance-on-number-of-trips">Effect of Distance on Number of Trips</a>
+  <ul class="collapse">
+  <li><a href="#converting-from-sf-data.table-to-spatialpolygonsdataframe" id="toc-converting-from-sf-data.table-to-spatialpolygonsdataframe" class="nav-link" data-scroll-target="#converting-from-sf-data.table-to-spatialpolygonsdataframe">Converting from sf data.table to SpatialPolygonsDataFrame</a></li>
+  <li><a href="#computing-the-distance-matrix" id="toc-computing-the-distance-matrix" class="nav-link" data-scroll-target="#computing-the-distance-matrix">Computing the distance matrix</a></li>
+  <li><a href="#labelling-column-and-row-headers-of-distance-matrix" id="toc-labelling-column-and-row-headers-of-distance-matrix" class="nav-link" data-scroll-target="#labelling-column-and-row-headers-of-distance-matrix">Labelling column and row headers of distance matrix</a></li>
+  <li><a href="#pivoting-distance-value-by-grid_id" id="toc-pivoting-distance-value-by-grid_id" class="nav-link" data-scroll-target="#pivoting-distance-value-by-grid_id">Pivoting distance value by <code>grid_id</code></a></li>
+  <li><a href="#find-mininum-inter-zonal-difference" id="toc-find-mininum-inter-zonal-difference" class="nav-link" data-scroll-target="#find-mininum-inter-zonal-difference">Find mininum inter-zonal difference</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -257,7 +269,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">December 11, 2023</p>
+      <p class="date-modified">December 15, 2023</p>
     </div>
   </div>
     
@@ -266,6 +278,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<section id="geospatial-data-science" class="level1">
+<h1>Geospatial Data Science</h1>
 <section id="getting-started" class="level2">
 <h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
 <ul>
@@ -274,9 +288,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>tmap - creating thematic maps.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tmap, sf, DT, stplanr,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               performance,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ggpubr, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tmap, sf, sp, DT, stplanr,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               performance, reshape2,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ggpubr, tidyverse, httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="preparing-the-flow-data" class="level2">
@@ -314,16 +328,13 @@ $ TOTAL_TRIPS         &lt;dbl&gt; 7, 2, 3, 10, 5, 4, 3, 22, 3, 3, 7, 1, 3, 1, 3,
 <section id="extracting-the-study-data" class="level3">
 <h3 class="anchored" data-anchor-id="extracting-the-study-data">Extracting the Study Data</h3>
 <p>Filter out data that belong to trips that occur during “Weekday” and “6-9am” (wdmp)</p>
-<pre><code>::: {.cell}
-
-```{.r .cell-code}
-wdmp &lt;- odbus %&gt;%
-  filter(DAY_TYPE == "WEEKDAY") %&gt;%
-  filter(TIME_PER_HOUR &gt;= 6 &amp; TIME_PER_HOUR &lt;= 9) %&gt;%
-  group_by(ORIGIN_PT_CODE, DESTINATION_PT_CODE) %&gt;%
-  summarise(TRIPS = sum(TOTAL_TRIPS))
-```
-:::</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wdmp <span class="ot">&lt;-</span> odbus <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DAY_TYPE <span class="sc">==</span> <span class="st">"WEEKDAY"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TIME_PER_HOUR <span class="sc">&gt;=</span> <span class="dv">6</span> <span class="sc">&amp;</span> TIME_PER_HOUR <span class="sc">&lt;=</span> <span class="dv">9</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ORIGIN_PT_CODE, DESTINATION_PT_CODE) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">TRIPS =</span> <span class="fu">sum</span>(TOTAL_TRIPS))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Check resulting data table</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wdmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -547,6 +558,60 @@ $ geometry   &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((33222.98 29..., MULTIPOLYG
 <p><img src="takehome_ex2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Hexagons involved in most taken bus route</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>max_wdmp_row <span class="ot">&lt;-</span> wdmp[<span class="fu">which.max</span>(wdmp<span class="sc">$</span>TRIPS), ]</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>ori_grid_max <span class="ot">&lt;-</span> max_wdmp_row<span class="sc">$</span>ori_grid</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>desti_grid_max <span class="ot">&lt;-</span> max_wdmp_row<span class="sc">$</span>desti_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hexagons with the highest volume of trips</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>max_wdmp_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  ori_grid desti_grid TRIPS
+     &lt;int&gt;      &lt;int&gt; &lt;dbl&gt;
+1     1350       1375 96630</code></pre>
+</div>
+</div>
+<p>Note: Trips originating from grid id 1350, with destination 1375 has the highest volume (i.e.&nbsp;96630 trips)</p>
+<p>Locating the bus stops contained within the hexagons and their locations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>ori_busstop <span class="ot">&lt;-</span> busstop_grid<span class="sc">$</span>BUS_STOP_N[busstop_grid<span class="sc">$</span>grid_id <span class="sc">==</span> ori_grid_max]</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>desti_busstop <span class="ot">&lt;-</span> busstop_grid<span class="sc">$</span>BUS_STOP_N[busstop_grid<span class="sc">$</span>grid_id <span class="sc">==</span> desti_grid_max]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>List of bus stops of interest</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ori_busstop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "46211" "46219"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>desti_busstop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "46159" "46109" "46101" "46151"</code></pre>
+</div>
+</div>
+<p>Location of bus stops of interest</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>busstop_locations_ori <span class="ot">&lt;-</span> busstop<span class="sc">$</span>LOC_DESC[<span class="fu">match</span>(ori_busstop, busstop<span class="sc">$</span>BUS_STOP_N)]</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>busstop_locations_desti <span class="ot">&lt;-</span> busstop<span class="sc">$</span>LOC_DESC[<span class="fu">match</span>(desti_busstop, busstop<span class="sc">$</span>BUS_STOP_N)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>busstop_locations_ori </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "JOHOR BAHRU CHECKPT" "JOHOR BAHRU CHECKPT"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>busstop_locations_desti</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BLK 206"         "W'LANDS CHECKPT" "W'LANDS CHECKPT" "BLK 212"        </code></pre>
+</div>
+</div>
+<p>Note: We can see that the locations with the highest volume of trips involve trips that originate from Malaysia into Singapore, across the causeway. Bus Stop 46159 Blk 206 and Bus Stop 46151 Blk 212 both correspond to Marsiling Lane, which is near the Woodlands checkpoint.</p>
+<p>Information from:</p>
+<p><a href="https://www.transitlink.com.sg/eservice/eguide/bscode_idx.php?bs_code=46159">TransitLink Bus Stop 46159</a></p>
+<p><a href="https://www.transitlink.com.sg/eservice/eguide/bscode_idx.php?bs_code=46151">TransitLink Bus Stop 46151</a></p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: gray">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -558,11 +623,159 @@ Statistical Conclusion
 </div>
 <div class="callout-body-container callout-body">
 <p>Weekday Morning Peak 6am-9am</p>
-<p>During the weekday morning peak period in Singapore, significant flows are concentrated between residential areas such as Bukit Batok and work areas like Tuas, as well as from Woodlands Checkpoint to industrial parks in locations like Loyang. This concentration suggests a predominant pattern of people commuting from their homes in residential estates or across the border from Malaysia to their workplaces in office and industrial areas. The observed flow dynamics highlight key commuting routes, likely reflecting the spatial distribution of residences and employment centers in the region.</p>
+<p>Upon examination, a notable trend emerges with heightened activity at transit points like Woodlands checkpoint, indicating substantial cross-border commuting. Specifically, bus stops 46159 Blk 206 and 46151 Blk 212 also located near the checkpoint highlight the significance of these transit nodes. With bus stops servicing this area having the greatest trips volume. In addition, the observed concentration of trips between residential zones (e.g., Bukit Batok) and industrial hubs (e.g., Tuas, Loyang) also reveals a distinct commuting pattern. This concentration suggests a predominant pattern of people commuting from their homes in residential estates or across the border from Malaysia to their workplaces in office and industrial areas.</p>
 </div>
 </div>
+</section>
+</section>
+<section id="propulsive-and-attractiveness-variables" class="level2">
+<h2 class="anchored" data-anchor-id="propulsive-and-attractiveness-variables">Propulsive and Attractiveness Variables</h2>
+<p>Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.</p>
+</section>
+<section id="effect-of-distance-on-number-of-trips" class="level2">
+<h2 class="anchored" data-anchor-id="effect-of-distance-on-number-of-trips">Effect of Distance on Number of Trips</h2>
+<section id="converting-from-sf-data.table-to-spatialpolygonsdataframe" class="level3">
+<h3 class="anchored" data-anchor-id="converting-from-sf-data.table-to-spatialpolygonsdataframe">Converting from sf data.table to SpatialPolygonsDataFrame</h3>
+<p><code>grid_sf</code> is converted from sf tibble data frame to SpatialPolygonsDataFrame of sp object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>grid_sp <span class="ot">&lt;-</span> <span class="fu">as</span>(grid_sf, <span class="st">"Spatial"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>grid_sp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatialPolygonsDataFrame 
+features    : 3942 
+extent      : 1917.538, 57042.54, 15315.71, 50606.24  (xmin, xmax, ymin, ymax)
+crs         : +proj=tmerc +lat_0=1.36666666666667 +lon_0=103.833333333333 +k=1 +x_0=28001.642 +y_0=38744.572 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+variables   : 1
+names       : grid_id 
+min values  :       1 
+max values  :    3942 </code></pre>
+</div>
+</div>
+</section>
+<section id="computing-the-distance-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="computing-the-distance-matrix">Computing the distance matrix</h3>
+<p>Euclidean distance between the centroids of the hexagons</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>euc_dist <span class="ot">&lt;-</span> <span class="fu">spDists</span>(grid_sp, </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">longlat =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(euc_dist, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]      [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
+ [1,]     0.000  1299.038 2598.076 3897.114 5196.152 6495.191 7794.229 9093.267
+ [2,]  1299.038     0.000 1299.038 2598.076 3897.114 5196.152 6495.191 7794.229
+ [3,]  2598.076  1299.038    0.000 1299.038 2598.076 3897.114 5196.152 6495.191
+ [4,]  3897.114  2598.076 1299.038    0.000 1299.038 2598.076 3897.114 5196.152
+ [5,]  5196.152  3897.114 2598.076 1299.038    0.000 1299.038 2598.076 3897.114
+ [6,]  6495.191  5196.152 3897.114 2598.076 1299.038    0.000 1299.038 2598.076
+ [7,]  7794.229  6495.191 5196.152 3897.114 2598.076 1299.038    0.000 1299.038
+ [8,]  9093.267  7794.229 6495.191 5196.152 3897.114 2598.076 1299.038    0.000
+ [9,] 10392.305  9093.267 7794.229 6495.191 5196.152 3897.114 2598.076 1299.038
+[10,] 11691.343 10392.305 9093.267 7794.229 6495.191 5196.152 3897.114 2598.076
+           [,9]     [,10]
+ [1,] 10392.305 11691.343
+ [2,]  9093.267 10392.305
+ [3,]  7794.229  9093.267
+ [4,]  6495.191  7794.229
+ [5,]  5196.152  6495.191
+ [6,]  3897.114  5196.152
+ [7,]  2598.076  3897.114
+ [8,]  1299.038  2598.076
+ [9,]     0.000  1299.038
+[10,]  1299.038     0.000</code></pre>
+</div>
+</div>
+<p>Note: Output distance is a matrix object class of R. Column headers and row headers are also not labeled with the hexagon grid id.</p>
+</section>
+<section id="labelling-column-and-row-headers-of-distance-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="labelling-column-and-row-headers-of-distance-matrix">Labelling column and row headers of distance matrix</h3>
+<p>Create a list sorted according to the the distance matrix by hexagon grid id</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>grid_id <span class="ot">&lt;-</span> grid_sf<span class="sc">$</span>grid_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Attach <code>grid_id</code> to row and column for distance matrix matching</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(euc_dist) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(grid_id)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(euc_dist) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(grid_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pivoting-distance-value-by-grid_id" class="level3">
+<h3 class="anchored" data-anchor-id="pivoting-distance-value-by-grid_id">Pivoting distance value by <code>grid_id</code></h3>
+<p>Pivot the distance matrix into a long table by using the row and column hexagons. Columns are renamed for easy reference.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>dist_pair <span class="ot">&lt;-</span> <span class="fu">melt</span>(euc_dist) <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">ori_grid =</span> Var1,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">desti_grid =</span> Var2,</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">euc_dist =</span> value)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dist_pair, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ori_grid desti_grid  euc_dist
+1         1          1     0.000
+2         2          1  1299.038
+3         3          1  2598.076
+4         4          1  3897.114
+5         5          1  5196.152
+6         6          1  6495.191
+7         7          1  7794.229
+8         8          1  9093.267
+9         9          1 10392.305
+10       10          1 11691.343</code></pre>
+</div>
+</div>
+</section>
+<section id="find-mininum-inter-zonal-difference" class="level3">
+<h3 class="anchored" data-anchor-id="find-mininum-inter-zonal-difference">Find mininum inter-zonal difference</h3>
+<p>An analytical hexagon has an inter-zonal difference of 0 when compared to itself, which inaccurately represents intra-zonal disparity. Thus, a small constant value i.e.&nbsp;smaller than the minimum inter-zonal difference, replaces all instances where the intra-zonal difference is ‘0’. Therefore, allowing for a more accurate reflection of intra-zonal differences in the distance computation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>dist_pair <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(euc_dist <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ori_grid      desti_grid      euc_dist    
+ Min.   :   1   Min.   :   1   Min.   :  750  
+ 1st Qu.: 986   1st Qu.: 986   1st Qu.:14465  
+ Median :1972   Median :1972   Median :22761  
+ Mean   :1972   Mean   :1972   Mean   :23714  
+ 3rd Qu.:2957   3rd Qu.:2957   3rd Qu.:31882  
+ Max.   :3942   Max.   :3942   Max.   :64356  </code></pre>
+</div>
+</div>
+<p>Note: The smallest distance inter-zonal difference is 750m, which is the the distance between the centres of two adjacent analytical hexagons in this analysis. The intra-zonal distance is thus set to 50m.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>dist_pair<span class="sc">$</span>euc_dist <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dist_pair<span class="sc">$</span>euc_dist <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">50</span>, dist_pair<span class="sc">$</span>euc_dist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check resulting data frame</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>dist_pair <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ori_grid      desti_grid      euc_dist    
+ Min.   :   1   Min.   :   1   Min.   :   50  
+ 1st Qu.: 986   1st Qu.: 986   1st Qu.:14465  
+ Median :1972   Median :1972   Median :22761  
+ Mean   :1972   Mean   :1972   Mean   :23708  
+ 3rd Qu.:2957   3rd Qu.:2957   3rd Qu.:31882  
+ Max.   :3942   Max.   :3942   Max.   :64356  </code></pre>
+</div>
+</div>
+<p>Converting <code>ori_grid</code> and <code>desti_grid</code> columns to factors in R (categorical data type)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>dist_pair<span class="sc">$</span>ori_grid <span class="ot">&lt;-</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.factor</span>(dist_pair<span class="sc">$</span>ori_grid)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>dist_pair<span class="sc">$</span>desti_grid <span class="ot">&lt;-</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">as.factor</span>(dist_pair<span class="sc">$</span>desti_grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Save the dataframe as rds format</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(dist_pair, <span class="st">"data/rds/dist_pair.rds"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#Spatial Interaction Modelling</p>
+<p>Calibrate spatial interactive models to determine factors affecting urban commuting flows at the selected time interval.</p>
+<p>Present the modelling results by using appropriate geovisualisation and graphical visualisation methods. (Not more than 5 visuals)</p>
+<p>With reference to the Spatial Interaction Model output tables, maps and data visualisation prepared, describe the modelling results. (not more than 100 words per visual).</p>
 
 
+</section>
 </section>
 </section>
 
