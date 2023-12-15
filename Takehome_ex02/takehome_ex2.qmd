@@ -564,9 +564,7 @@ hdb_sf <- st_as_sf(hdb,
 ### Number of HDB per Location
 
 ```{r}
-grid_attr$fnb <- lengths(st_intersects(grid_sf, fnb))
 
-summary(grid_attr$fnb)
 ```
 
 ## Attractive Attributes
