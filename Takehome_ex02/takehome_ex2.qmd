@@ -660,12 +660,6 @@ grid_attr$sch <- lengths(st_intersects(grid_sf, sch_sf))
 
 summary(grid_attr$sch)
 ```
-
-
 #Spatial Interaction Modelling
 
-Calibrate spatial interactive models to determine factors affecting urban commuting flows at the selected time interval.
-
-Present the modelling results by using appropriate geovisualisation and graphical visualisation methods. (Not more than 5 visuals)
-
-With reference to the Spatial Interaction Model output tables, maps and data visualisation prepared, describe the modelling results. (not more than 100 words per visual).
+Select attributes relevant Propulsive Attributes and Attractive Attributes for Spatial Interaction Modelling
