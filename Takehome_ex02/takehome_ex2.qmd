@@ -71,6 +71,13 @@ Check resulting data table
 head(wdmp)
 ```
 
+Summary Statistics
+
+```{r}
+summary(wdmp)
+```
+
+
 Output saved in rds format for future use
 
 ```{r}
@@ -264,46 +271,28 @@ Assemble at least three propulsive and three attractiveness variables by using a
 csv <- read_csv("data/aspatial/hdb.csv")
 ```
 
-Remove duplicates, select relevant columns, rename columns
+Remove duplicates, keep only residential properties, select relevant columns, rename columns for ease of analysis
 
 ```{r}
 csv_unique <- csv %>% 
   distinct(lat, lng, addr, .keep_all = TRUE)
 
 csv <- csv_unique %>% 
+  filter(residential == "Y") %>% 
   select(latitude = lat,
          longitude = lng,
          POI_NAME = building,
          POI_ST_NUM = blk_no,
          POI_ST_NAM = street,
          postal,
-         addr)
+         addr,
+         total_dwelling_units,
+         SUBZONE_N)
 ```
 
 ### Geocoding using SLA API
 
 Note: Ideally, using the hdb postal code, we can get its corresponding latitude and longitude. However, upon opening the hdb.csv file, we notice that 79 postal codes are missing (i.e. NIL instead of number). For those that have missing postal codes, we use the addr column to get the corresponding latitude and longitude.
-
-
-```{r}
-url <- "https://www.onemap.gov.sg/api/common/elastic/search"
-addresses <- csv$`addr`
-
-found <- data.frame()
-not_found <- data.frame()
-
-for(address in addresses){
-  query <- list('searchVal' = address, 'returnGeom' = 'Y', 'getAddrDetails' = 'Y', 'pageNum' = '1')
-  res <- GET(url, query = query)
-  
-  if (content(res)$found != 0) {
-    found <- rbind(found, data.frame(content(res))[4:13])
-  } else {
-      not_found <- rbind(not_found, data.frame(address))
-    }
-  }
-```
-
 
 ```{r}
 url <- "https://www.onemap.gov.sg/api/common/elastic/search"
@@ -336,6 +325,21 @@ for(postcode in postcodes){
   }
 }
 ```
+
+Checking for data that could still be missing
+
+```{r}
+not_found
+```
+
+Note:
+
+Info for xyz still missing. Convert corresponding latitude and longitude into x and y coordinates
+
+```{r}
+
+```
+
 
 Note: hdb_filtered is a tibble dataframe object class
 
