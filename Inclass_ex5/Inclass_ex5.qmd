@@ -27,7 +27,7 @@ pacman::p_load(tmap, sf, spdep, sp, Matrix, spflow, knitr, tidyverse)
 - tibble data.frame consisting of origin, destination, flows & distances between the origin and destination
 - tibble data.frame consisting of the explanatory variables
 
-#Retriving Data
+# Retriving Data
 
 ```{r}
 mpsz_nb <- read_rds("data/rds/mpsz_nb.rds")
