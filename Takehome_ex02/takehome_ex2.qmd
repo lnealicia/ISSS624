@@ -553,7 +553,6 @@ hdb <- hdb %>%
   )
 ```
 
-
 ### Converting an aspatial data into a simple features tibble data.frame
 
 ```{r}
@@ -595,6 +594,7 @@ grid_attr$biz <- grid_sf %>%
 
 summary(grid_attr$biz)
 ```
+
 The location with the most number of businesses is grid id 3942, with 126 businesses located within.
 
 ### Importing of Financial Services Locations
@@ -644,7 +644,6 @@ sch <- sch %>%
   )
 ```
 
-
 ### Converting an aspatial data into a simple features tibble data.frame
 
 ```{r}
@@ -661,6 +660,7 @@ grid_attr$sch <- lengths(st_intersects(grid_sf, sch_sf))
 
 summary(grid_attr$sch)
 ```
-#Spatial Interaction Modelling
+
+# Spatial Interaction Modelling
 
 Select attributes relevant Propulsive Attributes and Attractive Attributes for Spatial Interaction Modelling
