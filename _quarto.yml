@@ -29,6 +29,8 @@ website:
             href: Inclass_ex3/Inclass_ex3.html
           - text: In-Class Exercise 4
             href: Inclass_ex4/Inclass_ex4.html
+          - text: In-Class Exercise 5
+            href: Inclass_ex5/Inclass_ex5.html
       - text: Take-home Exercise
         menu:
           - text: Take Home Exercise 1
