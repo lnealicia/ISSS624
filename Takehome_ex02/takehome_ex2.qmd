@@ -1174,7 +1174,7 @@ compare_performance(model_list,
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: red"}
-Similarly, the model with the lowest RMSE, thus most accurate, is the uncontrained model.
+Similarly, the model with the lowest RMSE(1412.062), the unconstrained model  indicates the best performance among the models.
 :::
 
 ### Visualising fitted
