@@ -1057,7 +1057,16 @@ summary(oriSIM)
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: purple"}
-XXX
+log(desti_fs)   0.3295599  0.0001655  1991.250  < 2e-16 ***
+log(desti_biz)  0.0350935  0.0001723   203.630  < 2e-16 ***
+log(desti_sch)  0.3924206  0.0006150   638.034  < 2e-16 ***
+log(euc_dist)  -0.6985434  0.0001180 -5920.797  < 2e-16 ***
+
+Number of weekday morning peak period trips has a statistically significant relationship with all destination attractiveness attributes.
+
+The strongest positive association is with number of schools (Coefficient Estimate: 0.3924206) followed by number of financial services (Coefficient Estimate: 0.3295599), suggesting that they are the most attractive factors.
+
+The strongest negative association is with distance (-0.6985434). Thus, the further away the destination from origin, the less attractive it is.
 :::
 
 ## Destination Constrained Model
@@ -1081,7 +1090,16 @@ summary(destiSIM)
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: purple"}
-YYY
+log(ori_mrt_exit)  0.1788028  0.0003400   525.958  < 2e-16 ***
+log(ori_fnb)       0.0116404  0.0002378    48.942  < 2e-16 ***
+log(ori_hdb)       0.4079424  0.0001581  2579.549  < 2e-16 ***
+log(euc_dist)     -0.6817863  0.0001213 -5621.232  < 2e-16 ***
+
+Number of weekday morning peak period trips has a statistically significant relationship with all origin propulsive attributes.
+
+The strongest positive association is with number of residential HDB buildings (Coefficient Estimate: 0.4079424) followed by number of train station exits (Coefficient Estimate: 0.1788028), suggesting that they are the most attractive factors.
+
+The strongest negative association is with distance (-0.6817863). Thus, the further away the origin from destination, the less propulsive it is.
 :::
 
 ## Doubly Constrained Model
@@ -1103,7 +1121,11 @@ summary(dbcSIM)
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: purple"}
-YYY
+log(euc_dist)  -0.6789398  0.0001267 -5360.218  < 2e-16 ***
+
+Number of weekday morning peak period trips has a statistically significant relationship with the log applied distance.
+
+It has a strong negative association (-0.6789398). Thus, the greater the distance between origin and destination, the fewer trips in general.
 :::
 
 ## Unconstrained Model
@@ -1125,7 +1147,11 @@ summary(uncSIM)
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: purple"}
-YYY
+euc_dist       -4.626e-04  1.114e-07 -4153.590  < 2e-16 ***
+
+Number of weekday morning peak period trips has a statistically significant relationship with distance.
+
+It has a negative association (-4.626e-04). Thus, the greater the distance between origin and destination, the fewer trips in general.
 :::
 
 ## Model Diagnostics
