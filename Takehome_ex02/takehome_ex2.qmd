@@ -443,6 +443,13 @@ Save output as SIM_data.rds
 write_rds(flow_data1, "data/rds/SIM_data")
 ```
 
+Import to R environment
+
+```{r}
+SIM_data <- readRDS("data/rds/SIM_data.rds")
+```
+
+
 ### Visualising Plot
 
 ```{r}
@@ -1027,7 +1034,7 @@ log(TRIPS) = 3.601 + 0.398 * log(desti_sch)
 There seems to be a positive correlation between number of trips and the number of schools.
 :::
 
-## Origin Constrained
+## Origin Constrained Model
 
 -1 is used to exclude the intercept term from the Poisson regression model
 
@@ -1053,7 +1060,7 @@ summary(oriSIM)
 XXX
 :::
 
-## Destination Constrained
+## Destination Constrained Model
 
 ```{r}
 destiSIM <- glm(
@@ -1077,7 +1084,7 @@ summary(destiSIM)
 YYY
 :::
 
-## Doubly Constrained
+## Doubly Constrained Model
 
 ```{r}
 dbcSIM <- glm(formula = TRIPS ~ 
@@ -1099,7 +1106,7 @@ summary(dbcSIM)
 YYY
 :::
 
-## Unconstrained
+## Unconstrained Model
 
 ```{r}
 uncSIM <- glm(formula = TRIPS ~ 
@@ -1138,19 +1145,19 @@ calc_r2 <- function(observed, estimated){
 ### R-squared value for each model
 
 ```{r}
-message(paste("R-squared value for Origin Constrained Model is:", calc_r2(oriSIM$data$trips, oriSIM$fitted.values)))
+message(paste("R-squared value for Origin Constrained Model is:", calc_r2(oriSIM$data$TRIPS, oriSIM$fitted.values)))
         
-message(paste("R-squared value for Origin Constrained Model is:", calc_r2(destiSIM$data$trips, destiSIM$fitted.values)))
+message(paste("R-squared value for Origin Constrained Model is:", calc_r2(destiSIM$data$TRIPS, destiSIM$fitted.values)))
 
-message(paste("R-squared value for Destination Constrained Model is:",calc_r2(destiSIM$data$trips, destiSIM$fitted.values)))
+message(paste("R-squared value for Destination Constrained Model is:",calc_r2(destiSIM$data$TRIPS, destiSIM$fitted.values)))
 
-message(paste("R-squared value for Doubly Constrained Model is:",calc_r2(dbcSIM$data$trips, dbcSIM$fitted.values)))
+message(paste("R-squared value for Doubly Constrained Model is:",calc_r2(dbcSIM$data$TRIPS, dbcSIM$fitted.values)))
 
-message(paste("R-squared value for Unconstrained Model is:",calc_r2(uncSIM$data$trips, uncSIM$fitted.values)))
+message(paste("R-squared value for Unconstrained Model is:",calc_r2(uncSIM$data$TRIPS, uncSIM$fitted.values)))
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: red"}
-YYY
+The model with the highest R-squared value is the unconstrained model, where the variables (origin, destination and distance) can account for about 45% of the variability in trips. The doubly constrained model, which uses log of distance for its calculations, was able to account for about 21% of variability in trips.
 :::
 
 ### RMSE
@@ -1167,7 +1174,7 @@ compare_performance(model_list,
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: red"}
-YYY
+Similarly, the model with the lowest RMSE, thus most accurate, is the uncontrained model.
 :::
 
 ### Visualising fitted
@@ -1212,7 +1219,7 @@ df <- as.data.frame(destiSIM$fitted.values) %>%
 ```{r}
 SIM_data <- SIM_data %>%
   cbind(df) %>%
-  rename(decTRIPS = "destiSIM$fitted.values")
+  rename(destiTRIPS = "destiSIM$fitted.values")
 ```
 
 Repeat for Doubly Constrained SIM (i.e. dbcSIM)
@@ -1230,34 +1237,34 @@ SIM_data <- SIM_data %>%
 
 ```{r}
 unc_p <- ggplot(data = SIM_data,
-                aes(x = uncTRIPS,
+                aes(x = log(uncTRIPS),
                     y = TRIPS)) +
   geom_point() +
   geom_smooth(method = lm)
 
-orc_p <- ggplot(data = SIM_data,
-                aes(x = orcTRIPS,
+ori_p <- ggplot(data = SIM_data,
+                aes(x = log(oriTRIPS),
                     y = TRIPS)) +
   geom_point() +
   geom_smooth(method = lm)
 
-dec_p <- ggplot(data = SIM_data,
-                aes(x = decTRIPS,
+desti_p <- ggplot(data = SIM_data,
+                aes(x = log(destiTRIPS),
                     y = TRIPS)) +
   geom_point() +
   geom_smooth(method = lm)
 
 dbc_p <- ggplot(data = SIM_data,
-                aes(x = dbcTRIPS,
+                aes(x = log(dbcTRIPS),
                     y = TRIPS)) +
   geom_point() +
   geom_smooth(method = lm)
 
-ggarrange(unc_p, orc_p, dec_p, dbc_p,
+ggarrange(unc_p, ori_p, desti_p, dbc_p,
           ncol = 2,
           nrow = 2)
 ```
 
 ::: {.callout-tip title="Statistical Conclusion" style="color: red"}
-YYY
+The plots above using the log values in x-axis show that there is a strongest linear trend between fitted and observed values in the unconstrained model, followed by doubly constrained model, as compared to the other models. 
 :::
