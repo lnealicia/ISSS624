@@ -1027,4 +1027,35 @@ log(TRIPS) = 3.601 + 0.398 * log(desti_sch)
 There seems to be a positive correlation between number of trips and the number of schools.
 :::
 
+## Origin Constrained
 
+-1 is used to exclude the intercept term from the Poisson regression model
+
+```{r}
+originSIM <- glm(
+    formula = TRIPS ~ ori_grid 
+            + log(ori_mrt_exit)
+            + log(ori_fnb) 
+            + log(ori_hdb)
+            + log(euc_dist) - 1,
+    family = poisson(link = "log"),
+    data = attr_flow,
+           na.action = na.exclude)
+```
+
+Results
+
+```{r}
+summary(originSIM)
+```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: purple"}
+Given the regression equation:
+log(TRIPS) = 3.601 + 0.398 * log(desti_sch)  
+
+There seems to be a positive correlation between number of trips and the number of schools.
+:::
+
+## Destination Constrained
+
+## Doubly Constrained
