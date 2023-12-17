@@ -215,6 +215,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a></li>
   <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data Preparation</a></li>
+  <li><a href="#retriving-data" id="toc-retriving-data" class="nav-link" data-scroll-target="#retriving-data">Retriving Data</a>
+  <ul class="collapse">
   <li><a href="#preparing-spflow-objects" id="toc-preparing-spflow-objects" class="nav-link" data-scroll-target="#preparing-spflow-objects">Preparing spflow objects</a>
   <ul class="collapse">
   <li><a href="#creating-spflow_network-class-objects" id="toc-creating-spflow_network-class-objects" class="nav-link" data-scroll-target="#creating-spflow_network-class-objects">Creating <code>spflow_network-class</code> objects</a></li>
@@ -226,6 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#base-model" id="toc-base-model" class="nav-link" data-scroll-target="#base-model">Base Model</a></li>
   <li><a href="#residual-diagnositcs" id="toc-residual-diagnositcs" class="nav-link" data-scroll-target="#residual-diagnositcs">Residual Diagnositcs</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -285,13 +288,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>tibble data.frame consisting of origin, destination, flows &amp; distances between the origin and destination</li>
 <li>tibble data.frame consisting of the explanatory variables</li>
 </ul>
-<p>#Retriving Data</p>
+</section>
+<section id="retriving-data" class="level1">
+<h1>Retriving Data</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpsz_nb <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_nb.rds"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mpsz_flow <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_flow.rds"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>mpsz_var <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/mpsz_var.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 <section id="preparing-spflow-objects" class="level2">
 <h2 class="anchored" data-anchor-id="preparing-spflow-objects">Preparing spflow objects</h2>
 <section id="creating-spflow_network-class-objects" class="level3">
@@ -475,8 +479,8 @@ Dependent variable: log(1 + TRIPS)
 --------------------------------------------------
 Coefficients:
                           est     sd   t.stat  p.val
-rho_d                   0.680  0.004  192.554  0.000
-rho_o                   0.678  0.004  187.732  0.000
+rho_d                   0.680  0.004  192.553  0.000
+rho_o                   0.678  0.004  187.733  0.000
 rho_w                  -0.396  0.006  -65.591  0.000
 (Intercept)             0.410  0.065    6.266  0.000
 (Intra)                 1.313  0.081   16.263  0.000
@@ -488,7 +492,7 @@ D_RETAILS_COUNT         0.000  0.000   -0.306  0.759
 D_RETAILS_COUNT.lag1    0.000  0.000    0.152  0.880
 D_FINSERV_COUNT         0.002  0.000    6.787  0.000
 D_FINSERV_COUNT.lag1   -0.002  0.001   -3.767  0.000
-O_BUSSTOP_COUNT         0.002  0.000    6.806  0.000
+O_BUSSTOP_COUNT         0.002  0.000    6.807  0.000
 O_BUSSTOP_COUNT.lag1   -0.001  0.000   -2.364  0.018
 O_AGE25_64              0.000  0.000    7.336  0.000
 O_AGE25_64.lag1         0.000  0.000   -2.797  0.005
@@ -582,13 +586,13 @@ Dependent variable: log(1 + TRIPS)
 --------------------------------------------------
 Coefficients:
                           est     sd    t.stat  p.val
-rho_d                   0.689  0.003   196.832  0.000
-rho_o                   0.687  0.004   192.214  0.000
-rho_w                  -0.473  0.003  -142.469  0.000
-(Intercept)             1.086  0.049    22.275  0.000
+rho_d                   0.689  0.003   196.831  0.000
+rho_o                   0.687  0.004   192.217  0.000
+rho_w                  -0.473  0.003  -142.470  0.000
+(Intercept)             1.086  0.049    22.274  0.000
 (Intra)                 0.840  0.075    11.255  0.000
 D_SCHOOL_COUNT          0.019  0.002     8.896  0.000
-D_SCHOOL_COUNT.lag1     0.019  0.004     5.130  0.000
+D_SCHOOL_COUNT.lag1     0.019  0.004     5.129  0.000
 D_BUSINESS_COUNT        0.000  0.000     3.328  0.001
 D_BUSINESS_COUNT.lag1   0.000  0.000     1.664  0.096
 D_RETAILS_COUNT         0.000  0.000    -0.414  0.679
@@ -602,7 +606,7 @@ O_AGE25_64.lag1         0.000  0.000    -0.462  0.644
 P_log(DISTANCE + 1)    -0.125  0.005   -22.865  0.000
 
 --------------------------------------------------
-R2_corr: 0.6965974  
+R2_corr: 0.6965979  
 Observations: 97969  
 Model coherence: Validated</code></pre>
 </div>
@@ -689,7 +693,7 @@ Dependent variable: log(1 + TRIPS)
 --------------------------------------------------
 Coefficients:
                           est     sd   t.stat  p.val
-rho_d                   0.731  0.003  218.603  0.000
+rho_d                   0.731  0.003  218.602  0.000
 (Intercept)             3.068  0.067   45.899  0.000
 (Intra)                -0.398  0.093   -4.291  0.000
 D_SCHOOL_COUNT          0.063  0.003   24.291  0.000
@@ -745,8 +749,8 @@ Coefficients:
 rho_d                   0.680  0.004  192.554  0.000
 rho_o                   0.678  0.004  187.732  0.000
 rho_w                  -0.396  0.006  -65.591  0.000
-(Intercept)             0.410  0.065    6.266  0.000
-(Intra)                 1.313  0.081   16.263  0.000
+(Intercept)             0.410  0.065    6.267  0.000
+(Intra)                 1.313  0.081   16.262  0.000
 D_SCHOOL_COUNT          0.017  0.002    7.885  0.000
 D_SCHOOL_COUNT.lag1     0.002  0.004    0.551  0.581
 D_BUSINESS_COUNT        0.000  0.000    3.015  0.003
@@ -755,20 +759,21 @@ D_RETAILS_COUNT         0.000  0.000   -0.306  0.759
 D_RETAILS_COUNT.lag1    0.000  0.000    0.152  0.880
 D_FINSERV_COUNT         0.002  0.000    6.787  0.000
 D_FINSERV_COUNT.lag1   -0.002  0.001   -3.767  0.000
-O_BUSSTOP_COUNT         0.002  0.000    6.806  0.000
+O_BUSSTOP_COUNT         0.002  0.000    6.807  0.000
 O_BUSSTOP_COUNT.lag1   -0.001  0.000   -2.364  0.018
 O_AGE25_64              0.000  0.000    7.336  0.000
 O_AGE25_64.lag1         0.000  0.000   -2.797  0.005
 P_log(DISTANCE + 1)    -0.050  0.007   -6.793  0.000
 
 --------------------------------------------------
-R2_corr: 0.6942945  
+R2_corr: 0.6942946  
 Observations: 97969  
 Model coherence: Validated</code></pre>
 </div>
 </div>
 
 
+</section>
 </section>
 </section>
 
