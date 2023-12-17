@@ -276,6 +276,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#flow-by-origin" id="toc-flow-by-origin" class="nav-link" data-scroll-target="#flow-by-origin">Flow by Origin</a></li>
   <li><a href="#flow-by-destination" id="toc-flow-by-destination" class="nav-link" data-scroll-target="#flow-by-destination">Flow by Destination</a></li>
+  <li><a href="#add-trips" id="toc-add-trips" class="nav-link" data-scroll-target="#add-trips">Add Trips</a></li>
+  <li><a href="#remove-null-values" id="toc-remove-null-values" class="nav-link" data-scroll-target="#remove-null-values">Remove NULL values</a></li>
   <li><a href="#summary-of-attributes" id="toc-summary-of-attributes" class="nav-link" data-scroll-target="#summary-of-attributes">Summary of attributes</a></li>
   <li><a href="#replacing-0-values" id="toc-replacing-0-values" class="nav-link" data-scroll-target="#replacing-0-values">Replacing 0 values</a></li>
   <li><a href="#linear-correlation-between-trips-and-propulsive-attributes" id="toc-linear-correlation-between-trips-and-propulsive-attributes" class="nav-link" data-scroll-target="#linear-correlation-between-trips-and-propulsive-attributes">Linear Correlation between Trips and Propulsive Attributes</a></li>
@@ -328,7 +330,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tmap, sf, sp, DT, stplanr,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               performance, reshape2,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ggpubr, tidyverse, httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ggpubr, tidyverse, httr, ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="preparing-the-flow-data" class="level2">
@@ -5159,35 +5161,55 @@ First 10 features:
 <span id="cb110-12"><a href="#cb110-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="add-trips" class="level3">
+<h3 class="anchored" data-anchor-id="add-trips">Add Trips</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="ot">&lt;-</span> <span class="fu">left_join</span>(</span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>  attr_flow,</span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>  flow_data,</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"ori_grid"</span>, <span class="st">"desti_grid"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">c</span>(FlowNoIntra, offset)</span>
+<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="remove-null-values" class="level3">
+<h3 class="anchored" data-anchor-id="remove-null-values">Remove NULL values</h3>
+<p>There are some routes from ori_grid to desti_grid that have 0 or NULL trips. These will be removed</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="ot">&lt;-</span> attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(TRIPS) <span class="sc">&amp;</span> TRIPS <span class="sc">!=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 <section id="summary-of-attributes" class="level3">
 <h3 class="anchored" data-anchor-id="summary-of-attributes">Summary of attributes</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(attr_flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(attr_flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    ori_grid          desti_grid          euc_dist      ori_mrt_exit    
- 1      :    3942   1      :    3942   Min.   :   50   Min.   : 0.0000  
- 2      :    3942   2      :    3942   1st Qu.:14465   1st Qu.: 0.0000  
- 3      :    3942   3      :    3942   Median :22761   Median : 0.0000  
- 4      :    3942   4      :    3942   Mean   :23708   Mean   : 0.1433  
- 5      :    3942   5      :    3942   3rd Qu.:31882   3rd Qu.: 0.0000  
- 6      :    3942   6      :    3942   Max.   :64356   Max.   :19.0000  
- (Other):15515712   (Other):15515712                                    
-    ori_fnb            ori_hdb         desti_biz          desti_fs       
- Min.   :  0.0000   Min.   : 0.000   Min.   :  0.000   Min.   :  0.0000  
- 1st Qu.:  0.0000   1st Qu.: 0.000   1st Qu.:  0.000   1st Qu.:  0.0000  
- Median :  0.0000   Median : 0.000   Median :  0.000   Median :  0.0000  
- Mean   :  0.4868   Mean   : 2.583   Mean   :  1.662   Mean   :  0.8422  
- 3rd Qu.:  0.0000   3rd Qu.: 0.000   3rd Qu.:  0.000   3rd Qu.:  0.0000  
- Max.   :127.0000   Max.   :75.000   Max.   :126.000   Max.   :176.0000  
-                                                                         
-   desti_sch      
- Min.   :0.00000  
- 1st Qu.:0.00000  
- Median :0.00000  
- Mean   :0.08879  
- 3rd Qu.:0.00000  
- Max.   :5.00000  
-                  </code></pre>
+<pre><code>    ori_grid       desti_grid       euc_dist      ori_mrt_exit   
+ 2634   :  286   2010   :  365   Min.   :   50   Min.   : 0.000  
+ 1849   :  285   1982   :  356   1st Qu.: 2704   1st Qu.: 0.000  
+ 2010   :  284   2009   :  343   Median : 5250   Median : 0.000  
+ 2038   :  283   1984   :  318   Mean   : 6220   Mean   : 1.272  
+ 1987   :  282   2634   :  300   3rd Qu.: 8649   3rd Qu.: 2.000  
+ 1990   :  281   1849   :  299   Max.   :25200   Max.   :19.000  
+ (Other):64013   (Other):63733                                   
+    ori_fnb           ori_hdb        desti_biz          desti_fs      
+ Min.   :  0.000   Min.   : 0.00   Min.   :  0.000   Min.   :  0.000  
+ 1st Qu.:  0.000   1st Qu.: 0.00   1st Qu.:  0.000   1st Qu.:  0.000  
+ Median :  0.000   Median : 9.00   Median :  1.000   Median :  3.000  
+ Mean   :  5.154   Mean   :17.05   Mean   :  7.355   Mean   :  8.957  
+ 3rd Qu.:  2.000   3rd Qu.:31.00   3rd Qu.:  7.000   3rd Qu.:  9.000  
+ Max.   :127.000   Max.   :75.00   Max.   :126.000   Max.   :176.000  
+                                                                      
+   desti_sch          TRIPS        
+ Min.   :0.0000   Min.   :    1.0  
+ 1st Qu.:0.0000   1st Qu.:    7.0  
+ Median :0.0000   Median :   37.0  
+ Mean   :0.5574   Mean   :  394.6  
+ 3rd Qu.:1.0000   3rd Qu.:  182.0  
+ Max.   :5.0000   Max.   :96644.0  
+                                   </code></pre>
 </div>
 </div>
 <p>Note: Columns with prefix “ori” or “desti” have 0 values</p>
@@ -5196,67 +5218,367 @@ First 10 features:
 <h3 class="anchored" data-anchor-id="replacing-0-values">Replacing 0 values</h3>
 <p>0 values in columns with prefix “ori” or “desti” will be replaced with a small value i.e.&nbsp;0.99</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="ot">&lt;-</span> attr_flow <span class="sc">%&gt;%</span></span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(ori_mrt_exit, ori_fnb, ori_hdb, desti_fs, desti_biz, desti_sch),</span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>            <span class="sc">~</span> <span class="fu">ifelse</span>(. <span class="sc">==</span> <span class="dv">0</span>, <span class="fl">0.99</span>, .))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="ot">&lt;-</span> attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(ori_mrt_exit, ori_fnb, ori_hdb, desti_fs, desti_biz, desti_sch),</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>            <span class="sc">~</span> <span class="fu">ifelse</span>(. <span class="sc">==</span> <span class="dv">0</span>, <span class="fl">0.99</span>, .))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check <code>attr_flow</code> again</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(attr_flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(attr_flow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    ori_grid          desti_grid          euc_dist      ori_mrt_exit   
- 1      :    3942   1      :    3942   Min.   :   50   Min.   : 0.990  
- 2      :    3942   2      :    3942   1st Qu.:14465   1st Qu.: 0.990  
- 3      :    3942   3      :    3942   Median :22761   Median : 0.990  
- 4      :    3942   4      :    3942   Mean   :23708   Mean   : 1.084  
- 5      :    3942   5      :    3942   3rd Qu.:31882   3rd Qu.: 0.990  
- 6      :    3942   6      :    3942   Max.   :64356   Max.   :19.000  
- (Other):15515712   (Other):15515712                                   
-    ori_fnb           ori_hdb         desti_biz          desti_fs      
- Min.   :  0.990   Min.   : 0.990   Min.   :  0.990   Min.   :  0.990  
- 1st Qu.:  0.990   1st Qu.: 0.990   1st Qu.:  0.990   1st Qu.:  0.990  
- Median :  0.990   Median : 0.990   Median :  0.990   Median :  0.990  
- Mean   :  1.416   Mean   : 3.473   Mean   :  2.517   Mean   :  1.722  
- 3rd Qu.:  0.990   3rd Qu.: 0.990   3rd Qu.:  0.990   3rd Qu.:  0.990  
- Max.   :127.000   Max.   :75.000   Max.   :126.000   Max.   :176.000  
-                                                                       
-   desti_sch    
- Min.   :0.990  
- 1st Qu.:0.990  
- Median :0.990  
- Mean   :1.018  
- 3rd Qu.:0.990  
- Max.   :5.000  
-                </code></pre>
+<pre><code>    ori_grid       desti_grid       euc_dist      ori_mrt_exit   
+ 2634   :  286   2010   :  365   Min.   :   50   Min.   : 0.990  
+ 1849   :  285   1982   :  356   1st Qu.: 2704   1st Qu.: 0.990  
+ 2010   :  284   2009   :  343   Median : 5250   Median : 0.990  
+ 2038   :  283   1984   :  318   Mean   : 6220   Mean   : 1.872  
+ 1987   :  282   2634   :  300   3rd Qu.: 8649   3rd Qu.: 2.000  
+ 1990   :  281   1849   :  299   Max.   :25200   Max.   :19.000  
+ (Other):64013   (Other):63733                                   
+    ori_fnb           ori_hdb        desti_biz          desti_fs      
+ Min.   :  0.990   Min.   : 0.99   Min.   :  0.990   Min.   :  0.990  
+ 1st Qu.:  0.990   1st Qu.: 0.99   1st Qu.:  0.990   1st Qu.:  0.990  
+ Median :  0.990   Median : 9.00   Median :  1.000   Median :  3.000  
+ Mean   :  5.713   Mean   :17.40   Mean   :  7.749   Mean   :  9.227  
+ 3rd Qu.:  2.000   3rd Qu.:31.00   3rd Qu.:  7.000   3rd Qu.:  9.000  
+ Max.   :127.000   Max.   :75.00   Max.   :126.000   Max.   :176.000  
+                                                                      
+   desti_sch         TRIPS        
+ Min.   :0.990   Min.   :    1.0  
+ 1st Qu.:0.990   1st Qu.:    7.0  
+ Median :0.990   Median :   37.0  
+ Mean   :1.173   Mean   :  394.6  
+ 3rd Qu.:1.000   3rd Qu.:  182.0  
+ Max.   :5.000   Max.   :96644.0  
+                                  </code></pre>
 </div>
 </div>
 <p>Save output indo rds</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(attr_flow, <span class="st">"data/rds/sim_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(attr_flow, <span class="st">"data/rds/sim_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="linear-correlation-between-trips-and-propulsive-attributes" class="level3">
 <h3 class="anchored" data-anchor-id="linear-correlation-between-trips-and-propulsive-attributes">Linear Correlation between Trips and Propulsive Attributes</h3>
 <section id="train-station-exits" class="level4">
 <h4 class="anchored" data-anchor-id="train-station-exits">Train Station Exits</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(ori_mrt_exit),</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">log</span>(TRIPS))</span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(</span>
+<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb119-8"><a href="#cb119-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> .<span class="dv">7</span></span>
+<span id="cb119-9"><a href="#cb119-9" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb119-10"><a href="#cb119-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb119-11"><a href="#cb119-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb119-12"><a href="#cb119-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb119-13"><a href="#cb119-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb119-14"><a href="#cb119-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Trips ~ Train Strain Station Exits"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-80-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-equation" class="level4">
+<h4 class="anchored" data-anchor-id="regression-equation">Regression Equation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(TRIPS) <span class="sc">~</span> <span class="fu">log</span>(ori_mrt_exit), <span class="at">data =</span> attr_flow)</span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">1</span>]</span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">2</span>]</span>
+<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a>equation <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"log(TRIPS) = %.3f + %.3f * log(ori_mrt_exit)"</span>, intercept, slope)</span>
+<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-8"><a href="#cb120-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Regression Equation:</span><span class="sc">\n</span><span class="st">"</span>, equation, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Regression Equation:
+ log(TRIPS) = 3.593 + 0.141 * log(ori_mrt_exit) </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Given the regression equation: log(TRIPS) = 3.593 + 0.141 * log(ori_mrt_exit)</p>
+<p>There seems to be a positive correlation between number of trips and the number of train station exits.</p>
+</div>
+</div>
 </section>
 <section id="food-beverage-establishments" class="level4">
 <h4 class="anchored" data-anchor-id="food-beverage-establishments">Food &amp; Beverage Establishments</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(</span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(ori_fnb),</span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">log</span>(TRIPS))</span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(</span>
+<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> .<span class="dv">7</span></span>
+<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb122-10"><a href="#cb122-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb122-11"><a href="#cb122-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb122-12"><a href="#cb122-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb122-13"><a href="#cb122-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb122-14"><a href="#cb122-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Trips ~ Food &amp; Beverage Establishments"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-82-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-equation-1" class="level4">
+<h4 class="anchored" data-anchor-id="regression-equation-1">Regression Equation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(TRIPS) <span class="sc">~</span> <span class="fu">log</span>(ori_fnb), <span class="at">data =</span> attr_flow)</span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">1</span>]</span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">2</span>]</span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a>equation <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"log(TRIPS) = %.3f + %.3f * log(ori_fnb)"</span>, intercept, slope)</span>
+<span id="cb123-7"><a href="#cb123-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-8"><a href="#cb123-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Regression Equation:</span><span class="sc">\n</span><span class="st">"</span>, equation, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Regression Equation:
+ log(TRIPS) = 3.686 + -0.076 * log(ori_fnb) </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Given the regression equation: log(TRIPS) = 3.686 + -0.076 * log(ori_fnb)</p>
+<p>There seems to be a negative correlation between number of trips and the number of food &amp; beverage establishments.</p>
+</div>
+</div>
 </section>
 <section id="residential-hdb-buildings" class="level4">
 <h4 class="anchored" data-anchor-id="residential-hdb-buildings">Residential HDB buildings</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(</span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(ori_hdb),</span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">log</span>(TRIPS))</span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(</span>
+<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> .<span class="dv">7</span></span>
+<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb125-10"><a href="#cb125-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb125-11"><a href="#cb125-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb125-12"><a href="#cb125-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb125-13"><a href="#cb125-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb125-14"><a href="#cb125-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Trips ~ Residential HDB buildings"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-84-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-equation-2" class="level4">
+<h4 class="anchored" data-anchor-id="regression-equation-2">Regression Equation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(TRIPS) <span class="sc">~</span> <span class="fu">log</span>(ori_hdb), <span class="at">data =</span> attr_flow)</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">1</span>]</span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">2</span>]</span>
+<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a>equation <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"log(TRIPS) = %.3f + %.3f * log(ori_hdb)"</span>, intercept, slope)</span>
+<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-8"><a href="#cb126-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Regression Equation:</span><span class="sc">\n</span><span class="st">"</span>, equation, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Regression Equation:
+ log(TRIPS) = 2.894 + 0.401 * log(ori_hdb) </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: blue">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Given the regression equation: log(TRIPS) = 2.894 + 0.401 * log(ori_hdb)</p>
+<p>There seems to be a negative correlation between number of trips and the number of residential HDB buildings.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="linear-correlation-between-trips-and-attractive-attributes" class="level3">
 <h3 class="anchored" data-anchor-id="linear-correlation-between-trips-and-attractive-attributes">Linear Correlation between Trips and Attractive Attributes</h3>
 <section id="financial-services" class="level4">
 <h4 class="anchored" data-anchor-id="financial-services">Financial Services</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(</span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(desti_fs),</span>
+<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">log</span>(TRIPS))</span>
+<span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb128-6"><a href="#cb128-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(</span>
+<span id="cb128-7"><a href="#cb128-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb128-8"><a href="#cb128-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> .<span class="dv">7</span></span>
+<span id="cb128-9"><a href="#cb128-9" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb128-10"><a href="#cb128-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb128-11"><a href="#cb128-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb128-12"><a href="#cb128-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb128-13"><a href="#cb128-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb128-14"><a href="#cb128-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Trips ~ Financial Services"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-86-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-equation-3" class="level4">
+<h4 class="anchored" data-anchor-id="regression-equation-3">Regression Equation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(TRIPS) <span class="sc">~</span> <span class="fu">log</span>(desti_fs), <span class="at">data =</span> attr_flow)</span>
+<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">1</span>]</span>
+<span id="cb129-4"><a href="#cb129-4" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">2</span>]</span>
+<span id="cb129-5"><a href="#cb129-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb129-6"><a href="#cb129-6" aria-hidden="true" tabindex="-1"></a>equation <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"log(TRIPS) = %.3f + %.3f * log(desti_fs)"</span>, intercept, slope)</span>
+<span id="cb129-7"><a href="#cb129-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb129-8"><a href="#cb129-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Regression Equation:</span><span class="sc">\n</span><span class="st">"</span>, equation, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Regression Equation:
+ log(TRIPS) = 3.383 + 0.201 * log(desti_fs) </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Given the regression equation: log(TRIPS) = 3.383 + 0.201 * log(desti_fs)</p>
+<p>There seems to be a positive correlation between number of trips and the number of financial services.</p>
+</div>
+</div>
 </section>
 <section id="businesses" class="level4">
 <h4 class="anchored" data-anchor-id="businesses">Businesses</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(</span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(desti_biz),</span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">log</span>(TRIPS))</span>
+<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(</span>
+<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb131-8"><a href="#cb131-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> .<span class="dv">7</span></span>
+<span id="cb131-9"><a href="#cb131-9" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb131-10"><a href="#cb131-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb131-11"><a href="#cb131-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb131-12"><a href="#cb131-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb131-13"><a href="#cb131-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb131-14"><a href="#cb131-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Trips ~ Businesses"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-88-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-equation-4" class="level4">
+<h4 class="anchored" data-anchor-id="regression-equation-4">Regression Equation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(TRIPS) <span class="sc">~</span> <span class="fu">log</span>(desti_biz), <span class="at">data =</span> attr_flow)</span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">1</span>]</span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">2</span>]</span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a>equation <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"log(TRIPS) = %.3f + %.3f * log(desti_biz)"</span>, intercept, slope)</span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Regression Equation:</span><span class="sc">\n</span><span class="st">"</span>, equation, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Regression Equation:
+ log(TRIPS) = 3.497 + 0.147 * log(desti_biz) </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Given the regression equation: log(TRIPS) = 3.497 + 0.147 * log(desti_biz)</p>
+<p>There seems to be a positive correlation between number of trips and the number of businesses.</p>
+</div>
+</div>
 </section>
 <section id="schools" class="level4">
 <h4 class="anchored" data-anchor-id="schools">Schools</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>attr_flow <span class="sc">%&gt;%</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(</span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(desti_sch),</span>
+<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">log</span>(TRIPS))</span>
+<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(</span>
+<span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb134-8"><a href="#cb134-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> .<span class="dv">7</span></span>
+<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb134-10"><a href="#cb134-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb134-11"><a href="#cb134-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb134-12"><a href="#cb134-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb134-13"><a href="#cb134-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb134-14"><a href="#cb134-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Trips ~ Schools"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="takehome_ex2_files/figure-html/unnamed-chunk-90-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-equation-5" class="level4">
+<h4 class="anchored" data-anchor-id="regression-equation-5">Regression Equation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(TRIPS) <span class="sc">~</span> <span class="fu">log</span>(desti_sch), <span class="at">data =</span> attr_flow)</span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">1</span>]</span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">coef</span>(linear_model)[<span class="dv">2</span>]</span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a>equation <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"log(TRIPS) = %.3f + %.3f * log(desti_sch)"</span>, intercept, slope)</span>
+<span id="cb135-7"><a href="#cb135-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb135-8"><a href="#cb135-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Regression Equation:</span><span class="sc">\n</span><span class="st">"</span>, equation, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Regression Equation:
+ log(TRIPS) = 3.601 + 0.398 * log(desti_sch) </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Statistical Conclusion" style="color: green">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Statistical Conclusion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Given the regression equation: log(TRIPS) = 3.601 + 0.398 * log(desti_sch)</p>
+<p>There seems to be a positive correlation between number of trips and the number of schools.</p>
+</div>
+</div>
 
 
 </section>
