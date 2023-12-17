@@ -1103,9 +1103,9 @@ YYY
 
 ```{r}
 uncSIM <- glm(formula = TRIPS ~ 
-                log(ori_grid) + 
-                log(desti_grid) +
-                log(euc_dist),
+                ori_grid + 
+                desti_grid +
+                euc_dist,
               family = poisson(link = "log"),
               data = attr_flow,
               na.action = na.exclude)
