@@ -23,7 +23,7 @@ editor: visual
 ```{r}
 pacman::p_load(tmap, sf, sp, DT, stplanr,
                performance, reshape2,
-               ggpubr, tidyverse, httr)
+               ggpubr, tidyverse, httr, ggplot2)
 ```
 
 ## Preparing the Flow Data
@@ -693,8 +693,6 @@ attr <- grid_attr %>%
   mutate(
     grid_id = as.factor(grid_id)
   )
-
-attr
 ```
 
 ### Flow by Origin
@@ -735,11 +733,31 @@ attr_flow <- left_join(
   )
 ```
 
+### Add Trips
+
+```{r}
+attr_flow <- left_join(
+  attr_flow,
+  flow_data,
+  by = c("ori_grid", "desti_grid")) %>%
+  select(
+    -c(FlowNoIntra, offset)
+  )
+```
+
+### Remove NULL values
+
+There are some routes from ori_grid to desti_grid that have 0 or NULL trips. These will be removed
+
+```{r}
+attr_flow <- attr_flow %>%
+  filter(!is.na(TRIPS) & TRIPS != 0)
+```
+
 ### Summary of attributes
 
 ```{r}
 summary(attr_flow)
-
 ```
 Note: Columns with prefix "ori" or "desti" have 0 values
 
@@ -769,39 +787,244 @@ write_rds(attr_flow, "data/rds/sim_data.rds")
 #### Train Station Exits
 
 ```{r}
+attr_flow %>%
+      ggplot(
+        aes(x = log(ori_mrt_exit),
+            y = log(TRIPS))
+      ) +
+      geom_point(
+        size = 1,
+        alpha = .7
+      ) +
+      geom_smooth(method = lm) +
+      theme(
+        axis.text.x = element_blank()
+      ) +
+      ggtitle("Trips ~ Train Strain Station Exits")
+```
+
+#### Regression Equation
+
+```{r}
+linear_model <- lm(log(TRIPS) ~ log(ori_mrt_exit), data = attr_flow)
+
+intercept <- coef(linear_model)[1]
+slope <- coef(linear_model)[2]
+
+equation <- sprintf("log(TRIPS) = %.3f + %.3f * log(ori_mrt_exit)", intercept, slope)
+
+cat("Regression Equation:\n", equation, "\n")
 
 ```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: blue"}
+Given the regression equation:
+log(TRIPS) = 3.593 + 0.141 * log(ori_mrt_exit) 
+
+There seems to be a positive correlation between number of trips and the number of train station exits.
+:::
 
 #### Food & Beverage Establishments
 
 ```{r}
+attr_flow %>%
+      ggplot(
+        aes(x = log(ori_fnb),
+            y = log(TRIPS))
+      ) +
+      geom_point(
+        size = 1,
+        alpha = .7
+      ) +
+      geom_smooth(method = lm) +
+      theme(
+        axis.text.x = element_blank()
+      ) +
+      ggtitle("Trips ~ Food & Beverage Establishments")
+```
+
+#### Regression Equation
+
+```{r}
+linear_model <- lm(log(TRIPS) ~ log(ori_fnb), data = attr_flow)
+
+intercept <- coef(linear_model)[1]
+slope <- coef(linear_model)[2]
+
+equation <- sprintf("log(TRIPS) = %.3f + %.3f * log(ori_fnb)", intercept, slope)
+
+cat("Regression Equation:\n", equation, "\n")
 
 ```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: blue"}
+Given the regression equation:
+log(TRIPS) = 3.686 + -0.076 * log(ori_fnb)
+
+There seems to be a negative correlation between number of trips and the number of food & beverage establishments. Conversely to hypothesised, this is not a strong propulsive attribute.
+:::
+
 
 #### Residential HDB buildings
 
 ```{r}
+attr_flow %>%
+      ggplot(
+        aes(x = log(ori_hdb),
+            y = log(TRIPS))
+      ) +
+      geom_point(
+        size = 1,
+        alpha = .7
+      ) +
+      geom_smooth(method = lm) +
+      theme(
+        axis.text.x = element_blank()
+      ) +
+      ggtitle("Trips ~ Residential HDB buildings")
+```
+
+#### Regression Equation
+
+```{r}
+linear_model <- lm(log(TRIPS) ~ log(ori_hdb), data = attr_flow)
+
+intercept <- coef(linear_model)[1]
+slope <- coef(linear_model)[2]
+
+equation <- sprintf("log(TRIPS) = %.3f + %.3f * log(ori_hdb)", intercept, slope)
+
+cat("Regression Equation:\n", equation, "\n")
 
 ```
 
+::: {.callout-tip title="Statistical Conclusion" style="color: blue"}
+Given the regression equation:
+log(TRIPS) = 2.894 + 0.401 * log(ori_hdb) 
+
+There seems to be a negative correlation between number of trips and the number of residential HDB buildings.
+:::
 
 ### Linear Correlation between Trips and Attractive Attributes
 
 #### Financial Services
 
 ```{r}
+attr_flow %>%
+      ggplot(
+        aes(x = log(desti_fs),
+            y = log(TRIPS))
+      ) +
+      geom_point(
+        size = 1,
+        alpha = .7
+      ) +
+      geom_smooth(method = lm) +
+      theme(
+        axis.text.x = element_blank()
+      ) +
+      ggtitle("Trips ~ Financial Services")
+```
+
+#### Regression Equation
+
+```{r}
+linear_model <- lm(log(TRIPS) ~ log(desti_fs), data = attr_flow)
+
+intercept <- coef(linear_model)[1]
+slope <- coef(linear_model)[2]
+
+equation <- sprintf("log(TRIPS) = %.3f + %.3f * log(desti_fs)", intercept, slope)
+
+cat("Regression Equation:\n", equation, "\n")
 
 ```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Given the regression equation:
+log(TRIPS) = 3.383 + 0.201 * log(desti_fs) 
+
+There seems to be a positive correlation between number of trips and the number of financial services.
+:::
 
 #### Businesses
 
 ```{r}
+attr_flow %>%
+      ggplot(
+        aes(x = log(desti_biz),
+            y = log(TRIPS))
+      ) +
+      geom_point(
+        size = 1,
+        alpha = .7
+      ) +
+      geom_smooth(method = lm) +
+      theme(
+        axis.text.x = element_blank()
+      ) +
+      ggtitle("Trips ~ Businesses")
+```
+
+#### Regression Equation
+
+```{r}
+linear_model <- lm(log(TRIPS) ~ log(desti_biz), data = attr_flow)
+
+intercept <- coef(linear_model)[1]
+slope <- coef(linear_model)[2]
+
+equation <- sprintf("log(TRIPS) = %.3f + %.3f * log(desti_biz)", intercept, slope)
+
+cat("Regression Equation:\n", equation, "\n")
 
 ```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Given the regression equation:
+log(TRIPS) = 3.497 + 0.147 * log(desti_biz) 
+
+There seems to be a positive correlation between number of trips and the number of businesses.
+:::
 
 #### Schools
+
 ```{r}
+attr_flow %>%
+      ggplot(
+        aes(x = log(desti_sch),
+            y = log(TRIPS))
+      ) +
+      geom_point(
+        size = 1,
+        alpha = .7
+      ) +
+      geom_smooth(method = lm) +
+      theme(
+        axis.text.x = element_blank()
+      ) +
+      ggtitle("Trips ~ Schools")
+```
+
+#### Regression Equation
+
+```{r}
+linear_model <- lm(log(TRIPS) ~ log(desti_sch), data = attr_flow)
+
+intercept <- coef(linear_model)[1]
+slope <- coef(linear_model)[2]
+
+equation <- sprintf("log(TRIPS) = %.3f + %.3f * log(desti_sch)", intercept, slope)
+
+cat("Regression Equation:\n", equation, "\n")
 
 ```
+
+::: {.callout-tip title="Statistical Conclusion" style="color: green"}
+Given the regression equation:
+log(TRIPS) = 3.601 + 0.398 * log(desti_sch)  
+
+There seems to be a positive correlation between number of trips and the number of schools.
+:::
 
 
