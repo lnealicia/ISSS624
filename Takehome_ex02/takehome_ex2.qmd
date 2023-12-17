@@ -497,10 +497,14 @@ mrt_exit <- st_read(dsn = "Data/geospatial",
 
 ```{r}
 
-grid_attr <- grid_sf %>%
-  mutate(mrt_exit_count = lengths(st_intersects(., mrt_exit)))
+grid_attr <- grid_sf
+
+grid_attr$mrt_exit <- lengths(st_intersects(grid_sf, mrt_exit))
 
 summary(grid_attr$mrt_exit)
+
+message(paste("There are", sum(grid_attr$mrt_exit), "Train Station Exits that occur in hexagons with bus stops", "with a maximum of", max(grid_attr$mrt_exit), "within grid_id", grid_attr$grid_id[which.max(grid_attr$mrt_exit)]))
+
 ```
 
 ### Importing of F&B locations
@@ -517,6 +521,8 @@ fnb <- st_read(dsn = "Data/geospatial",
 grid_attr$fnb <- lengths(st_intersects(grid_sf, fnb))
 
 summary(grid_attr$fnb)
+
+message(paste("There are", sum(grid_attr$fnb), " Food & Beverage establishments that occur in hexagons with bus stops", "with a maximum of", max(grid_attr$fnb), "within grid_id", grid_attr$grid_id[which.max(grid_attr$fnb)]))
 ```
 
 ### Importing of residential HDBs
@@ -565,9 +571,11 @@ hdb_sf <- st_as_sf(hdb,
 ### Number of HDB per Location
 
 ```{r}
-grid_attr$fnb <- lengths(st_intersects(grid_sf, fnb))
+grid_attr$hdb <- lengths(st_intersects(grid_sf, hdb_sf))
 
-summary(grid_attr$fnb)
+summary(grid_attr$hdb)
+
+message(paste("There are", sum(grid_attr$hdb), " residential HDB buildings that occur in hexagons with bus stops", "with a maximum of", max(grid_attr$hdb), "within grid_id", grid_attr$grid_id[which.max(grid_attr$hdb)]))
 ```
 
 ## Attractive Attributes
@@ -586,13 +594,15 @@ biz <- st_read(dsn = "Data/geospatial",
   st_transform(crs = 3414)
 ```
 
-### Number of Business Offices per Location
+### Number of Businesses per Location
 
 ```{r}
-grid_attr$biz <- grid_sf %>%
-  mutate(biz_no = lengths(st_intersects(., biz)))
+
+grid_attr$biz <- lengths(st_intersects(grid_sf, biz))
 
 summary(grid_attr$biz)
+
+message(paste("There are", sum(grid_attr$biz), " Businesses that occur in hexagons with bus stops", "with a maximum of", max(grid_attr$biz), "within grid_id", grid_attr$grid_id[which.max(grid_attr$biz)]))
 ```
 
 The location with the most number of businesses is grid id 3942, with 126 businesses located within.
@@ -611,7 +621,10 @@ fs <- st_read(dsn = "Data/geospatial",
 grid_attr$fs <- lengths(st_intersects(grid_sf, fs))
 
 summary(grid_attr$fs)
+
+message(paste("There are", sum(grid_attr$fs), " Financial Services that occur in hexagons with bus stops", "with a maximum of", max(grid_attr$fs), "within grid_id", grid_attr$grid_id[which.max(grid_attr$fs)]))
 ```
+Note: The hexagaon with grid_id 2009 also boasts the highest count of train station exits!
 
 ### Importing of School Locations
 
@@ -659,8 +672,136 @@ sch_sf <- st_as_sf(sch,
 grid_attr$sch <- lengths(st_intersects(grid_sf, sch_sf))
 
 summary(grid_attr$sch)
+
+message(paste("There are", sum(grid_attr$sch), " Schools that occur in hexagons with bus stops", "with a maximum of", max(grid_attr$sch), "within grid_id", grid_attr$grid_id[which.max(grid_attr$sch)]))
+```
+## Check Propulsive and Attractive Attributes
+
+Check `grid_attr`
+
+```{r}
+grid_attr
 ```
 
 # Spatial Interaction Modelling
 
 Select attributes relevant Propulsive Attributes and Attractive Attributes for Spatial Interaction Modelling
+
+```{r}
+attr <- grid_attr %>%
+  st_drop_geometry() %>%
+  mutate(
+    grid_id = as.factor(grid_id)
+  )
+
+attr
+```
+
+### Flow by Origin
+
+Retain only propulsive attributes
+
+```{r}
+attr_flow <- left_join(
+  dist_pair,
+  attr,
+  by = c("ori_grid" = "grid_id")) %>%
+  rename(
+    ori_mrt_exit = mrt_exit,
+    ori_fnb = fnb,
+    ori_hdb = hdb
+  ) %>%
+  select(
+    -c(fs,biz,sch))
+
+```
+
+### Flow by Destination
+
+Retain only attractive attributes
+
+```{r}
+attr_flow <- left_join(
+  attr_flow,
+  attr,
+  by = c("desti_grid" = "grid_id")) %>%
+  rename(
+    desti_fs = fs,
+    desti_biz = biz,
+    desti_sch = sch
+  ) %>%
+  select(
+    -c(mrt_exit,fnb,hdb)
+  )
+```
+
+### Summary of attributes
+
+```{r}
+summary(attr_flow)
+
+```
+Note: Columns with prefix "ori" or "desti" have 0 values
+
+### Replacing 0 values
+
+0 values in columns with prefix "ori" or "desti" will be replaced with a small value i.e. 0.99
+
+```{r}
+attr_flow <- attr_flow %>%
+  mutate_at(vars(ori_mrt_exit, ori_fnb, ori_hdb, desti_fs, desti_biz, desti_sch),
+            ~ ifelse(. == 0, 0.99, .))
+```
+
+Check `attr_flow` again
+```{r}
+summary(attr_flow)
+```
+
+Save output indo rds
+
+```{r}
+write_rds(attr_flow, "data/rds/sim_data.rds")
+```
+
+### Linear Correlation between Trips and Propulsive Attributes
+
+#### Train Station Exits
+
+```{r}
+
+```
+
+#### Food & Beverage Establishments
+
+```{r}
+
+```
+
+#### Residential HDB buildings
+
+```{r}
+
+```
+
+
+### Linear Correlation between Trips and Attractive Attributes
+
+#### Financial Services
+
+```{r}
+
+```
+
+#### Businesses
+
+```{r}
+
+```
+
+#### Schools
+```{r}
+
+```
+
+
