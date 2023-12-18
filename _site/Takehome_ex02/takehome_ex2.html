@@ -195,10 +195,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text"></span></a>
-  </li>  
+  <li class="dropdown-header">
+ <span class="menu-text">about.html</span></li>
 </ul>
             <div class="quarto-navbar-tools">
 </div>
@@ -2524,7 +2522,10 @@ Statistical Conclusion
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>XXX</p>
+<p>log(desti_fs) 0.3295599 0.0001655 1991.250 &lt; 2e-16 <strong><em> log(desti_biz) 0.0350935 0.0001723 203.630 &lt; 2e-16 </em></strong> log(desti_sch) 0.3924206 0.0006150 638.034 &lt; 2e-16 <strong><em> log(euc_dist) -0.6985434 0.0001180 -5920.797 &lt; 2e-16 </em></strong></p>
+<p>Number of weekday morning peak period trips has a statistically significant relationship with all destination attractiveness attributes.</p>
+<p>The strongest positive association is with number of schools (Coefficient Estimate: 0.3924206) followed by number of financial services (Coefficient Estimate: 0.3295599), suggesting that they are the most attractive factors.</p>
+<p>The strongest negative association is with distance (-0.6985434). Thus, the further away the destination from origin, the less attractive it is.</p>
 </div>
 </div>
 </section>
@@ -3401,7 +3402,10 @@ Statistical Conclusion
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>YYY</p>
+<p>log(ori_mrt_exit) 0.1788028 0.0003400 525.958 &lt; 2e-16 <strong><em> log(ori_fnb) 0.0116404 0.0002378 48.942 &lt; 2e-16 </em></strong> log(ori_hdb) 0.4079424 0.0001581 2579.549 &lt; 2e-16 <strong><em> log(euc_dist) -0.6817863 0.0001213 -5621.232 &lt; 2e-16 </em></strong></p>
+<p>Number of weekday morning peak period trips has a statistically significant relationship with all origin propulsive attributes.</p>
+<p>The strongest positive association is with number of residential HDB buildings (Coefficient Estimate: 0.4079424) followed by number of train station exits (Coefficient Estimate: 0.1788028), suggesting that they are the most attractive factors.</p>
+<p>The strongest negative association is with distance (-0.6817863). Thus, the further away the origin from destination, the less propulsive it is.</p>
 </div>
 </div>
 </section>
@@ -5092,7 +5096,9 @@ Statistical Conclusion
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>YYY</p>
+<p>log(euc_dist) -0.6789398 0.0001267 -5360.218 &lt; 2e-16 ***</p>
+<p>Number of weekday morning peak period trips has a statistically significant relationship with the log applied distance.</p>
+<p>It has a strong negative association (-0.6789398). Thus, the greater the distance between origin and destination, the fewer trips in general.</p>
 </div>
 </div>
 </section>
@@ -6783,7 +6789,9 @@ Statistical Conclusion
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>YYY</p>
+<p>euc_dist -4.626e-04 1.114e-07 -4153.590 &lt; 2e-16 ***</p>
+<p>Number of weekday morning peak period trips has a statistically significant relationship with distance.</p>
+<p>It has a negative association (-4.626e-04). Thus, the greater the distance between origin and destination, the fewer trips in general.</p>
 </div>
 </div>
 </section>
@@ -6859,7 +6867,7 @@ Statistical Conclusion
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Similarly, the model with the lowest RMSE, thus most accurate, is the uncontrained model.</p>
+<p>Similarly, the model with the lowest RMSE(1412.062), the unconstrained model indicates the best performance among the models.</p>
 </div>
 </div>
 </section>
